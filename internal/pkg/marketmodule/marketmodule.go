@@ -2,29 +2,33 @@ package marketmodule
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"cryptowatcher.example/internal/pkg/cmchttp"
+	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types"
 )
 
 type marketmodule struct {
 	ApiKey string
-	cmcr	cmchttp.Requester
+	cmcr   cmchttp.Requester
+	l *logga.Logga
 }
 
-func New(mmApiKey string) *marketmodule {
+func New(ApiKey string, logger *logga.Logga) *marketmodule {
 
 	return &marketmodule{
-		ApiKey:           mmApiKey,
+		ApiKey: ApiKey,
+		l: logger,
 	}
 }
 
 func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error) {
 
-	fmt.Println("---  Fetching currencies  ---")
-	fmt.Printf("Fetching top %d but dispalying top %d\n\n", numberToRetrieve)
+	l := mm.l.Lg.With().Str("marketmodule", "SaveCurrencyListing").Logger()
+
+	l.Info().Msg("---  Fetching currencies  ---")
+	l.Info().Msgf("Fetching top %d but dispalying top %d\n\n", numberToRetrieve)
 
 	currencies, _ := mm.GetCurrencyListing(numberToRetrieve)
 
@@ -49,6 +53,10 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 
 func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, error) {
 
+	l := mm.l.Lg.With().Str("marketmodule", "GetCurrencyListing").Logger()
+
+	l.Info().Msg("---  Fetching currencies  ---")
+
 	params := map[string]string{
 		"start":   "1",
 		"limit":   strconv.Itoa(limit),
@@ -59,20 +67,20 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 
 	_, data, err := cmcr.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
-		fmt.Println("There was an error instantiating mm request client")
-		fmt.Println(err.Error())
+		l.Error().Msg("There was an error instantiating mm request client")
+		l.Error().Msg(err.Error())
 		return nil, err
 	}
 
 	var listing types.CurrencyListing
 	err = json.Unmarshal(data, &listing)
 	if err != nil {
-		fmt.Println("There was an error unmarshalling json mm response")
-		fmt.Println(err.Error())
+		l.Error().Msg("There was an error unmarshalling json mm response")
+		l.Error().Msg(err.Error())
 		return nil, err
 	}
 
-	fmt.Printf("%d currencies returned\n\n", len(listing.Currencies))
+	l.Info().Msgf("%d currencies returned\n\n", len(listing.Currencies))
 
 	return &listing, nil
 }

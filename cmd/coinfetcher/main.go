@@ -7,20 +7,17 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/marketmodule"
 )
 
 var numberToRetrieveDefault = 100
-var numberToDisplayDefault = 10
 
 type ParamStruct struct {
 	NumberToRetrieve int
-	NumberToDisplay  int
 }
 
 func main() {
-	fmt.Println("Starting comparisons")
-
 	flags := getFlags()
 
 	run(flags)
@@ -29,23 +26,22 @@ func main() {
 func run(flags ParamStruct) {
 
 	cmcApiKey := getEnvironmentVar("CMC_API_KEY")
+	logga := logga.New()
 
-	cmcmodule := marketmodule.New(cmcApiKey)
-	_, err := cmcmodule.SaveCurrencyListing(flags.NumberToRetrieve)
+	mm := marketmodule.New(cmcApiKey, logga)
+	_, err := mm.SaveCurrencyListing(flags.NumberToRetrieve)
 	if err != nil {
-		fmt.Println(err.Error())
+		logga.Lg.Error().Msg(err.Error())
 	}
 }
 
 func getFlags() ParamStruct {
 
 	numberToRetrieve := flag.Int("retrieve", numberToRetrieveDefault, "Number of coins to include in fetch")
-	numberToDisplay := flag.Int("display", numberToDisplayDefault, "Number of coins to display in output")
 	flag.Parse()
 
 	params := ParamStruct{
 		NumberToRetrieve: *numberToRetrieve,
-		NumberToDisplay:  *numberToDisplay,
 	}
 
 	return params

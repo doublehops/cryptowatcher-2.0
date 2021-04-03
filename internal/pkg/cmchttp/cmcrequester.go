@@ -1,7 +1,7 @@
 package cmchttp
 
 import (
-	"fmt"
+	"cryptowatcher.example/internal/pkg/logga"
 	"io/ioutil"
 	"net/http"
 )
@@ -9,25 +9,29 @@ import (
 const host = "https://pro-api.coinmarketcap.com"
 
 type Requester struct {
-	ApiKey           string
+	ApiKey string
+	l *logga.Logga
 }
 
-func New(rApiKey string) *Requester {
+func New(rApiKey string, logger *logga.Logga) *Requester {
 	return &Requester{
-		ApiKey:           rApiKey,
+		ApiKey: rApiKey,
+		l: logger,
 	}
 }
 
 func (r *Requester) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
+	l := r.l.Lg.With().Str("cmchttp", "MakeRequest").Logger()
+
 	client := &http.Client{}
 
-	fmt.Printf("r.MakeRequest: %s %s\n", method, path)
+	l.Info().Msgf("r.MakeRequest: %s %s\n", method, path)
 
-	req, err := http.NewRequest(method, host + path, nil)
+	req, err := http.NewRequest(method, host+path, nil)
 	if err != nil {
-		fmt.Println("There was an error instantiated request client for r")
-		fmt.Println(err.Error())
+		l.Error().Msg("There was an error instantiated request client for r")
+		l.Error().Msg(err.Error())
 		return "", nil, err
 	}
 
@@ -44,13 +48,12 @@ func (r *Requester) MakeRequest(method, path string, params map[string]string, p
 
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Println("There was an error making request to r")
-		fmt.Println(err.Error())
+		l.Error().Msg("There was an error making request to r")
+		l.Error().Msg(err.Error())
 		return "", nil, err
 	}
 
 	statusCode := resp.Status
-	fmt.Printf("----- statusCode: %s\n", statusCode)
 	respBody, _ := ioutil.ReadAll(resp.Body)
 
 	return statusCode, respBody, nil
