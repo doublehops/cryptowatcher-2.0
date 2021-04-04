@@ -1,4 +1,4 @@
-package api
+package types
 
 type CurrencySortBase struct {
 	Name           string

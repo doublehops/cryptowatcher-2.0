@@ -2,16 +2,14 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"os"
 
-	"github.com/joho/godotenv"
-
+	"cryptowatcher.example/internal/funcs"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/marketmodule"
+	"cryptowatcher.example/internal/pkg/orm"
 )
 
-var numberToRetrieveDefault = 100
+var numberToRetrieveDefault = 10
 
 type ParamStruct struct {
 	NumberToRetrieve int
@@ -25,13 +23,15 @@ func main() {
 
 func run(flags ParamStruct) {
 
-	cmcApiKey := getEnvironmentVar("CMC_API_KEY")
-	logga := logga.New()
+	cmcApiKey := funcs.GetEnvironmentVar("CMC_API_KEY")
+	logger := logga.New()
 
-	mm := marketmodule.New(cmcApiKey, logga)
+	db := orm.Connect(logger)
+
+	mm := marketmodule.New(db, cmcApiKey, logger)
 	_, err := mm.SaveCurrencyListing(flags.NumberToRetrieve)
 	if err != nil {
-		logga.Lg.Error().Msg(err.Error())
+		logger.Lg.Error().Msg(err.Error())
 	}
 }
 
@@ -45,15 +45,4 @@ func getFlags() ParamStruct {
 	}
 
 	return params
-}
-
-func getEnvironmentVar(varName string) string {
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Println("Unable to open environment file")
-		os.Exit(1)
-	}
-
-	return os.Getenv(varName)
 }

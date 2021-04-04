@@ -1,4 +1,13 @@
-CREATE TABLE coin (
+CREATE TABLE coins (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    name varchar(200) NOT NUll,
+    symbol varchar(10) NOT NULL,
+    created_at int(32),
+    updated_at int(32),
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
+
+CREATE TABLE cmc_history (
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(200) NOT NUll,
     symbol varchar(10) NOT NULL,
@@ -18,7 +27,7 @@ CREATE TABLE coin (
     percent_change_60d float(12, 2),
     percent_change_90d float(12, 2),
     market_cap float(12, 2),
-    created_at int(11),
-    updated_at int(11),
+    created_at int(32),
+    updated_at int(32),
     PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8;
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
