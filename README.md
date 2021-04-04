@@ -21,5 +21,6 @@ migrate create -ext sql -dir database/migrations -seq {migration_name}
 #### Run migrations
 
 ```
-migrate -path database/migrations -database "mysql://root:my123@tcp(localhost:3306)/cw" -verbose up 
+UP: dev/migrate/migrate.sh
+Down: dev/migrate/migrate-down.sh
 ```
