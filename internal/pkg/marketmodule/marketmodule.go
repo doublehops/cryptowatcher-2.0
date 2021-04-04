@@ -66,6 +66,7 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 	cmcr := cmchttp.New(mm.ApiKey, mm.l)
 
 	_, data, err := cmcr.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
+	l.Info().Msgf("%v", data)
 	if err != nil {
 		l.Error().Msg("There was an error instantiating mm request client")
 		l.Error().Msg(err.Error())
@@ -81,6 +82,9 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 	}
 
 	l.Info().Msgf("%d currencies returned\n\n", len(listing.Currencies))
+	//for _, cur := range listing.Currencies {
+	//	l.Info().Msgf("%v", data)
+	//}
 
 	return &listing, nil
 }
