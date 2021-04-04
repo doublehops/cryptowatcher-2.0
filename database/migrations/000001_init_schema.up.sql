@@ -1,4 +1,4 @@
-CREATE TABLE coins (
+CREATE TABLE coin (
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(200) NOT NUll,
     symbol varchar(10) NOT NULL,

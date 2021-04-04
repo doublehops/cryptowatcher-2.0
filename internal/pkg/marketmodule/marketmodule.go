@@ -1,30 +1,31 @@
 package marketmodule
 
 import (
-	"cryptowatcher.example/internal/models/coin"
-	"cryptowatcher.example/internal/types/database"
 	"encoding/json"
-	"gorm.io/gorm"
 	"strconv"
 
+	"gorm.io/gorm"
+
+	"cryptowatcher.example/internal/models/coin"
 	"cryptowatcher.example/internal/pkg/cmchttp"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/api"
+	"cryptowatcher.example/internal/types/database"
 )
 
 type marketmodule struct {
-	db *gorm.DB
+	db     *gorm.DB
 	ApiKey string
 	cmcr   cmchttp.Requester
-	l *logga.Logga
+	l      *logga.Logga
 }
 
 func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *marketmodule {
 
 	return &marketmodule{
-		db: db,
+		db:     db,
 		ApiKey: ApiKey,
-		l: logger,
+		l:      logger,
 	}
 }
 
@@ -49,7 +50,7 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 
 		if cr.ID == 0 {
 			crNew := database.Coin{
-				Name: c.Name,
+				Name:   c.Name,
 				Symbol: c.Symbol,
 			}
 

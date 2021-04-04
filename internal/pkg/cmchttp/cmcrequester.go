@@ -1,9 +1,10 @@
 package cmchttp
 
 import (
-	"cryptowatcher.example/internal/pkg/logga"
 	"io/ioutil"
 	"net/http"
+
+	"cryptowatcher.example/internal/pkg/logga"
 )
 
 const host = "https://pro-api.coinmarketcap.com"
