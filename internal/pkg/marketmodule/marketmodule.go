@@ -4,22 +4,28 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"gorm.io/gorm"
+
+	"cryptowatcher.example/internal/models/coin"
 	"cryptowatcher.example/internal/pkg/cmchttp"
 	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/types"
+	"cryptowatcher.example/internal/types/api"
+	"cryptowatcher.example/internal/types/database"
 )
 
 type marketmodule struct {
+	db     *gorm.DB
 	ApiKey string
 	cmcr   cmchttp.Requester
-	l *logga.Logga
+	l      *logga.Logga
 }
 
-func New(ApiKey string, logger *logga.Logga) *marketmodule {
+func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *marketmodule {
 
 	return &marketmodule{
+		db:     db,
 		ApiKey: ApiKey,
-		l: logger,
+		l:      logger,
 	}
 }
 
@@ -28,24 +34,35 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 	l := mm.l.Lg.With().Str("marketmodule", "SaveCurrencyListing").Logger()
 
 	l.Info().Msg("---  Fetching currencies  ---")
-	l.Info().Msgf("Fetching top %d but dispalying top %d\n\n", numberToRetrieve)
+
+	cm := coin.New(mm.db, mm.l)
 
 	currencies, _ := mm.GetCurrencyListing(numberToRetrieve)
 
 	for _, c := range currencies.Currencies {
 
-		ratio := c.Quote.USDObj.MarketCap / c.Quote.USDObj.Volume24Hours
-
-		_ = types.CurrencySortBase{
-			Name:           c.Name,
-			Rank:           c.CmcRank,
-			Symbol:         c.Symbol,
-			MarketCap:      c.Quote.USDObj.MarketCap,
-			Volume24h:      c.Quote.USDObj.Volume24Hours,
-			CapVolumeRatio: ratio,
+		cr, err := cm.GetCoinBySymbol(c.Symbol)
+		if err != nil {
+			return "", err
 		}
 
-		// @TODO: Save to database
+		l.Info().Msgf(">>>>  ID found for `%s` is: %v", c.Symbol, cr.ID)
+
+		if cr.ID == 0 {
+			crNew := database.Coin{
+				Name:   c.Name,
+				Symbol: c.Symbol,
+			}
+
+			result := cm.CreateCoin(&crNew)
+			if result.Error != nil {
+				l.Error().Msg("Error saving coin record to database")
+				l.Error().Msgf("%v", result.Error)
+				return "", result.Error
+			}
+		}
+
+		// @TODO: Add record to CmcHistory
 	}
 
 	return "", nil
