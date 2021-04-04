@@ -63,7 +63,7 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 		"convert": "USD",
 	}
 
-	cmcr := cmchttp.New(mm.ApiKey)
+	cmcr := cmchttp.New(mm.ApiKey, mm.l)
 
 	_, data, err := cmcr.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
