@@ -1,32 +1,33 @@
 package database
 
 type Coin struct {
-	ID        uint
+	ID        uint32
 	Name      string
 	Symbol    string
-	CreatedAt int
-	UpdatedAt int
+	CreatedAt int32
+	UpdatedAt int32
 }
 
 type CmcHistory struct {
-	ID                uint
+	ID                uint32
 	Name              string
 	Symbol            string
-	NumMarketPairs    int
+	Slug            string
+	NumMarketPairs    int32
 	DateAdded         string
-	MaxSupply         int
-	CirculatingSupply int
-	TotalSupply       int
-	CmcRank           int
-	QuotePrice        float32
-	Volume24h         float32
-	PercentChange1h   float32
-	PercentChange24h  float32
-	PercentChange7D   float32
-	PercentChange30D  float32
-	PercentChange60D  float32
-	PercentChange90D  float32
-	MarketCap         float32
-	CreatedAt         int
-	UpdatedAt         int
+	MaxSupply         float64
+	CirculatingSupply float64
+	TotalSupply       float64
+	CmcRank           int32
+	QuotePrice        float64
+	Volume24h         float64	`gorm:"column:volume_24h"`
+	PercentChange1h   float64	`gorm:"column:percent_change_1h"`
+	PercentChange24h  float64	`gorm:"column:percent_change_24h"`
+	PercentChange7D   float64	`gorm:"column:percent_change_7d"`
+	PercentChange30D  float64	`gorm:"column:percent_change_30d"`
+	PercentChange60D  float64	`gorm:"column:percent_change_60d"`
+	PercentChange90D  float64	`gorm:"column:percent_change_90d"`
+	MarketCap         float64
+	CreatedAt         int32
+	UpdatedAt         int32
 }

@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/gorm"
 
+	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/coin"
 	"cryptowatcher.example/internal/pkg/cmchttp"
 	"cryptowatcher.example/internal/pkg/logga"
@@ -63,6 +64,31 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 		}
 
 		// @TODO: Add record to CmcHistory
+
+		cmcm := cmchistory.New(mm.db, mm.l)
+
+		cmcr := database.CmcHistory{
+			Name:              c.Name,
+			Symbol:            c.Symbol,
+			Slug:              c.Slug,
+			NumMarketPairs:    c.NumMarketPairs,
+			DateAdded:         c.DateAdded,
+			MaxSupply:         c.MaxSupply,
+			CirculatingSupply: c.CirculatingSupply,
+			TotalSupply:       c.TotalSupply,
+			CmcRank:           c.CmcRank,
+			QuotePrice:        c.Quote.USDObj.Price,
+			Volume24h:         c.Quote.USDObj.Volume24Hours,
+			PercentChange1h:   c.Quote.USDObj.PercentChange1Hour,
+			PercentChange24h:  c.Quote.USDObj.PercentChange24Hours,
+			PercentChange7D:   c.Quote.USDObj.PercentChange7Days,
+			PercentChange30D:  c.Quote.USDObj.PercentChange30Days,
+			PercentChange60D:  c.Quote.USDObj.PercentChange60Days,
+			PercentChange90D:  c.Quote.USDObj.PercentChange90Days,
+			MarketCap:         c.Quote.USDObj.MarketCap,
+		}
+
+		cmcm.CreateRecord(&cmcr)
 	}
 
 	return "", nil
