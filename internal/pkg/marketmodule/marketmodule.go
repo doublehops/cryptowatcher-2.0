@@ -42,8 +42,6 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 
 	for _, c := range currencies.Currencies {
 
-		l.Info().Msgf(">>>>>>  Coin: %s; MaxSupply: %f", c.Symbol, c.MaxSupply)
-
 		cr, err := cm.GetCoinBySymbol(c.Symbol)
 		if err != nil {
 			return "", err
