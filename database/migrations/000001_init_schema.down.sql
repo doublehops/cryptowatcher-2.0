@@ -1,2 +1,2 @@
-DROP TABLE coins;
+DROP TABLE coin;
 DROP TABLE cmc_history;

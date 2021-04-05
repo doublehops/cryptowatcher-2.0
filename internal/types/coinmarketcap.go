@@ -1,6 +1,6 @@
 package api
 
-type CurrencySortBase struct {
+type XXXCurrencySortBase struct {
 	Name           string
 	Rank           int32
 	Symbol         string
@@ -14,19 +14,19 @@ type CurrencyListing struct {
 }
 
 type Currency struct {
-	Id             int      `json:"id"`
-	Name           string   `json:"name"`
-	Symbol         string   `json:"symbol"`
-	Slug           string   `json:"slug"`
-	NumMarketPairs int      `json:"num_market_pairs"`
-	DateAdded      string   `json:"date_added"`
-	Tags           []string `json:"tags"`
-	//MaxSupply         int      `json:"max_supply"` // It seems that some currencies are missing this property.
-	CirculatingSupply float64 `json:"circulating_supply"`
-	TotalSupply       float64 `json:"total_supply"`
-	CmcRank           int32   `json:"cmc_rank"`
-	LastUpdated       string  `json:"last_updated"`
-	Quote             Quote   `json:"quote"`
+	Id                int32    `json:"id"`
+	Name              string   `json:"name"`
+	Symbol            string   `json:"symbol"`
+	Slug              string   `json:"slug"`
+	NumMarketPairs    int32    `json:"num_market_pair"`
+	DateAdded         string   `json:"date_added"`
+	Tags              []string `json:"tags"`
+	MaxSupply         float64    `json:"max_supply"` // It seems that some currencies are missing this property.
+	CirculatingSupply float64  `json:"circulating_supply"`
+	TotalSupply       float64  `json:"total_supply"`
+	CmcRank           int32    `json:"cmc_rank"`
+	LastUpdated       string   `json:"last_updated"`
+	Quote             Quote    `json:"quote"`
 }
 
 type Quote struct {
