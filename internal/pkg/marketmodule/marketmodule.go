@@ -36,18 +36,15 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 
 	l.Info().Msg("---  Fetching currencies  ---")
 
-	cm := coin.New(mm.db, mm.l)
+	tx := mm.db.Begin()
+
+	cm := coin.New(tx, mm.l)
 
 	currencies, _ := mm.GetCurrencyListing(numberToRetrieve)
 
 	for _, c := range currencies.Currencies {
 
-		cr, err := cm.GetCoinBySymbol(c.Symbol)
-		if err != nil {
-			return "", err
-		}
-
-		l.Info().Msgf(">>>>  ID found for `%s` is: %v", c.Symbol, cr.ID)
+		cr := cm.GetCoinBySymbol(c.Symbol)
 
 		if cr.ID == 0 {
 			crNew := database.Coin{
@@ -67,7 +64,7 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 
 		cmcm := cmchistory.New(mm.db, mm.l)
 
-		cmcr := database.CmcHistory{
+		cmcr := &database.CmcHistory{
 			Name:              c.Name,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
@@ -88,7 +85,7 @@ func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error
 			MarketCap:         c.Quote.USDObj.MarketCap,
 		}
 
-		cmcm.CreateRecord(&cmcr)
+		cmcm.CreateRecord(cmcr)
 	}
 
 	return "", nil
