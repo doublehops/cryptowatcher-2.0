@@ -2,11 +2,13 @@ package main
 
 import (
 	"flag"
-
-	"cryptowatcher.example/internal/funcs"
+	"os"
+	
+	"cryptowatcher.example/internal/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/marketmodule"
 	"cryptowatcher.example/internal/pkg/orm"
+	envtype "cryptowatcher.example/internal/types/env"
 )
 
 var numberToRetrieveDefault = 10
@@ -23,13 +25,28 @@ func main() {
 
 func run(flags ParamStruct) {
 
-	cmcApiKey := funcs.GetEnvironmentVar("CMC_API_KEY")
+	RequiredEnvVars := []string{
+		"CMC_API_KEY",
+
+		"MYSQL_HOST",
+		"MYSQL_USER",
+		"MYSQL_PASSWORD",
+		"MYSQL_DATABASE",
+	}
+
 	logger := logga.New()
 
-	db := orm.Connect(logger)
+	envVars := envtype.EnvVars{}
+	err := env.GetEnvironmentVars(&envVars, RequiredEnvVars)
+	if err != nil {
+		logger.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
 
-	mm := marketmodule.New(db, cmcApiKey, logger)
-	_, err := mm.SaveCurrencyListing(flags.NumberToRetrieve)
+	db := orm.Connect(logger, envVars)
+
+	mm := marketmodule.New(db, envVars["CMC_API_KEY"], logger)
+	_, err = mm.SaveCurrencyListing(flags.NumberToRetrieve)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 	}
