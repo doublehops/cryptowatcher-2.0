@@ -1,32 +1,51 @@
 package env
 
 import (
-	"cryptowatcher.example/internal/funcs"
-	envtype "cryptowatcher.example/internal/types/env"
 	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
 
 	"github.com/joho/godotenv"
+
+	"cryptowatcher.example/internal/pkg/logga"
 )
 
-func GetEnvironmentVars(vars *envtype.EnvVars, requiredVars []string) error {
+type Env struct {
+	l *logga.Logga
+}
 
-	envVars := loadEnvironmentVars()
+func New(l *logga.Logga) (*Env, error){
+
+	err := LoadEnvironmentVars()
+	if err != nil {
+		return nil, err
+	}
+
+	e := Env{
+		l: l,
+	}
+
+	return &e, nil
+}
+
+func (e *Env) GetVar(v string) string {
+
+	return os.Getenv(v)
+}
+
+func (e *Env) TestEnvironmentVars(requiredVars []string) error {
 
 	for _, v := range requiredVars {
-		if !funcs.KeyExists(v, envVars) {
+		if os.Getenv(v) == "" {
 			return fmt.Errorf("Variable not found in environment file: %s\n", v)
 		}
-
-		(*vars)[v] = envVars[v]
 	}
 
 	return nil
 }
 
-func loadEnvironmentVars() map[string]string {
+func LoadEnvironmentVars() error {
 
 	var (
 		_, b, _, _ = runtime.Caller(0)
@@ -41,12 +60,11 @@ func loadEnvironmentVars() map[string]string {
 		envFile = basepath +"/../../.env"
 	}
 
-	values, err := godotenv.Read(envFile)
+	err := godotenv.Load(envFile)
 	if err != nil {
-		fmt.Printf("Unable to open environment file. %s\n", err.Error())
-		os.Exit(1)
+		return fmt.Errorf("Could not load environment file: %s\n", envFile)
 	}
 
-	return values
+	return nil
 }
 
