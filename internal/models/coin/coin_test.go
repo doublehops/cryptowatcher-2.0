@@ -1,6 +1,7 @@
 package coin
 
 import (
+	"cryptowatcher.example/internal/env"
 	"gorm.io/gorm"
 	"os"
 	"testing"
@@ -23,7 +24,13 @@ func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 
 	l = logga.New()
-	db = orm.Connect(l)
+
+	e, err := env.New(l)
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+	db = orm.Connect(l, e)
 	tx = db.Begin()
 
 	// Add test record

@@ -1,6 +1,7 @@
 package cmchistory
 
 import (
+	"cryptowatcher.example/internal/env"
 	"os"
 	"testing"
 
@@ -23,7 +24,15 @@ func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 
 	l = logga.New()
-	db = orm.Connect(l)
+
+	e, err := env.New(l)
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+
+	l = logga.New()
+	db = orm.Connect(l, e)
 	tx = db.Begin()
 }
 
