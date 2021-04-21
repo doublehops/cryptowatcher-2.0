@@ -1,4 +1,4 @@
-package types
+package cmcmodule
 
 type CurrencySortBase struct {
 	Name           string
@@ -10,7 +10,7 @@ type CurrencySortBase struct {
 }
 
 type CurrencyListing struct {
-	Currencies []Currency `json:"data"`
+	Currencies []*Currency `json:"data"`
 }
 
 type Currency struct {

@@ -1,29 +1,27 @@
-package cmchttp
+package cmcmodule
 
 import (
 	"io/ioutil"
 	"net/http"
-
-	"cryptowatcher.example/internal/pkg/logga"
 )
 
 const host = "https://pro-api.coinmarketcap.com"
 
-type Requester struct {
-	ApiKey string
-	l *logga.Logga
-}
+//type Requester struct {
+//	ApiKey string
+//	l *logga.Logga
+//}
 
-func New(rApiKey string, logger *logga.Logga) *Requester {
-	return &Requester{
-		ApiKey: rApiKey,
-		l: logger,
-	}
-}
+//func New(rApiKey string, logger *logga.Logga) *Requester {
+//	return &Requester{
+//		ApiKey: rApiKey,
+//		l: logger,
+//	}
+//}
 
-func (r *Requester) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
+func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
-	l := r.l.Lg.With().Str("cmchttp", "MakeRequest").Logger()
+	l := mm.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
 
 	client := &http.Client{}
 
@@ -36,7 +34,7 @@ func (r *Requester) MakeRequest(method, path string, params map[string]string, p
 		return "", nil, err
 	}
 
-	req.Header.Add("X-CMC_PRO_API_KEY", r.ApiKey)
+	req.Header.Add("X-CMC_PRO_API_KEY", mm.ApiKey)
 	req.Header.Add("Accept", "application/json")
 
 	if params != nil {
