@@ -21,6 +21,6 @@ migrate create -ext sql -dir database/migrations -seq {migration_name}
 #### Run migrations
 
 ```
-UP: dev/migrate/migrate.sh
+Up: dev/migrate/migrate.sh
 Down: dev/migrate/migrate-down.sh
 ```

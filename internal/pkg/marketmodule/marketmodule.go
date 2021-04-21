@@ -107,7 +107,7 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 
 	_, data, err := cmcr.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
-		l.Error().Msg("There was an error instantiating mm request client")
+		l.Error().Msg("There was an error instantiating marketmodule request client")
 		l.Error().Msg(err.Error())
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (mm *marketmodule) GetCurrencyListing(limit int) (*types.CurrencyListing, e
 	var listing types.CurrencyListing
 	err = json.Unmarshal(data, &listing)
 	if err != nil {
-		l.Error().Msg("There was an error unmarshalling json mm response")
+		l.Error().Msg("There was an error unmarshalling json marketmodule response")
 		l.Error().Msg(err.Error())
 		return nil, err
 	}
