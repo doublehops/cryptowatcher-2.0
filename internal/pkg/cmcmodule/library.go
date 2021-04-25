@@ -20,67 +20,6 @@ func New(ApiKey string, logger *logga.Logga) *CmcModule {
 	}
 }
 
-//func (mm *marketmodule) SaveCurrencyListing(numberToRetrieve int) (string, error) {
-//
-//	l := mm.l.Lg.With().Str("marketmodule", "SaveCurrencyListing").Logger()
-//
-//	l.Info().Msg("---  Fetching currencies  ---")
-//
-//	tx := mm.db.Begin()
-//
-//	cm := currency.New(tx, mm.l)
-//
-//	currencies, _ := mm.GetCurrencyListing(numberToRetrieve)
-//
-//	for _, c := range currencies.Currencies {
-//
-//		cr := cm.GetCoinBySymbol(c.Symbol)
-//
-//		if cr.ID == 0 {
-//			crNew := database.Coin{
-//				Name:   c.Name,
-//				Symbol: c.Symbol,
-//			}
-//
-//			result := cm.CreateCoin(&crNew)
-//			if result.Error != nil {
-//				l.Error().Msg("Error saving currency record to database")
-//				l.Error().Msgf("%v", result.Error)
-//				return "", result.Error
-//			}
-//		}
-//
-//		// @TODO: Add record to CmcHistory
-//
-//		cmcm := cmchistory.New(mm.db, mm.l)
-//
-//		cmcr := &database.CmcHistory{
-//			Name:              c.Name,
-//			Symbol:            c.Symbol,
-//			Slug:              c.Slug,
-//			NumMarketPairs:    c.NumMarketPairs,
-//			DateAdded:         c.DateAdded,
-//			MaxSupply:         c.MaxSupply,
-//			CirculatingSupply: c.CirculatingSupply,
-//			TotalSupply:       c.TotalSupply,
-//			CmcRank:           c.CmcRank,
-//			QuotePrice:        c.Quote.USDObj.Price,
-//			Volume24h:         c.Quote.USDObj.Volume24Hours,
-//			PercentChange1h:   c.Quote.USDObj.PercentChange1Hour,
-//			PercentChange24h:  c.Quote.USDObj.PercentChange24Hours,
-//			PercentChange7D:   c.Quote.USDObj.PercentChange7Days,
-//			PercentChange30D:  c.Quote.USDObj.PercentChange30Days,
-//			PercentChange60D:  c.Quote.USDObj.PercentChange60Days,
-//			PercentChange90D:  c.Quote.USDObj.PercentChange90Days,
-//			MarketCap:         c.Quote.USDObj.MarketCap,
-//		}
-//
-//		cmcm.CreateRecord(cmcr)
-//	}
-//
-//	return "", nil
-//}
-
 func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
 	l := mm.l.Lg.With().Str("marketmodule", "GetCurrencyListing").Logger()
