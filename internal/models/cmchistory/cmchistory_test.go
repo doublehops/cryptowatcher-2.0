@@ -68,11 +68,13 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 		MarketCap:         1222333555,
 	}
 
-	record, err := cmcm.CreateRecord(r)
+	err := cmcm.CreateRecord(r)
 
 	assert.Nil(t, err, "Created record returned no error")
 
-	rr, err := cmcm.GetRecordByID(record.ID)
+	var rt database.CmcHistory
+
+	err := cmcm.GetRecordByID(&rt, r.ID)
 
 	assert.Equal(t, r.Name, rr.Name, "Name returned as expected")
 	assert.Equal(t, r.Symbol, rr.Symbol, "Name returned as expected")

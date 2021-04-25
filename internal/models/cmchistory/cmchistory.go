@@ -20,28 +20,26 @@ func New(db *gorm.DB, logger *logga.Logga) *Model {
 	}
 }
 
-func (m *Model) CreateRecord(r *database.CmcHistory) (*database.CmcHistory, error) {
+func (m *Model) CreateRecord(record *database.CmcHistory) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "CreateRecord").Logger()
+	l.Info().Msgf("Adding cmc record: %s", record.Symbol)
 
-	l.Info().Msgf("Adding cmc record: %s", r.Symbol)
-
-	result := m.db.Create(&r)
+	result := m.db.Create(&record)
 	if result.Error != nil {
 		l.Error().Msgf("There was an error saving record to database. %v", result.Error)
+		return result.Error
 	}
 
-	return r, result.Error
+	return nil
 }
 
-func (m *Model) GetRecordByID(ID int32) (*database.CmcHistory, error) {
+func (m *Model) GetRecordByID(record *database.CmcHistory, ID int32) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
-
 	l.Info().Msgf("Retrieving cmchistory record: %d", ID)
 
-	var record database.CmcHistory
 	m.db.First(&record, "id = ?", ID)
 
-	return &record, nil
+	return nil
 }
