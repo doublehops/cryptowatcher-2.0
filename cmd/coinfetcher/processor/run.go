@@ -6,7 +6,6 @@ import (
 	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
-	"github.com/davecgh/go-spew/spew"
 	"gorm.io/gorm"
 )
 
@@ -42,18 +41,20 @@ func (r *Runner) Run() error {
 
 	// Add coins if not already in the database.
 	for _, c := range currencies {
-		ec := cm.GetCoinBySymbol(c.Symbol)
-		spew.Dump(ec)
-		if ec.ID > 0 { // Coin already in database.
-			continue
-		}
 
-		crNew := database.Currency{
-			Name:   c.Name,
-			Symbol: c.Symbol,
-		}
+		var cur database.Currency
 
-		cm.CreateCurrency(&crNew)
+		cm.GetCoinBySymbol(&cur, c.Symbol)
+		if cur.ID == 0 { // Currency not yet in database.
+
+			cur.Name = c.Name
+			cur.Symbol = c.Symbol
+
+			err := cm.CreateCurrency(&cur)
+			if err != nil {
+				l.Error().Msgf("Error adding currency: %s", cur.Symbol)
+			}
+		}
 	}
 
 	return nil
