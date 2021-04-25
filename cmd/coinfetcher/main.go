@@ -5,10 +5,10 @@ import (
 	"flag"
 	"os"
 
+	"cryptowatcher.example/cmd/coinfetcher/processor"
 	"cryptowatcher.example/internal/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
-	"cryptowatcher.example/cmd/coinfetcher/processor"
 )
 
 var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.
@@ -53,11 +53,11 @@ func run(flags ParamStruct) {
 	db := orm.Connect(logger, e)
 
 	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(db, e.GetVar("CMC_API_KEY"), logger)
+	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), logger)
 
 	// Process
 	//p := New(e, logger, cmcm)
-	runner := processor.New(e, logger, cmcm)
+	runner := processor.New(e, logger, db, cmcm)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)

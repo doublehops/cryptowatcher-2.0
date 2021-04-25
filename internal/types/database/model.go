@@ -1,6 +1,6 @@
 package database
 
-type Coin struct {
+type Currency struct {
 	ID        uint32
 	Name      string
 	Symbol    string

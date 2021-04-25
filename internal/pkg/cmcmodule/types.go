@@ -9,7 +9,7 @@ type CurrencySortBase struct {
 	CapVolumeRatio float64
 }
 
-type CurrencyListing struct {
+type Data struct {
 	Currencies []*Currency `json:"data"`
 }
 

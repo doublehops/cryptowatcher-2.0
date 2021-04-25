@@ -4,21 +4,17 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"gorm.io/gorm"
-
 	"cryptowatcher.example/internal/pkg/logga"
 )
 
 type CmcModule struct {
-	db     *gorm.DB
 	ApiKey string
 	l      *logga.Logga
 }
 
-func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *CmcModule {
+func New(ApiKey string, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
-		db:     db,
 		ApiKey: ApiKey,
 		l:      logger,
 	}
@@ -32,7 +28,7 @@ func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *CmcModule {
 //
 //	tx := mm.db.Begin()
 //
-//	cm := coin.New(tx, mm.l)
+//	cm := currency.New(tx, mm.l)
 //
 //	currencies, _ := mm.GetCurrencyListing(numberToRetrieve)
 //
@@ -48,7 +44,7 @@ func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *CmcModule {
 //
 //			result := cm.CreateCoin(&crNew)
 //			if result.Error != nil {
-//				l.Error().Msg("Error saving coin record to database")
+//				l.Error().Msg("Error saving currency record to database")
 //				l.Error().Msgf("%v", result.Error)
 //				return "", result.Error
 //			}
@@ -85,7 +81,7 @@ func New(db *gorm.DB, ApiKey string, logger *logga.Logga) *CmcModule {
 //	return "", nil
 //}
 
-func (mm *CmcModule) GetCurrencyListing(limit int) (CurrencyListing, error) {
+func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
 	l := mm.l.Lg.With().Str("marketmodule", "GetCurrencyListing").Logger()
 
@@ -97,7 +93,8 @@ func (mm *CmcModule) GetCurrencyListing(limit int) (CurrencyListing, error) {
 		"convert": "USD",
 	}
 
-	var listing CurrencyListing
+	var dataObj Data
+	var listing []*Currency
 
 	_, data, err := mm.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
@@ -106,14 +103,16 @@ func (mm *CmcModule) GetCurrencyListing(limit int) (CurrencyListing, error) {
 		return listing, err
 	}
 
-	err = json.Unmarshal(data, &listing)
+	err = json.Unmarshal(data, &dataObj)
 	if err != nil {
 		l.Error().Msg("There was an error unmarshalling json marketmodule response")
 		l.Error().Msg(err.Error())
 		return listing, err
 	}
 
-	l.Info().Msgf("%d currencies returned\n\n", len(listing.Currencies))
+	listing = dataObj.Currencies
+
+	l.Info().Msgf("%d currencies returned\n\n", len(listing))
 
 	return listing, nil
 }

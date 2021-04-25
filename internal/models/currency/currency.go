@@ -1,4 +1,4 @@
-package coin
+package currency
 
 import (
 	"gorm.io/gorm"
@@ -20,23 +20,21 @@ func New(db *gorm.DB, logger *logga.Logga) *Model {
 	}
 }
 
-func (m *Model) GetCoinBySymbol(s string) *database.Coin {
+func (m *Model) GetCoinBySymbol(s string) *database.Currency {
 
-	l := m.l.Lg.With().Str("coin", "GetCoinBySymbol").Logger()
+	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()
+	l.Info().Msgf("Fetching currency by symbol: %s", s)
 
-	l.Info().Msgf("Fetching coin by symbol: %s", s)
-
-	r := database.Coin{}
+	r := database.Currency{}
 	m.db.Find(&r, "symbol = ?", s)
 
 	return &r
 }
 
-func (m *Model) CreateCoin(r *database.Coin) *gorm.DB {
+func (m *Model) CreateCurrency(r *database.Currency) *gorm.DB {
 
-	l := m.l.Lg.With().Str("coin", "CreateCoin").Logger()
-
-	l.Info().Msgf("Adding coin: %s", r.Symbol)
+	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
+	l.Info().Msgf("Adding currency: %s", r.Symbol)
 
 	result := m.db.Create(&r)
 	if result.Error != nil {
