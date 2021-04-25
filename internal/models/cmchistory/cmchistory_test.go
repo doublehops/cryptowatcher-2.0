@@ -1,7 +1,6 @@
 package cmchistory
 
 import (
-	"cryptowatcher.example/internal/env"
 	"os"
 	"testing"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 
+	"cryptowatcher.example/internal/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
@@ -69,14 +69,14 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 	}
 
 	err := cmcm.CreateRecord(r)
-
 	assert.Nil(t, err, "Created record returned no error")
 
 	var rt database.CmcHistory
 
-	err := cmcm.GetRecordByID(&rt, r.ID)
+	err = cmcm.GetRecordByID(&rt, r.ID)
+	assert.Nil(t, err, "Get record returned no error")
 
-	assert.Equal(t, r.Name, rr.Name, "Name returned as expected")
-	assert.Equal(t, r.Symbol, rr.Symbol, "Name returned as expected")
-	assert.Equal(t, r.TotalSupply, rr.TotalSupply, "Name returned as expected")
+	assert.Equal(t, r.Name, rt.Name, "Name returned as expected")
+	assert.Equal(t, r.Symbol, rt.Symbol, "Name returned as expected")
+	assert.Equal(t, r.TotalSupply, rt.TotalSupply, "Name returned as expected")
 }

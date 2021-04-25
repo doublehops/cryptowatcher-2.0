@@ -1,13 +1,14 @@
 package processor
 
 import (
+	"gorm.io/gorm"
+
 	"cryptowatcher.example/internal/env"
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
-	"gorm.io/gorm"
 )
 
 type Runner struct {
@@ -46,7 +47,7 @@ func (r *Runner) Run() error {
 
 		var cur database.Currency
 
-		cm.GetCoinBySymbol(&cur, c.Symbol)
+		cm.GetCurrencyBySymbol(&cur, c.Symbol)
 		if cur.ID == 0 { // Currency not yet in database.
 
 			cur.Name = c.Name

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"flag"
 	"os"
 
 	"cryptowatcher.example/cmd/coinfetcher/processor"
 	"cryptowatcher.example/internal/env"
+	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 )

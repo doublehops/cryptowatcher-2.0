@@ -34,11 +34,9 @@ func setup() {
 	tx = db.Begin()
 
 	// Add test record
+	record := getTestRecord()
 	cm := New(tx, l)
-	testCoin = cm.CreateCurrency(getTestRecord())
-
-	// call flag.Parse() here if TestMain uses flags
-	//os.Exit(m.Run())
+	err = cm.CreateCurrency(record)
 }
 
 func teardown() {
@@ -57,11 +55,8 @@ func TestCreateRecord(t *testing.T) {
 		Symbol: "CTestCoin",
 	}
 
-	result:= cm.CreateCurrency(cr)
-	if result.Error != nil {
-		t.Errorf("Error creating currency record")
-	}
-	assert.Nil(t, result.Error, "Record created without error")
+	err := cm.CreateCurrency(cr)
+	assert.Nil(t, err, "Record created without error")
 }
 
 func TestGetRecord(t *testing.T) {
@@ -71,12 +66,12 @@ func TestGetRecord(t *testing.T) {
 
 	cm := New(tx, l)
 
-	tcoin := getTestRecord()
+	cur := getTestRecord()
 
-	tc := cm.GetCoinBySymbol(tcoin.Symbol)
-	if tc.Name != tcoin.Name {
-		t.Errorf("Error getting currency record")
-	}
+	var tc database.Currency
+
+	cm.GetCurrencyBySymbol(&tc, cur.Symbol)
+	assert.Equal(t, cur.Name, tc.Name, "Retrieved currency")
 }
 
 func getTestRecord() *database.Currency {
