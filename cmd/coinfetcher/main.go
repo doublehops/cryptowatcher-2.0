@@ -56,18 +56,12 @@ func run(flags ParamStruct) {
 	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), logger)
 
 	// Process
-	//p := New(e, logger, cmcm)
 	runner := processor.New(e, logger, db, cmcm)
+	err = runner.Run()
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-
-	runner.Run()
-	//_, err = mm.SaveCurrencyListing(flags.NumberToRetrieve)
-	//if err != nil {
-	//	logger.Lg.Error().Msg(err.Error())
-	//}
 }
 
 func getFlags() ParamStruct {
