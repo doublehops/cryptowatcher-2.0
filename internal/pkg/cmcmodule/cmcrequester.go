@@ -13,11 +13,11 @@ func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, 
 
 	client := &http.Client{}
 
-	l.Info().Msgf("r.MakeRequest: %s %s\n", method, path)
+	l.Info().Msgf("cmcmodule.MakeRequest: %s %s\n", method, path)
 
 	req, err := http.NewRequest(method, host+path, nil)
 	if err != nil {
-		l.Error().Msg("There was an error instantiated request client for r")
+		l.Error().Msg("There was an error instantiating request client for cmcmodule")
 		l.Error().Msg(err.Error())
 		return "", nil, err
 	}
