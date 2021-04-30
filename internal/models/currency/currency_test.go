@@ -1,13 +1,13 @@
 package currency
 
 import (
-	"cryptowatcher.example/internal/env"
-	"gorm.io/gorm"
 	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 
-	"cryptowatcher.example/internal/env"
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 )
 

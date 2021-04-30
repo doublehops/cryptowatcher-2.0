@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 
-	"cryptowatcher.example/internal/env"
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"

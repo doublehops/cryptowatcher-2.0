@@ -55,9 +55,9 @@ func LoadEnvironmentVars() error {
 	var envFile string // We need to determine absolute path for testing.
 
 	if os.Getenv("APP_ENV") == "test" {
-		envFile = basepath +"/../../.env.testing"
+		envFile = basepath +"/../../../.env.testing"
 	} else {
-		envFile = basepath +"/../../.env"
+		envFile = basepath +"/../../../.env"
 	}
 
 	err := godotenv.Load(envFile)

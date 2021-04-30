@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"cryptowatcher.example/cmd/coinfetcher/processor"
-	"cryptowatcher.example/internal/env"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 )

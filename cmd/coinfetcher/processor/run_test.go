@@ -1,16 +1,8 @@
 package processor
 
 import (
-	"cryptowatcher.example/internal/env"
-	"cryptowatcher.example/internal/models/cmchistory"
-	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/cmcmodule"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/orm"
-	"cryptowatcher.example/internal/types/database"
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 	"io"
 	"io/ioutil"
@@ -19,6 +11,16 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"cryptowatcher.example/internal/models/cmchistory"
+	"cryptowatcher.example/internal/models/currency"
+	"cryptowatcher.example/internal/pkg/cmcmodule"
+	"cryptowatcher.example/internal/pkg/env"
+	"cryptowatcher.example/internal/pkg/logga"
+	"cryptowatcher.example/internal/pkg/orm"
+	"cryptowatcher.example/internal/types/database"
 )
 
 var l *logga.Logga
