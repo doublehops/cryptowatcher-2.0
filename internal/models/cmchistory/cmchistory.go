@@ -34,12 +34,24 @@ func (m *Model) CreateRecord(record *database.CmcHistory) error {
 	return nil
 }
 
-func (m *Model) GetRecordByID(record *database.CmcHistory, ID int32) error {
+func (m *Model) GetRecordByID(record database.CmcHistory, ID int32) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
-	l.Info().Msgf("Retrieving cmchistory record: %d", ID)
+	l.Info().Msgf("Retrieving cmchistory record by ID: %d", ID)
 
 	m.db.First(&record, "id = ?", ID)
 
 	return nil
+}
+
+func (m *Model) GetRecordsBySymbol(symbol string) ([]database.CmcHistory, error) {
+
+	l := m.l.Lg.With().Str("cmchistory", "GetRecordsBySymbol").Logger()
+	l.Info().Msgf("Retrieving cmchistory record by symbol: %s", symbol)
+
+	var records []database.CmcHistory
+
+	m.db.Find(&records, "symbol = ?", symbol)
+
+	return records, nil
 }

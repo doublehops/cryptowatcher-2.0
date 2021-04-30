@@ -26,6 +26,7 @@ func run(flags ParamStruct) {
 
 	RequiredEnvVars := []string{
 		"CMC_API_KEY",
+		"CMC_API_HOST",
 
 		"MYSQL_HOST",
 		"MYSQL_USER",
@@ -53,7 +54,7 @@ func run(flags ParamStruct) {
 	db := orm.Connect(logger, e)
 
 	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), logger)
+	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), e.GetVar("CMC_API_HOST"), logger)
 
 	// Process
 	runner := processor.New(e, logger, db, cmcm)

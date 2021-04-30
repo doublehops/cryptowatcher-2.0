@@ -38,7 +38,7 @@ func (e *Env) TestEnvironmentVars(requiredVars []string) error {
 
 	for _, v := range requiredVars {
 		if os.Getenv(v) == "" {
-			return fmt.Errorf("Variable not found in environment file: %s\n", v)
+			return fmt.Errorf("variable not found in environment file: %s", v)
 		}
 	}
 
@@ -62,7 +62,7 @@ func LoadEnvironmentVars() error {
 
 	err := godotenv.Load(envFile)
 	if err != nil {
-		return fmt.Errorf("Could not load environment file: %s\n", envFile)
+		return fmt.Errorf("could not load environment file: %s", envFile)
 	}
 
 	return nil

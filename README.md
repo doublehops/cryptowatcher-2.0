@@ -24,3 +24,21 @@ migrate create -ext sql -dir database/migrations -seq {migration_name}
 Up: dev/migrate/migrate.sh
 Down: dev/migrate/migrate-down.sh
 ```
+
+#### Run tests
+
+Tests are run with the following command:
+
+```
+go run ./...
+```
+
+However, first you may want to run migrations into the test database:
+```
+migrate -path database/migrations -database "mysql://root:my123@tcp(localhost:3306)/cw_test" -verbose up
+```
+
+cURL request to get history from CMC.
+```
+curl -H "X-CMC_PRO_API_KEY: _YOUR_KEY_" "Accept: application/json" -d "start=1&limit=5000&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+```

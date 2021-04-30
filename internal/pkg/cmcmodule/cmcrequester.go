@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-const host = "https://pro-api.coinmarketcap.com"
-
 func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
 	l := mm.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
@@ -15,7 +13,7 @@ func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, 
 
 	l.Info().Msgf("cmcmodule.MakeRequest: %s %s\n", method, path)
 
-	req, err := http.NewRequest(method, host+path, nil)
+	req, err := http.NewRequest(method, mm.ApiHost+path, nil)
 	if err != nil {
 		l.Error().Msg("There was an error instantiating request client for cmcmodule")
 		l.Error().Msg(err.Error())

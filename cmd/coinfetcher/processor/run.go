@@ -52,6 +52,7 @@ func (r *Runner) Run() error {
 
 			cur.Name = c.Name
 			cur.Symbol = c.Symbol
+			l.Info().Msgf(">>>>> Adding record. Symbol: %s", cur.Symbol)
 
 			err := cm.CreateCurrency(&cur)
 			if err != nil {

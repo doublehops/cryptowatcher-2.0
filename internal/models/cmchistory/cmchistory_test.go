@@ -18,8 +18,6 @@ var l *logga.Logga
 var db *gorm.DB
 var tx *gorm.DB
 
-var testCoin *gorm.DB
-
 func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 

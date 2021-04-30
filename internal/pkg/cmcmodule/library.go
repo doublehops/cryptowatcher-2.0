@@ -8,15 +8,17 @@ import (
 )
 
 type CmcModule struct {
-	ApiKey string
-	l      *logga.Logga
+	ApiKey  string
+	ApiHost string
+	l       *logga.Logga
 }
 
-func New(ApiKey string, logger *logga.Logga) *CmcModule {
+func New(ApiKey, ApiHost string, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
-		ApiKey: ApiKey,
-		l:      logger,
+		ApiKey:  ApiKey,
+		ApiHost: ApiHost,
+		l:       logger,
 	}
 }
 
@@ -46,6 +48,7 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 	if err != nil {
 		l.Error().Msg("There was an error unmarshalling json marketmodule response")
 		l.Error().Msg(err.Error())
+		l.Error().Msgf("%#v", err)
 		return listing, err
 	}
 
