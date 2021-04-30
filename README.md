@@ -27,17 +27,14 @@ Down: dev/migrate/migrate-down.sh
 
 #### Run tests
 
-Tests are run with the following command:
+Testing records go into a test database `cw_test`. Before testing, the database should be
+setup with the command `test/setup/setup_test_db.sh`. Then tests can be run with:
 
 ```
-go run ./...
+go test ./...
 ```
 
-However, first you may want to run migrations into the test database:
-```
-migrate -path database/migrations -database "mysql://root:my123@tcp(localhost:3306)/cw_test" -verbose up
-```
-
+#### ADDITIONAL THINGS
 cURL request to get history from CMC.
 ```
 curl -H "X-CMC_PRO_API_KEY: _YOUR_KEY_" "Accept: application/json" -d "start=1&limit=5000&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
