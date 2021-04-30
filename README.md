@@ -21,6 +21,21 @@ migrate create -ext sql -dir database/migrations -seq {migration_name}
 #### Run migrations
 
 ```
-UP: dev/migrate/migrate.sh
+Up: dev/migrate/migrate.sh
 Down: dev/migrate/migrate-down.sh
+```
+
+#### Run tests
+
+Testing records go into a test database `cw_test`. Before testing, the database should be
+setup with the command `test/setup/setup_test_db.sh`. Then tests can be run with:
+
+```
+go test ./...
+```
+
+#### ADDITIONAL THINGS
+cURL request to get history from CMC.
+```
+curl -H "X-CMC_PRO_API_KEY: _YOUR_KEY_" "Accept: application/json" -d "start=1&limit=5000&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
 ```

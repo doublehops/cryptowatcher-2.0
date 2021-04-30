@@ -2,18 +2,23 @@ package funcs
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
-	"os"
+	"net/http"
+	"net/http/httptest"
 )
 
-func GetEnvironmentVar(varName string) string {
+func KeyExists(key string, m map[string]string) bool {
 
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Println("Unable to open environment file")
-		os.Exit(1)
-	}
-
-	return os.Getenv(varName)
+	_, ok := m[key]
+	return ok
 }
 
+func TestServer(expectedResponse []byte) (string, []byte, error) {
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Test server received response")
+	}))
+
+	defer ts.Close()
+
+	return "", expectedResponse, nil
+}

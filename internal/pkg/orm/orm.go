@@ -8,18 +8,18 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 
-	"cryptowatcher.example/internal/funcs"
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 )
 
-func Connect(logger *logga.Logga) *gorm.DB {
+func Connect(logger *logga.Logga, e *env.Env) *gorm.DB {
 
 	l := logger.Lg.With().Str("marketmodule", "GetCurrencyListing").Logger()
 
-	dbName := funcs.GetEnvironmentVar("MYSQL_DATABASE")
-	user := funcs.GetEnvironmentVar("MYSQL_USER")
-	password := funcs.GetEnvironmentVar("MYSQL_PASSWORD")
-	host := funcs.GetEnvironmentVar("MYSQL_HOST")
+	dbName := e.GetVar("MYSQL_DATABASE")
+	user := e.GetVar("MYSQL_USER")
+	password := e.GetVar("MYSQL_PASSWORD")
+	host := e.GetVar("MYSQL_HOST")
 
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, dbName), // data source name

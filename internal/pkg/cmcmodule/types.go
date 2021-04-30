@@ -1,4 +1,4 @@
-package types
+package cmcmodule
 
 type CurrencySortBase struct {
 	Name           string
@@ -9,8 +9,8 @@ type CurrencySortBase struct {
 	CapVolumeRatio float64
 }
 
-type CurrencyListing struct {
-	Currencies []Currency `json:"data"`
+type Data struct {
+	Currencies []*Currency `json:"data"`
 }
 
 type Currency struct {
@@ -18,10 +18,10 @@ type Currency struct {
 	Name              string   `json:"name"`
 	Symbol            string   `json:"symbol"`
 	Slug              string   `json:"slug"`
-	NumMarketPairs    int32      `json:"num_market_pairs"`
+	NumMarketPairs    int32    `json:"num_market_pairs"`
 	DateAdded         string   `json:"date_added"`
 	Tags              []string `json:"tags"`
-	MaxSupply         float64      `json:"max_supply"` // It seems that some currencies are missing this property.
+	MaxSupply         float64  `json:"max_supply"` // It seems that some currencies are missing this property.
 	CirculatingSupply float64  `json:"circulating_supply"`
 	TotalSupply       float64  `json:"total_supply"`
 	CmcRank           int32    `json:"cmc_rank"`

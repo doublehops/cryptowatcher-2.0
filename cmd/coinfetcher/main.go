@@ -2,14 +2,16 @@ package main
 
 import (
 	"flag"
+	"os"
 
-	"cryptowatcher.example/internal/funcs"
+	"cryptowatcher.example/cmd/coinfetcher/processor"
+	"cryptowatcher.example/internal/pkg/cmcmodule"
+	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/marketmodule"
 	"cryptowatcher.example/internal/pkg/orm"
 )
 
-var numberToRetrieveDefault = 10
+var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.
 
 type ParamStruct struct {
 	NumberToRetrieve int
@@ -17,21 +19,49 @@ type ParamStruct struct {
 
 func main() {
 	flags := getFlags()
-
 	run(flags)
 }
 
 func run(flags ParamStruct) {
 
-	cmcApiKey := funcs.GetEnvironmentVar("CMC_API_KEY")
+	RequiredEnvVars := []string{
+		"CMC_API_KEY",
+		"CMC_API_HOST",
+
+		"MYSQL_HOST",
+		"MYSQL_USER",
+		"MYSQL_PASSWORD",
+		"MYSQL_DATABASE",
+	}
+
+	// Setup logger.
 	logger := logga.New()
 
-	db := orm.Connect(logger)
-
-	mm := marketmodule.New(db, cmcApiKey, logger)
-	_, err := mm.SaveCurrencyListing(flags.NumberToRetrieve)
+	// Setup environment.
+	e, err := env.New(logger)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+
+	err = e.TestEnvironmentVars(RequiredEnvVars)
+	if err != nil {
+		logger.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+
+	// Setup database connection.
+	db := orm.Connect(logger, e)
+
+	// Setup Coinmarketcap connection.
+	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), e.GetVar("CMC_API_HOST"), logger)
+
+	// Process
+	runner := processor.New(e, logger, db, cmcm)
+	err = runner.Run()
+	if err != nil {
+		logger.Lg.Error().Msg(err.Error())
+		os.Exit(1)
 	}
 }
 
