@@ -52,18 +52,18 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 		NumMarketPairs:    12,
 		DateAdded:         "2021-04-10 10:46:00",
 		MaxSupply:         12.32,
-		CirculatingSupply: 12313123123.02,
+		CirculatingSupply: 123133.02,
 		TotalSupply:       564654.40,
 		CmcRank:           123,
 		QuotePrice:        100.23,
-		Volume24h:         154867894541.151,
+		Volume24h:         15541.15,
 		PercentChange1h:   1,
 		PercentChange24h:  24,
 		PercentChange7D:   7,
 		PercentChange30D:  30,
 		PercentChange60D:  60,
 		PercentChange90D:  90,
-		MarketCap:         1222333555,
+		MarketCap:         12555,
 	}
 
 	err := cmcm.CreateRecord(r)
@@ -74,7 +74,21 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 	err = cmcm.GetRecordByID(&rt, r.ID)
 	assert.Nil(t, err, "Get record returned no error")
 
-	assert.Equal(t, r.Name, rt.Name, "Name returned as expected")
-	assert.Equal(t, r.Symbol, rt.Symbol, "Name returned as expected")
-	assert.Equal(t, r.TotalSupply, rt.TotalSupply, "Name returned as expected")
+	assert.Equal(t, r.Name, rt.Name, "Record returned as expected")
+	assert.Equal(t, r.Symbol, rt.Symbol, "Record returned as expected")
+	assert.Equal(t, r.Slug, rt.Slug, "Record returned as expected")
+	assert.Equal(t, r.NumMarketPairs, rt.NumMarketPairs, "Record returned as expected")
+	assert.Equal(t, r.MaxSupply, rt.MaxSupply, "Record returned as expected")
+	assert.Equal(t, r.CirculatingSupply, rt.CirculatingSupply, "Record returned as expected")
+	assert.Equal(t, r.TotalSupply, rt.TotalSupply, "Record returned as expected")
+	assert.Equal(t, r.CmcRank, rt.CmcRank, "Record returned as expected")
+	assert.Equal(t, r.QuotePrice, rt.QuotePrice, "Record returned as expected")
+	assert.Equal(t, r.Volume24h, rt.Volume24h, "Record returned as expected")
+	assert.Equal(t, r.PercentChange1h, rt.PercentChange1h, "Record returned as expected")
+	assert.Equal(t, r.PercentChange24h, rt.PercentChange24h, "Record returned as expected")
+	assert.Equal(t, r.PercentChange7D, rt.PercentChange7D, "Record returned as expected")
+	assert.Equal(t, r.PercentChange30D, rt.PercentChange30D, "Record returned as expected")
+	assert.Equal(t, r.PercentChange60D, rt.PercentChange60D, "Record returned as expected")
+	assert.Equal(t, r.PercentChange90D, rt.PercentChange90D, "Record returned as expected")
+	assert.Equal(t, r.MarketCap, rt.MarketCap, "Record returned as expected")
 }
