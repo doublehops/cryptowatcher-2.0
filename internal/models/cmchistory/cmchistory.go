@@ -34,7 +34,7 @@ func (m *Model) CreateRecord(record *database.CmcHistory) error {
 	return nil
 }
 
-func (m *Model) GetRecordByID(record database.CmcHistory, ID int32) error {
+func (m *Model) GetRecordByID(record *database.CmcHistory, ID int32) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
 	l.Info().Msgf("Retrieving cmchistory record by ID: %d", ID)
