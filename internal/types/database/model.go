@@ -1,15 +1,18 @@
 package database
 
+import "gorm.io/gorm"
+
 type Currency struct {
-	ID        uint32
-	Name      string
-	Symbol    string
-	CreatedAt int32
-	UpdatedAt int32
+	ID     uint32
+	Name   string
+	Symbol string
+	gorm.Model
 }
 
 type CmcHistory struct {
-	ID                int32
+	ID                uint32
+	CurrencyID     uint32
+	Currency        Currency `gorm:"foreignKey:CurrencyID"`
 	Name              string
 	Symbol            string
 	Slug              string
@@ -28,6 +31,5 @@ type CmcHistory struct {
 	PercentChange60D  float64 `gorm:"column:percent_change_60d"`
 	PercentChange90D  float64 `gorm:"column:percent_change_90d"`
 	MarketCap         float64
-	CreatedAt         int32
-	UpdatedAt         int32
+	gorm.Model
 }

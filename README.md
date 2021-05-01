@@ -39,3 +39,8 @@ cURL request to get history from CMC.
 ```
 curl -H "X-CMC_PRO_API_KEY: _YOUR_KEY_" "Accept: application/json" -d "start=1&limit=5000&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
 ```
+
+Debug in GORM:
+```
+result := m.db.Debug().Create(&record)
+```

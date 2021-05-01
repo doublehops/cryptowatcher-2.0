@@ -62,6 +62,7 @@ func (r *Runner) Run() error {
 
 		cmcr := &database.CmcHistory{
 			Name:              c.Name,
+			Currency:          cur,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
 			NumMarketPairs:    c.NumMarketPairs,
