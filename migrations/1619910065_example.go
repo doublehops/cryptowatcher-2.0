@@ -2,7 +2,6 @@ package migrations
 
 import (
 	"cryptowatcher.example/internal/types/database"
-	_ "cryptowatcher.example/migrations"
 	"errors"
 	"github.com/carprice-tech/migorm"
 	"github.com/jinzhu/gorm"
