@@ -1,7 +1,6 @@
 package cmchistory
 
 import (
-	"cryptowatcher.example/internal/models/currency"
 	"os"
 	"testing"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 
+	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
