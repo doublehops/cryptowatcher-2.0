@@ -47,14 +47,13 @@ func (r *Runner) Run() error {
 
 		var cur database.Currency
 
-		cm.GetCurrencyBySymbol(&cur, c.Symbol)
+		cm.GetRecordBySymbol(&cur, c.Symbol)
 		if cur.ID == 0 { // Currency not yet in database.
 
 			cur.Name = c.Name
 			cur.Symbol = c.Symbol
-			l.Info().Msgf(">>>>> Adding record. Symbol: %s", cur.Symbol)
 
-			err := cm.CreateCurrency(&cur)
+			err := cm.CreateRecord(&cur)
 			if err != nil {
 				l.Error().Msgf("Error adding currency: %s", cur.Symbol)
 			}
@@ -62,6 +61,7 @@ func (r *Runner) Run() error {
 
 		cmcr := &database.CmcHistory{
 			Name:              c.Name,
+			Currency:          cur,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
 			NumMarketPairs:    c.NumMarketPairs,

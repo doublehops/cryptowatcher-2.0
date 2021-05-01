@@ -20,10 +20,16 @@ migrate create -ext sql -dir database/migrations -seq {migration_name}
 
 #### Run migrations
 
+##### ORIGINAL EFFORT
 ```
 Up: dev/migrate/migrate.sh
 Down: dev/migrate/migrate-down.sh
 ```
+
+##### SECOND EFFORT
+There doesn't appear to be good or well explained migration tools, so for now stick to the
+original effort above. This mentioned here is using Gorm 1.x and doesn't work from what
+I've tried today. Follow instructions here - https://github.com/carprice-tech/migorm
 
 #### Run tests
 
@@ -38,4 +44,9 @@ go test ./...
 cURL request to get history from CMC.
 ```
 curl -H "X-CMC_PRO_API_KEY: _YOUR_KEY_" "Accept: application/json" -d "start=1&limit=5000&convert=USD" -G https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+```
+
+Debug in GORM:
+```
+result := m.db.Debug().Create(&record)
 ```

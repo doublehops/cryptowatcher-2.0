@@ -19,7 +19,6 @@ var tx *gorm.DB
 
 var testCoin *gorm.DB
 
-
 func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 
@@ -36,7 +35,7 @@ func setup() {
 	// Add test record
 	record := getTestRecord()
 	cm := New(tx, l)
-	err = cm.CreateCurrency(record)
+	err = cm.CreateRecord(record)
 }
 
 func teardown() {
@@ -51,11 +50,11 @@ func TestCreateRecord(t *testing.T) {
 	cm := New(tx, l)
 
 	cr := &database.Currency{
-		Name: "createTestCoin",
-		Symbol: "CTestCoin",
+		Name:   "createTestCoin",
+		Symbol: "TestCoin",
 	}
 
-	err := cm.CreateCurrency(cr)
+	err := cm.CreateRecord(cr)
 	assert.Nil(t, err, "Record created without error")
 }
 
@@ -70,14 +69,14 @@ func TestGetRecord(t *testing.T) {
 
 	var tc database.Currency
 
-	cm.GetCurrencyBySymbol(&tc, cur.Symbol)
+	cm.GetRecordBySymbol(&tc, cur.Symbol)
 	assert.Equal(t, cur.Name, tc.Name, "Retrieved currency")
 }
 
 func getTestRecord() *database.Currency {
 
 	return &database.Currency{
-		Name: "testcoin",
+		Name:   "testcoin",
 		Symbol: "TestCoin",
 	}
 }

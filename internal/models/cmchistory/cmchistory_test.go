@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 
+	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
@@ -18,10 +19,11 @@ var l *logga.Logga
 var db *gorm.DB
 var tx *gorm.DB
 
-func setup() {
-	_ = os.Setenv("APP_ENV", "test")
+var cr *database.Currency
 
-	l = logga.New()
+func setup() {
+
+	_ = os.Setenv("APP_ENV", "test")
 
 	e, err := env.New(l)
 	if err != nil {
@@ -30,12 +32,33 @@ func setup() {
 	}
 
 	l = logga.New()
+
 	db = orm.Connect(l, e)
 	tx = db.Begin()
+	cr = createTestRecords(l)
 }
 
 func teardown() {
 	tx.Rollback()
+}
+
+func createTestRecords(l *logga.Logga) *database.Currency {
+
+	lg := l.Lg.With().Str("cmchistory_test", "createTestRecords").Logger()
+
+	cm := currency.New(tx, l)
+
+	cr := database.Currency{
+		Name:   fake.CharactersN(5),
+		Symbol: fake.CharactersN(3),
+	}
+
+	err := cm.CreateRecord(&cr)
+	if err != nil {
+		lg.Error().Msgf("Unable to create test record.")
+	}
+
+	return &cr
 }
 
 func TestCreateAndRetrieveRecord(t *testing.T) {
@@ -43,9 +66,8 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 	setup()
 	defer teardown()
 
-	cmcm := New(tx, l)
-
 	r := &database.CmcHistory{
+		CurrencyID:        cr.ID,
 		Name:              fake.CharactersN(10),
 		Symbol:            fake.Characters(),
 		Slug:              fake.Characters(),
@@ -66,14 +88,17 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 		MarketCap:         12555,
 	}
 
-	err := cmcm.CreateRecord(r)
+	chm := New(tx, l)
+
+	err := chm.CreateRecord(r)
 	assert.Nil(t, err, "Created record returned no error")
 
 	var rt database.CmcHistory
 
-	err = cmcm.GetRecordByID(&rt, r.ID)
+	err = chm.GetRecordByID(&rt, r.ID)
 	assert.Nil(t, err, "Get record returned no error")
 
+	assert.Equal(t, cr.ID, rt.CurrencyID, "Record returned as expected")
 	assert.Equal(t, r.Name, rt.Name, "Record returned as expected")
 	assert.Equal(t, r.Symbol, rt.Symbol, "Record returned as expected")
 	assert.Equal(t, r.Slug, rt.Slug, "Record returned as expected")

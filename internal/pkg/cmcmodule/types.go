@@ -14,7 +14,7 @@ type Data struct {
 }
 
 type Currency struct {
-	Id                int      `json:"id"`
+	ID                uint     `json:"id"`
 	Name              string   `json:"name"`
 	Symbol            string   `json:"symbol"`
 	Slug              string   `json:"slug"`
