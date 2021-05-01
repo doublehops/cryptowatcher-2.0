@@ -11,8 +11,8 @@ type Currency struct {
 
 type CmcHistory struct {
 	ID                uint32
-	CurrencyID     uint32
-	Currency        Currency `gorm:"foreignKey:CurrencyID"`
+	CurrencyID        uint32
+	Currency          Currency `gorm:"foreignKey:CurrencyID"`
 	Name              string
 	Symbol            string
 	Slug              string

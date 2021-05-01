@@ -19,7 +19,6 @@ var tx *gorm.DB
 
 var testCoin *gorm.DB
 
-
 func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 
@@ -51,8 +50,8 @@ func TestCreateRecord(t *testing.T) {
 	cm := New(tx, l)
 
 	cr := &database.Currency{
-		Name: "createTestCoin",
-		Symbol: "CTestCoin",
+		Name:   "createTestCoin",
+		Symbol: "TestCoin",
 	}
 
 	err := cm.CreateCurrency(cr)
@@ -77,7 +76,7 @@ func TestGetRecord(t *testing.T) {
 func getTestRecord() *database.Currency {
 
 	return &database.Currency{
-		Name: "testcoin",
+		Name:   "testcoin",
 		Symbol: "TestCoin",
 	}
 }
