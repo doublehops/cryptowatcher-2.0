@@ -78,7 +78,7 @@ func TestRun(t *testing.T) {
 	var curDbRec1 database.Currency
 
 	cm := currency.New(tx, l)
-	cm.GetCurrencyBySymbol(&curDbRec1, jsonRec1.Symbol)
+	cm.GetRecordBySymbol(&curDbRec1, jsonRec1.Symbol)
 
 	assert.Equal(t, jsonRec1.Name, curDbRec1.Name)
 	assert.Equal(t, jsonRec1.Symbol, curDbRec1.Symbol)

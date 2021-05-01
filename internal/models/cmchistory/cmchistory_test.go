@@ -53,7 +53,7 @@ func createTestRecords(l *logga.Logga) *database.Currency {
 		Symbol: fake.CharactersN(3),
 	}
 
-	err := cm.CreateCurrency(&cr)
+	err := cm.CreateRecord(&cr)
 	if err != nil {
 		lg.Error().Msgf("Unable to create test record.")
 	}

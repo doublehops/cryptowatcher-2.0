@@ -20,7 +20,7 @@ func New(db *gorm.DB, logger *logga.Logga) *Model {
 	}
 }
 
-func (m *Model) GetCurrencyBySymbol(record *database.Currency, s string) {
+func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()
 	l.Info().Msgf("Fetching currency by symbol: %s", s)
@@ -28,7 +28,7 @@ func (m *Model) GetCurrencyBySymbol(record *database.Currency, s string) {
 	m.db.Find(&record, "symbol = ?", s)
 }
 
-func (m *Model) CreateCurrency(record *database.Currency) (error) {
+func (m *Model) CreateRecord(record *database.Currency) (error) {
 
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
 	l.Info().Msgf("Adding currency: %s", record.Symbol)

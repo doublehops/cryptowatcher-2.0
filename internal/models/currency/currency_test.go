@@ -35,7 +35,7 @@ func setup() {
 	// Add test record
 	record := getTestRecord()
 	cm := New(tx, l)
-	err = cm.CreateCurrency(record)
+	err = cm.CreateRecord(record)
 }
 
 func teardown() {
@@ -54,7 +54,7 @@ func TestCreateRecord(t *testing.T) {
 		Symbol: "TestCoin",
 	}
 
-	err := cm.CreateCurrency(cr)
+	err := cm.CreateRecord(cr)
 	assert.Nil(t, err, "Record created without error")
 }
 
@@ -69,7 +69,7 @@ func TestGetRecord(t *testing.T) {
 
 	var tc database.Currency
 
-	cm.GetCurrencyBySymbol(&tc, cur.Symbol)
+	cm.GetRecordBySymbol(&tc, cur.Symbol)
 	assert.Equal(t, cur.Name, tc.Name, "Retrieved currency")
 }
 
