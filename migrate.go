@@ -1,13 +1,15 @@
 package main
 
 import (
+	"cryptowatcher.example/internal/pkg/orm"
+	"cryptowatcher.example/internal/types/database"
 	"flag"
 	"fmt"
 	"os"
 
-	"github.com/carprice-tech/migorm"
+	//"github.com/carprice-tech/migorm"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	//_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
@@ -46,21 +48,22 @@ func main() {
 	 *
 	 * db := orm.Connect(logger, e)
 	 */
+	db := orm.Connect(logger, e)
 
 	// Version 1.x connection
-	db, err := getVersionOneDatabaseConn(e)
-	if err != nil{
-		panic(err)
-	}
-
-	migrater := migorm.NewMigrater(db)
-	migorm.Run(migrater)
-
-	//db.Migrator().DropTable(&database.Currency{})
-	//db.Migrator().AutoMigrate(&database.Currency{})
+	//db, err := getVersionOneDatabaseConn(e)
+	//if err != nil{
+	//	panic(err)
+	//}
 	//
-	//db.Migrator().DropTable(&database.CmcHistory{})
-	//db.Migrator().AutoMigrate(&database.CmcHistory{})
+	//migrater := migorm.NewMigrater(db)
+	//migorm.Run(migrater)
+
+	db.Migrator().DropTable(&database.Currency{})
+	db.Migrator().AutoMigrate(&database.Currency{})
+
+	db.Migrator().DropTable(&database.CmcHistory{})
+	db.Migrator().AutoMigrate(&database.CmcHistory{})
 }
 
 func getVersionOneDatabaseConn(e *env.Env) (*gorm.DB, error){
