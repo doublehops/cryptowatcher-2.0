@@ -28,6 +28,20 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 	m.db.Find(&record, "symbol = ?", s)
 }
 
+func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
+
+	var records  []database.Currency
+
+	l := m.l.Lg.With().Str("currency", "GetRecordIdsAndSymbols").Logger()
+	l.Info().Msgf("Fetching currencies attrs of just ID and Symbol")
+
+	m.db.Select("id", "symbol").Find(&records)
+
+	for _, v := range records {
+		(*curMap)[v.Symbol] = v.ID
+	}
+}
+
 func (m *Model) CreateRecord(record *database.Currency) (error) {
 
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
