@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"cryptowatcher.example/internal/funcs"
 	"gorm.io/gorm"
 
 	"cryptowatcher.example/internal/models/cmchistory"
@@ -47,8 +48,11 @@ func (r *Runner) Run() error {
 
 		var cur database.Currency
 
-		cm.GetRecordBySymbol(&cur, c.Symbol)
-		if cur.ID == 0 { // Currency not yet in database.
+		var curID uint32
+		curMap := make(map[string]uint32)
+		cm.GetRecordsMapKeySymbol(&curMap)
+
+		if !funcs.MapKeyExistsForStringUint32(c.Symbol, curMap) { // Currency not yet in database.
 
 			cur.Name = c.Name
 			cur.Symbol = c.Symbol
@@ -57,11 +61,14 @@ func (r *Runner) Run() error {
 			if err != nil {
 				l.Error().Msgf("Error adding currency: %s", cur.Symbol)
 			}
+			curID = cur.ID
+		} else {
+			curID = curMap[c.Symbol]
 		}
 
 		cmcr := &database.CmcHistory{
 			Name:              c.Name,
-			Currency:          cur,
+			CurrencyID:        curID,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
 			NumMarketPairs:    c.NumMarketPairs,
