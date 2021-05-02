@@ -15,7 +15,7 @@ func KeyExists(key string, m map[string]interface{}) bool {
 func MapKeyExistsForStringUint32(key string, m map[string]uint32) bool {
 
 	// @todo: find a more dynamic way to use this function.
-	
+
 	_, ok := m[key]
 	return ok
 }

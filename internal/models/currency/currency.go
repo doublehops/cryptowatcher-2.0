@@ -31,7 +31,6 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 
 	var records  []database.Currency
-	//mp := make(map[string]uint32)
 
 	l := m.l.Lg.With().Str("currency", "GetRecordIdsAndSymbols").Logger()
 	l.Info().Msgf("Fetching currencies attrs of just ID and Symbol")
