@@ -12,6 +12,7 @@ type Model struct {
 	l *logga.Logga
 }
 
+// New - creates new instance of cmchistory.
 func New(db *gorm.DB, logger *logga.Logga) *Model {
 
 	return &Model{
@@ -20,6 +21,7 @@ func New(db *gorm.DB, logger *logga.Logga) *Model {
 	}
 }
 
+// CreateRecord inserts a new record into the cmc_history table.
 func (m *Model) CreateRecord(record *database.CmcHistory) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "CreateRecord").Logger()
@@ -34,6 +36,7 @@ func (m *Model) CreateRecord(record *database.CmcHistory) error {
 	return nil
 }
 
+// GetRecordByID will return the requested record from the database by its ID.
 func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
@@ -44,6 +47,7 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 	return nil
 }
 
+// GetRecordsBySymbol will return a collection of CmcHistory records from the database.
 func (m *Model) GetRecordsBySymbol(symbol string) ([]database.CmcHistory, error) {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordsBySymbol").Logger()

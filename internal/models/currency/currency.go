@@ -12,6 +12,7 @@ type Model struct {
 	l *logga.Logga
 }
 
+// New - creates new instance of currency.
 func New(db *gorm.DB, logger *logga.Logga) *Model {
 
 	return &Model{
@@ -20,6 +21,7 @@ func New(db *gorm.DB, logger *logga.Logga) *Model {
 	}
 }
 
+// GetRecordBySymbol will return the requested record from the database by its ID.
 func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()
@@ -28,6 +30,7 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 	m.db.Find(&record, "symbol = ?", s)
 }
 
+// GetRecordsMapKeySymbol will return the requested record from the database by its symbol.
 func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 
 	var records  []database.Currency
@@ -42,6 +45,7 @@ func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 	}
 }
 
+// CreateRecord will create a new record in the database.
 func (m *Model) CreateRecord(record *database.Currency) (error) {
 
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()

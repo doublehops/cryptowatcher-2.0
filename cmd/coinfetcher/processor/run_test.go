@@ -4,12 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"gorm.io/gorm"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,6 +16,7 @@ import (
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
+	"cryptowatcher.example/test"
 )
 
 var l *logga.Logga
@@ -44,29 +40,23 @@ func setup() {
 	tx = db.Begin()
 }
 
-func teardown() {
+func tearDown() {
 	tx.Rollback()
 }
 
 func TestRun(t *testing.T) {
 
 	setup()
-	defer teardown()
+	defer tearDown()
 
-	absPath, _ := filepath.Abs("./../../../dev/test_cmc_list_response.json")
-	testJsonResponse, _ := ioutil.ReadFile(absPath)
-
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		io.WriteString(w, string(testJsonResponse))
-	}))
+	// Setup test http server.
+	testJsonResponse := testfuncs.GetServerResponse("test_cmc_list_response.json")
+	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	baseUrl := server.URL
+	chm := cmcmodule.New(e.GetVar("CMC_API_KEY"), server.URL, l)
 
-	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), baseUrl, l)
-
-	p := New(e, l, tx, cmcm)
+	p := New(e, l, tx, chm)
 	p.Run()
 
 	var currencies cmcmodule.Data
