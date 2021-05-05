@@ -21,7 +21,6 @@ func SetupTestServer(jsonResponse []byte) *httptest.Server {
 
 func GetServerResponse(file string) []byte {
 
-	//absPath, _ := filepath.Abs("./../../../test/server_responses/test_cmc_list_response.json")
 	path := fmt.Sprintf("./../../../test/server_responses/%s", file)
 	absPath, _ := filepath.Abs(path)
 	testJsonResponse, err := ioutil.ReadFile(absPath)

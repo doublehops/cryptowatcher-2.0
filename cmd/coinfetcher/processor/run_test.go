@@ -54,11 +54,9 @@ func TestRun(t *testing.T) {
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	baseUrl := server.URL
+	chm := cmcmodule.New(e.GetVar("CMC_API_KEY"), server.URL, l)
 
-	cmcm := cmcmodule.New(e.GetVar("CMC_API_KEY"), baseUrl, l)
-
-	p := New(e, l, tx, cmcm)
+	p := New(e, l, tx, chm)
 	p.Run()
 
 	var currencies cmcmodule.Data
