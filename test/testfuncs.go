@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 )
 
+// SetupTestServer will setup a test server and respond with the value supplied as `jsonResponse`.
 func SetupTestServer(jsonResponse []byte) *httptest.Server {
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +20,8 @@ func SetupTestServer(jsonResponse []byte) *httptest.Server {
 	return server
 }
 
+// GetServerResponse will return the contents of `file` after reading it from the `server_responses` directory.
+// This directory should include all test responses we need in the application.
 func GetServerResponse(file string) []byte {
 
 	path := fmt.Sprintf("./../../../test/server_responses/%s", file)
