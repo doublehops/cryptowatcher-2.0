@@ -1,6 +1,7 @@
 package pagination
 
 import (
+	"math"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -8,26 +9,32 @@ import (
 	"cryptowatcher.example/internal/pkg/logga"
 )
 
-type Meta struct {
-	Page    int    `json:"page"`
-	PerPage int    `json:"perPage"`
-	Offset  int    `json:"offset"`
+type MetaRequest struct {
+	Page    int `json:"page"`
+	PerPage int `json:"perPage"`
+	Offset  int `json:"offset"`
+}
+
+type MetaResponse struct {
+	Page         int   `json:"page"`
+	PerPage      int   `json:"perPage"`
+	TotalPages   int   `json:"totalPages"`
+	TotalRecords int64 `json:"totalRecords"`
 }
 
 var defaultPage = 1
 var defaultPerPage = 10
 
-
 // GetPaginationVars - find and return pagination vars for query and meta response.
-func GetPaginationVars(lg *logga.Logga, c *gin.Context) *Meta {
+func GetPaginationVars(lg *logga.Logga, c *gin.Context) *MetaRequest {
 
 	l := lg.Lg.With().Str("pagination", "HandlePagination").Logger()
 	l.Info().Msg("Setting up pagination")
 
 	query := c.Request.URL.Query()
-	page, perPage, offset := getPaginationVars(query)
+	page, perPage, offset := getVars(query)
 
-	pg := Meta{
+	pg := MetaRequest{
 		Page:    page,
 		PerPage: perPage,
 		Offset:  offset,
@@ -36,8 +43,8 @@ func GetPaginationVars(lg *logga.Logga, c *gin.Context) *Meta {
 	return &pg
 }
 
-// getVar - Search request query for wanted var and return value, if not found, return default value.
-func getPaginationVars(query map[string][]string) (int, int, int) {
+// getVars - Search request query for wanted var and return value, if not found, return default value.
+func getVars(query map[string][]string) (int, int, int) {
 
 	page := defaultPage
 	perPage := defaultPerPage
@@ -60,4 +67,19 @@ func getPaginationVars(query map[string][]string) (int, int, int) {
 	}
 
 	return page, perPage, offset
+}
+
+// GetMetaResponse - Get pagination data to send in API response.
+func GetMetaResponse(pg *MetaRequest, count int64) *MetaResponse {
+
+	pageApprox := float64(count) / float64(pg.PerPage)
+	totalPages := math.Ceil(pageApprox)
+	tp := int(totalPages)
+
+	return &MetaResponse{
+		Page:         pg.Page,
+		PerPage:      pg.PerPage,
+		TotalPages:   tp,
+		TotalRecords: count,
+	}
 }

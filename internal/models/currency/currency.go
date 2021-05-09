@@ -32,12 +32,13 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 }
 
 // GetRecords will return model records.
-func (m *Model) GetRecords(records *database.Currencies, pg *pagination.Meta) {
+func (m *Model) GetRecords(records *database.Currencies, pg *pagination.MetaRequest, count *int64) {
 
 	l := m.l.Lg.With().Str("currency", "GetRecords").Logger()
 	l.Info().Msgf("Fetching currencies")
 
-	m.db.Debug().Limit(pg.PerPage).Offset(pg.Offset).Find(records)
+	m.db.Find(records).Count(count)
+	m.db.Limit(pg.PerPage).Offset(pg.Offset).Find(records)
 }
 
 // GetRecordsMapKeySymbol will return the requested record from the database by its symbol.
