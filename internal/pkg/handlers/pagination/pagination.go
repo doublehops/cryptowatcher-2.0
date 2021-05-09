@@ -56,7 +56,7 @@ func getPaginationVars(query map[string][]string) (int, int, int) {
 	}
 
 	if page != 1 {
-		offset = page * (perPage - 1)
+		offset = (page - 1) * perPage
 	}
 
 	return page, perPage, offset
