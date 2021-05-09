@@ -2,6 +2,8 @@ package database
 
 import "gorm.io/gorm"
 
+type Currencies []Currency
+
 type Currency struct {
 	ID     uint32
 	Name   string
