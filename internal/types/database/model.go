@@ -1,14 +1,21 @@
 package database
 
-import "gorm.io/gorm"
+import (
+	"database/sql"
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Currencies []Currency
 
 type Currency struct {
-	ID     uint32
+	ID     uint32 `gorm:"primarykey"`
 	Name   string
 	Symbol string
-	gorm.Model
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime `gorm:"index" json:"-"`
 }
 
 type CmcHistory struct {

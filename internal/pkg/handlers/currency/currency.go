@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"os"
 
-	"cryptowatcher.example/internal/pkg/logga"
 	"github.com/gin-gonic/gin"
 
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/handlers/pagination"
+	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
 )
