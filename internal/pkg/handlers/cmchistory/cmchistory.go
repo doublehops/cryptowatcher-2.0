@@ -2,7 +2,6 @@ package cmchistory
 
 import (
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"net/http"
 	"os"
 	"strconv"
@@ -148,7 +147,8 @@ func (h *Handler) getSearchParams(c *gin.Context) (*cmchistory.SearchParams, err
 	tt := time.Unix(params.TimeToUnix, 0)
 	params.TimeTo = tt.Format("2006-01-02 15:04:05")
 
-	spew.Dump(params)
+	l.Debug().Msg("Search params calculated")
+	l.Debug().Msgf("%v", params)
 
 	return &params, nil
 }
