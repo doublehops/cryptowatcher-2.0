@@ -1,6 +1,7 @@
 package cmchistory
 
 import (
+	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"gorm.io/gorm"
 
 	"cryptowatcher.example/internal/pkg/logga"
@@ -45,6 +46,16 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 	m.db.First(&record, "id = ?", ID)
 
 	return nil
+}
+
+// GetTimeSeriesData will return model records.
+func (m *Model) GetTimeSeriesData(symbol string, records *database.CmcHistories, pg *pagination.MetaRequest, count *int64) {
+
+	l := m.l.Lg.With().Str("cmchistory", "GetTimeSeriesData").Logger()
+	l.Info().Msgf("Fetching cmchistory records")
+
+	m.db.Find(records).Where("symbol", symbol).Count(count)
+	m.db.Limit(pg.PerPage).Offset(pg.Offset).Where("symbol", symbol).Find(records)
 }
 
 // GetRecordsBySymbol will return a collection of CmcHistory records from the database.

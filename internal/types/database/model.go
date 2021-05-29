@@ -18,6 +18,8 @@ type Currency struct {
 	DeletedAt sql.NullTime `gorm:"index" json:"-"`
 }
 
+type CmcHistories []CmcHistory
+
 type CmcHistory struct {
 	ID                uint32
 	CurrencyID        uint32
