@@ -1,7 +1,6 @@
 package cmchistory
 
 import (
-	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"gorm.io/gorm"
 
 	"cryptowatcher.example/internal/pkg/logga"
@@ -18,7 +17,6 @@ type SearchParams struct {
 	TimeTo       string
 	TimeFromUnix int64
 	TimeToUnix   int64
-	Interval     int64
 }
 
 // New - creates new instance of cmchistory.
@@ -56,22 +54,15 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 	return nil
 }
 
-// GetTimeSeriesData will return model records.
-func (m *Model) GetTimeSeriesData(symbol string, searchParams *SearchParams, records *database.CmcHistories, pg *pagination.MetaRequest, count *int64) {
+// GetTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group.
+func (m *Model) GetTimeSeriesData(symbol string, searchParams *SearchParams, records *database.CmcHistories) {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetTimeSeriesData").Logger()
-	l.Info().Msgf("Fetching cmchistory records")
+	l.Info().Msgf("Fetching cmchistory records for symbol: %s", symbol)
 
-	m.db.Find(records).
-		Where("symbol", symbol).
-		Where("created_at > ?", searchParams.TimeFrom).
-		Where("created_at < ?", searchParams.TimeTo).
-		Count(count)
+	buckets := 5 // number of buckets to group the records in and determine average for.
 
-	m.db.Where("symbol", symbol).Debug().
-		Where("created_at > ?", searchParams.TimeFrom).
-		Where("created_at < ?", searchParams.TimeTo).
-		Find(records)
+	m.db.Debug().Raw(TimeSeriesSlicedPeriodQuery, buckets, symbol, searchParams.TimeFrom, searchParams.TimeTo).Scan(records)
 }
 
 // GetRecordsBySymbol will return a collection of CmcHistory records from the database.

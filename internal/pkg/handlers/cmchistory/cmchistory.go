@@ -12,7 +12,6 @@ import (
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/env"
-	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
@@ -65,13 +64,10 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 		return
 	}
 
-	pg := pagination.GetPaginationVars(h.l, c)
-	var count int64
-
 	var records database.CmcHistories
-	chm.GetTimeSeriesData(symbol, searchParams, &records, pg, &count)
+	chm.GetTimeSeriesData(symbol, searchParams, &records)
 
-	c.JSON(http.StatusOK, gin.H{"data": records, "meta": pagination.GetMetaResponse(pg, count)})
+	c.JSON(http.StatusOK, gin.H{"data": records})
 }
 
 // getSearchParams - get search parameters to fetch records by.
@@ -111,34 +107,6 @@ func (h *Handler) getSearchParams(c *gin.Context) (*cmchistory.SearchParams, err
 
 	if params.TimeFrom > params.TimeTo {
 		return &params, fmt.Errorf("time-to cannot be earlier than time-fome")
-	}
-
-	// Get interval - try to keep the number of intervals to around 150 for the given time period,
-	// to not overwork frontend graph library and browser.
-	var day int64 = 60 * 60 * 24
-	var week = day * 7
-	var month = day * 30
-	var year = day * 365
-
-	i := c.Param("interval")
-	if i != "" {
-		it, err := strconv.ParseInt(i, 10, 64)
-		if err != nil {
-			return &params, err
-		}
-		params.Interval = it
-	} else {
-		duration := params.TimeToUnix - params.TimeFromUnix
-
-		if duration >= year {
-			params.Interval = day * 2
-		} else if duration >= month {
-			params.Interval = 60 * 60 * 8 // every 8 hours.
-		} else if duration >= week {
-			params.Interval = 60 * 60 // every hour.
-		} else {
-			params.Interval = 60 * 10
-		}
 	}
 
 	// Convert times to strings - 2006-01-02 15:04:05
