@@ -62,7 +62,7 @@ func (m *Model) GetTimeSeriesData(symbol string, searchParams *SearchParams, rec
 
 	buckets := 5 // number of buckets to group the records in and determine average for.
 
-	m.db.Debug().Raw(TimeSeriesSlicedPeriodQuery, buckets, symbol, searchParams.TimeFrom, searchParams.TimeTo).Scan(records)
+	m.db.Raw(TimeSeriesSlicedPeriodQuery, buckets, symbol, searchParams.TimeFrom, searchParams.TimeTo).Scan(records)
 }
 
 // GetRecordsBySymbol will return a collection of CmcHistory records from the database.
