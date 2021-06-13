@@ -54,7 +54,7 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
 	listing = dataObj.Currencies
 
-	l.Info().Msgf("%d currencies returned\n\n", len(listing))
+	l.Info().Msgf("%d currencies returned", len(listing))
 
 	return listing, nil
 }

@@ -2,13 +2,15 @@ CREATE TABLE currency (
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(200) NOT NUll,
     symbol varchar(10) NOT NULL,
-    created_at int(32),
-    updated_at int(32),
+    created_at DATETIME,
+    updated_at DATETIME,
+    deleted_at DATETIME,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
 
 CREATE TABLE cmc_history (
     id int(11) NOT NULL AUTO_INCREMENT,
+    currency_id INT(11) NOT NULL,
     name varchar(200) NOT NUll,
     symbol varchar(10) NOT NULL,
     slug varchar(100),
@@ -27,7 +29,8 @@ CREATE TABLE cmc_history (
     percent_change_60d float(15, 2),
     percent_change_90d float(15, 2),
     market_cap float(15, 2),
-    created_at int(32),
-    updated_at int(32),
+    created_at DATETIME,
+    updated_at DATETIME,
+    deleted_at DATETIME,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;

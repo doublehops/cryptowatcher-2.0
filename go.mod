@@ -1,6 +1,6 @@
 module cryptowatcher.example
 
-go 1.13
+go 1.16
 
 require (
 	github.com/carprice-tech/migorm v0.0.0-20190925105138-b3bc2ddda937
