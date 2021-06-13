@@ -1,4 +1,4 @@
-CREATE TABLE currency (
+CREATE TABLE IF NOT EXISTS currency (
     id int(11) NOT NULL AUTO_INCREMENT,
     name varchar(200) NOT NUll,
     symbol varchar(10) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE currency (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
 
-CREATE TABLE cmc_history (
+CREATE TABLE IF NOT EXISTS cmc_history (
     id int(11) NOT NULL AUTO_INCREMENT,
     currency_id INT(11) NOT NULL,
     name varchar(200) NOT NUll,

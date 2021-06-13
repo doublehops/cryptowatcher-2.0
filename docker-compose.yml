@@ -7,6 +7,7 @@ services:
     volumes:
       - ./db-data:/var/lib/mysql/data
       - ./db-logs:/var/lib/mysql/logsql
+      - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     environment:
@@ -14,6 +15,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    entrypoint: "mysql -u dev -ppass12 -h 127.0.0.1 cw < database/migrations/000001_init_schema.up.sql"
     networks:
       - net1
   web:
@@ -21,7 +23,8 @@ services:
     image: "golang:1.6.1-alpine"
 #    volumes:
 #      - .:/var/www
-    command: ["go", "run", "./cmd/server/main.go"]
+#    command: ["go", "run", "./cmd/server/main.go"]
+    entrypoint: "go run cmd/server/main.go"
     ports:
       - "8088:8080"
     depends_on:
