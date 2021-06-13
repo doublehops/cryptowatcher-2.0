@@ -10,15 +10,16 @@ import (
 type Currencies []Currency
 
 type Currency struct {
-	ID     uint32 `gorm:"primarykey"`
-	Name   string
-	Symbol string
+	ID        uint32 `gorm:"primarykey"`
+	Name      string
+	Symbol    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime `gorm:"index" json:"-"`
 }
 
 type CmcHistories []CmcHistory
+type CmcHistoriesPriceTimeSeriesData []CmcHistoryPriceTimeSeriesDataItem
 
 type CmcHistory struct {
 	ID                uint32
@@ -43,4 +44,9 @@ type CmcHistory struct {
 	PercentChange90D  float64 `gorm:"column:percent_change_90d"`
 	MarketCap         float64
 	gorm.Model
+}
+
+type CmcHistoryPriceTimeSeriesDataItem struct {
+	QuotePrice float64
+	CreatedAt  time.Time
 }

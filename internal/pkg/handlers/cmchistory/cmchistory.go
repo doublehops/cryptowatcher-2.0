@@ -64,8 +64,8 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 		return
 	}
 
-	var records database.CmcHistories
-	chm.GetTimeSeriesData(symbol, searchParams, &records)
+	var records database.CmcHistoriesPriceTimeSeriesData
+	chm.GetPriceTimeSeriesData(symbol, searchParams, &records)
 
 	c.JSON(http.StatusOK, gin.H{"data": records})
 }

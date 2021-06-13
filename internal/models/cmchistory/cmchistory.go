@@ -54,8 +54,8 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 	return nil
 }
 
-// GetTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group.
-func (m *Model) GetTimeSeriesData(symbol string, searchParams *SearchParams, records *database.CmcHistories) {
+// GetPriceTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group.
+func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams, records *database.CmcHistoriesPriceTimeSeriesData) {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetTimeSeriesData").Logger()
 	l.Info().Msgf("Fetching cmchistory records for symbol: %s", symbol)
