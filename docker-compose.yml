@@ -1,14 +1,12 @@
 version: "3"
 
 services:
-
   db:
     image: "mariadb:10.5"
-    restart: 'always'
+    restart: "always"
     volumes:
-      - /var/lib/mysql/data:/data/mariadb
-      - /var/lib/mysql/logs:/logs/mariadb
-#      - /var/docker/mariadb/conf:/etc/mysql
+      - ./db-data:/var/lib/mysql/data
+      - ./db-logs:/var/lib/mysql/logsql
     ports:
       - "3306:3306"
     environment:
@@ -16,3 +14,24 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - net1
+  web:
+    build: .
+    image: "golang:1.6.1-alpine"
+#    volumes:
+#      - .:/var/www
+    command: ["go", "run", "./cmd/server/main.go"]
+    ports:
+      - "8088:8080"
+    depends_on:
+      - db
+    networks:
+      - net1
+volumes:
+  db-data:
+  db-logs:
+
+networks:
+  net1:
+    driver: bridge

@@ -1,19 +1,5 @@
 ### Database Migrations
 
-Migrations are run with the migration tool found <a href="https://github.com/golang-migrate/migrate/tree/master/cmd/migrate">here</a>.
-
-#### Install database migration tool
-
-```
-$ curl -L https://packagecloud.io/golang-migrate/migrate/gpgkey | apt-key add -
-$ echo "deb https://packagecloud.io/golang-migrate/migrate/ubuntu/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/migrate.list
-$ apt-get update && apt install -y migrate
-```
-
-That will likely place `migrate` in `/usr/local/bin/migrate`.
-
-#### Create migrations
-
 Currently there are no migration tools being used, so manually importing needs to be done. A MySQL client needs to be installed in your environment and then run
 `mysql -u dev -ppass12 -h 127.0.0.1 cdb < database/migrations/000001_init_schema.up.sql`.
 
