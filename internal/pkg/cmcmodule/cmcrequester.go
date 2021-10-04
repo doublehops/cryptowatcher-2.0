@@ -11,7 +11,7 @@ func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, 
 
 	client := &http.Client{}
 
-	l.Info().Msgf("cmcmodule.MakeRequest: %s %s\n", method, path)
+	l.Info().Msgf("cmcmodule.MakeRequest: %s %s", method, path)
 
 	req, err := http.NewRequest(method, mm.ApiHost+path, nil)
 	if err != nil {

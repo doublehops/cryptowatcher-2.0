@@ -1,6 +1,7 @@
 package currency
 
 import (
+	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"gorm.io/gorm"
 
 	"cryptowatcher.example/internal/pkg/logga"
@@ -30,6 +31,16 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) {
 	m.db.Find(&record, "symbol = ?", s)
 }
 
+// GetRecords will return model records.
+func (m *Model) GetRecords(records *database.Currencies, pg *pagination.MetaRequest, count *int64) {
+
+	l := m.l.Lg.With().Str("currency", "GetRecords").Logger()
+	l.Info().Msgf("Fetching currencies")
+
+	m.db.Find(records).Count(count)
+	m.db.Limit(pg.PerPage).Offset(pg.Offset).Find(records)
+}
+
 // GetRecordsMapKeySymbol will return the requested record from the database by its symbol.
 func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 
@@ -38,7 +49,7 @@ func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 	l := m.l.Lg.With().Str("currency", "GetRecordIdsAndSymbols").Logger()
 	l.Info().Msgf("Fetching currencies attrs of just ID and Symbol")
 
-	m.db.Select("id", "symbol").Find(&records)
+	m.db.Debug().Select("id", "symbol").Find(&records)
 
 	for _, v := range records {
 		(*curMap)[v.Symbol] = v.ID
