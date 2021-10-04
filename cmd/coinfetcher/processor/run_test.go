@@ -50,7 +50,10 @@ func TestRun(t *testing.T) {
 	defer tearDown()
 
 	// Setup test http server.
-	testJsonResponse := testfuncs.GetServerResponse("test_cmc_list_response.json")
+	testJsonResponse, err := testfuncs.GetServerResponse("test_cmc_list_response.json")
+	if err != nil {
+		t.Fatalf("error getting server response. %s", err)
+	}
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
