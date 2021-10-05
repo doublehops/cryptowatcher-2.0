@@ -45,7 +45,7 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	symbol := c.Param("symbol")
 	l.Info().Msgf("Request to retrieve time series data for symbol: %s", symbol)
 
-	// Setup database connection.
+	// Setup db connection.
 	db := orm.Connect(h.l, h.e)
 	cm := currency.New(db, h.l)
 	chm := cmchistory.New(db, h.l)

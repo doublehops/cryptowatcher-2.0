@@ -1,8 +1,6 @@
 package cmchistory
 
 import (
-	"gorm.io/gorm"
-
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
@@ -36,14 +34,14 @@ func (m *Model) CreateRecord(record *database.CmcHistory) error {
 
 	result := m.db.Create(&record)
 	if result.Error != nil {
-		l.Error().Msgf("There was an error saving record to database. %v", result.Error)
+		l.Error().Msgf("There was an error saving record to db. %v", result.Error)
 		return result.Error
 	}
 
 	return nil
 }
 
-// GetRecordByID will return the requested record from the database by its ID.
+// GetRecordByID will return the requested record from the db by its ID.
 func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
@@ -65,7 +63,7 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 	m.db.Raw(TimeSeriesSlicedPeriodQuery, buckets, symbol, searchParams.TimeFrom, searchParams.TimeTo).Scan(records)
 }
 
-// GetRecordsBySymbol will return a collection of CmcHistory records from the database.
+// GetRecordsBySymbol will return a collection of CmcHistory records from the db.
 func (m *Model) GetRecordsBySymbol(symbol string) ([]database.CmcHistory, error) {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetRecordsBySymbol").Logger()

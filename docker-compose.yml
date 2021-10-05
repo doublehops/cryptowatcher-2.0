@@ -15,7 +15,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#    entrypoint: "mysql -u dev -ppass12 -h 127.0.0.1 cw < database/migrations/000001_init_schema.up.sql"
+#    entrypoint: "mysql -u dev -ppass12 -h 127.0.0.1 cw < db/migrations/000001_init_schema.up.sql"
     networks:
       - net1
   web:

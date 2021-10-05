@@ -40,7 +40,7 @@ func (h *Handler) GetRecords(c *gin.Context) {
 	l := h.l.Lg.With().Str("currency handle", "GetRecords").Logger()
 	l.Info().Msg("Request to list currency")
 
-	// Setup database connection.
+	// Setup db connection.
 	db := orm.Connect(h.l, h.e)
 	cm := currency.New(db, h.l)
 

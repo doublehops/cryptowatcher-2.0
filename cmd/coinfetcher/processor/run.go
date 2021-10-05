@@ -1,7 +1,7 @@
 package processor
 
 import (
-	"gorm.io/gorm"
+	"database/sql"
 
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
@@ -14,11 +14,11 @@ import (
 type Runner struct {
 	e    *env.Env
 	l    *logga.Logga
-	db   *gorm.DB
+	db   *sql.DB
 	cmcm *cmcmodule.CmcModule
 }
 
-func New(e *env.Env, l *logga.Logga, db *gorm.DB, cmcm *cmcmodule.CmcModule) *Runner {
+func New(e *env.Env, l *logga.Logga, db *sql.DB, cmcm *cmcmodule.CmcModule) *Runner {
 
 	return &Runner{
 		e:    e,
@@ -50,7 +50,7 @@ func (r *Runner) Run() error {
 		curMap := make(map[string]uint32)
 		cm.GetRecordsMapKeySymbol(&curMap)
 
-		// Check if currency already exists in database.
+		// Check if currency already exists in db.
 		_, exists := curMap[c.Symbol]
 
 		if !exists {

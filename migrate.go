@@ -44,7 +44,7 @@ func main() {
 	 */
 
 	/**
-	 * This is to make a database connection using Gorm 2.0 (gorm.io/gorm)
+	 * This is to make a db connection using Gorm 2.0 (gorm.io/gorm)
 	 *
 	 * db := orm.Connect(logger, e)
 	 */

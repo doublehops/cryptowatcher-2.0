@@ -35,7 +35,7 @@ func Connect(logger *logga.Logga, e *env.Env) *gorm.DB {
 	})
 
 	if err != nil {
-		l.Error().Msg("Error establishing database connection")
+		l.Error().Msg("Error establishing db connection")
 		l.Error().Msgf("%v", err)
 		os.Exit(1)
 	}
