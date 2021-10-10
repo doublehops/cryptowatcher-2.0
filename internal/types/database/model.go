@@ -19,7 +19,7 @@ type Currency struct {
 }
 
 type CmcHistories []CmcHistory
-type CmcHistoriesPriceTimeSeriesData []CmcHistoryPriceTimeSeriesDataItem
+type CmcHistoryPriceTimeSeriesData []CmcHistoryPriceTimeSeriesDataItem
 
 type CmcHistory struct {
 	ID                uint32

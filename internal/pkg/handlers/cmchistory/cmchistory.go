@@ -55,21 +55,32 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	chm := cmchistory.New(DB, h.l)
 
 	var cur database.Currency
-	cm.GetRecordBySymbol(&cur, symbol)
+	err = cm.GetRecordBySymbol(&cur, symbol)
+	if err != nil {
+		l.Info().Msgf("Error with GetRecordBySymbol: %s", err.Error())
+		c.JSON(http.StatusNotFound, gin.H{"code": "Error with GetRecordBySymbol", "message": err.Error()})
+		return
+	}
 
 	if cur.ID == 0 {
+		l.Info().Msgf("symbol not found: %s", err.Error())
 		c.JSON(http.StatusNotFound, gin.H{"code": "symbol not found", "message": "Symbol not found"})
 		return
 	}
 
 	searchParams, err := h.getSearchParams(c)
 	if err != nil {
+		l.Info().Msgf("Error processing request for symbol: %s; error: %s", symbol, err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"code": "Error processing request", "message": err.Error()})
 		return
 	}
 
-	var records []*database.CmcHistoryPriceTimeSeriesDataItem
-	chm.GetPriceTimeSeriesData(symbol, searchParams, records)
+	records, err := chm.GetPriceTimeSeriesData(symbol, searchParams)
+	if err != nil {
+		l.Info().Msgf("Error with GetPriceTimeSeriesData: %s", err.Error())
+		c.JSON(http.StatusNotFound, gin.H{"code": "Error with GetPriceTimeSeriesData", "message": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": records})
 }

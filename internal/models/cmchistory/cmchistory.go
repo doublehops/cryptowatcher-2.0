@@ -86,8 +86,8 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 	return nil
 }
 
-// GetPriceTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group.
-func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams, records []*database.CmcHistoryPriceTimeSeriesDataItem) error {
+// GetPriceTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group/bucket.
+func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams) ([]*database.CmcHistoryPriceTimeSeriesDataItem, error) {
 
 	l := m.l.Lg.With().Str("cmchistory", "GetTimeSeriesData").Logger()
 	l.Info().Msgf("Fetching cmchistory records for symbol: %s", symbol)
@@ -100,17 +100,18 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 	}
 	defer rows.Close()
 
+	var records []*database.CmcHistoryPriceTimeSeriesDataItem
 	for rows.Next() {
 		var record database.CmcHistoryPriceTimeSeriesDataItem
 		err = rows.Scan(&record.QuotePrice, &record.CreatedAt)
 		if err != nil {
-			return err
+			return records, err
 		}
 
 		records = append(records, &record)
 	}
 
-	return nil
+	return records, nil
 }
 
 // populateRecord will populate model object from query.
