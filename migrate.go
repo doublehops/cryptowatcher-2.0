@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+
 	//"fmt"
 	"os"
 
@@ -11,8 +13,6 @@ import (
 
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/orm"
-	"cryptowatcher.example/internal/types/database"
 )
 
 type ParamStruct struct {
@@ -43,41 +43,20 @@ func main() {
 	 * migration tool in this file is using Gorm 1.x. I hope they're compatible.
 	 */
 
-	/**
-	 * This is to make a db connection using Gorm 2.0 (gorm.io/gorm)
-	 *
-	 * db := orm.Connect(logger, e)
-	 */
-	db := orm.Connect(logger, e)
-
-	// Version 1.x connection
-	//db, err := getVersionOneDatabaseConn(e)
-	//if err != nil{
-	//	panic(err)
-	//}
-	//
-	//migrater := migorm.NewMigrater(db)
-	//migorm.Run(migrater)
-
-	db.Migrator().DropTable(&database.Currency{})
-	db.Migrator().AutoMigrate(&database.Currency{})
-
-	db.Migrator().DropTable(&database.CmcHistory{})
-	db.Migrator().AutoMigrate(&database.CmcHistory{})
 }
 
-//func getVersionOneDatabaseConn(e *env.Env) (*gorm.DB, error){
-//
-//	user := e.GetVar("MYSQL_USER")
-//	pass := e.GetVar("MYSQL_PASSWORD")
-//	host := e.GetVar("MYSQL_HOST")
-//	name := e.GetVar("MYSQL_DATABASE")
-//
-//	conStr := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8&parseTime=true&loc=Local", user, pass, host, name)
-//	dbConn, err := gorm.Open("mysql", conStr)
-//
-//	return dbConn, err
-//}
+func getVersionOneDatabaseConn(e *env.Env) (*gorm.DB, error){
+
+	user := e.GetVar("MYSQL_USER")
+	pass := e.GetVar("MYSQL_PASSWORD")
+	host := e.GetVar("MYSQL_HOST")
+	name := e.GetVar("MYSQL_DATABASE")
+
+	conStr := fmt.Sprintf("%v:%v@tcp(%v)/%v?charset=utf8&parseTime=true&loc=Local", user, pass, host, name)
+	dbConn, err := gorm.Open("mysql", conStr)
+
+	return dbConn, err
+}
 
 func getFlags() ParamStruct {
 

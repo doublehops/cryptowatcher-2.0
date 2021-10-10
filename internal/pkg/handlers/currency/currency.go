@@ -41,7 +41,6 @@ func (h *Handler) GetRecords(c *gin.Context) {
 	l.Info().Msg("Request to list currency")
 
 	// Setup db connection.
-	//db := orm.Connect(h.l, h.e)
 	DB, err := db.New(h.l, h.e)
 	if err!= nil {
 		// @todo handle error
