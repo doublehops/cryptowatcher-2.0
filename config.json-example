@@ -1,0 +1,12 @@
+{
+  "tracker": {
+    "APIKey": "1e649074-64cf-44cf-8236-a0c234c1ccc2",
+    "host": "https://pro-api.coinmarketcap.com"
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "name": "cw",
+    "user": "dev",
+    "password": "pass12"
+  }
+}

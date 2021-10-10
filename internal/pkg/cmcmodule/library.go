@@ -13,11 +13,11 @@ type CmcModule struct {
 	l       *logga.Logga
 }
 
-func New(ApiKey, ApiHost string, logger *logga.Logga) *CmcModule {
+func New(ApiHost, ApiKey string, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
-		ApiKey:  ApiKey,
 		ApiHost: ApiHost,
+		ApiKey:  ApiKey,
 		l:       logger,
 	}
 }
