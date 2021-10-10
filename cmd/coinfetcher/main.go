@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"os"
 
 	"cryptowatcher.example/cmd/coinfetcher/processor"
@@ -9,25 +8,22 @@ import (
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
+	"cryptowatcher.example/internal/pkg/runflags"
 )
 
 var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.
 
-type FlagStruct struct {
-	ConfigFile string
-}
-
 func main() {
-	flags := getFlags()
+	flags := runflags.GetFlags()
 	run(flags)
 }
 
-func run(flags FlagStruct) {
+func run(flags runflags.FlagStruct) {
 
 	// Setup logger.
 	logger := logga.New()
 
-	// Setup environment.
+	// Setup config.
 	cfg, err := config.New(logger, flags.ConfigFile)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
@@ -35,7 +31,7 @@ func run(flags FlagStruct) {
 	}
 
 	// Setup db connection.
-	db, err := db.New(logger, cfg.DB)
+	DB, err := db.New(logger, cfg.DB)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
@@ -45,22 +41,10 @@ func run(flags FlagStruct) {
 	cmcm := cmcmodule.New(cfg.Tracker.Host, cfg.Tracker.APIKey, logger)
 
 	// Process
-	runner := processor.New(cfg.Tracker, logger, db, cmcm)
+	runner := processor.New(cfg.Tracker, logger, DB, cmcm)
 	err = runner.Run()
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-}
-
-func getFlags() FlagStruct {
-
-	configFile := flag.String("config", "config.json", "Config file to use")
-	flag.Parse()
-
-	params := FlagStruct{
-		ConfigFile: *configFile,
-	}
-
-	return params
 }

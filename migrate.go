@@ -1,18 +1,10 @@
 package main
 
 import (
+	"cryptowatcher.example/internal/pkg/logga"
 	"flag"
 	"fmt"
-
-	//"fmt"
 	"os"
-
-	//"github.com/carprice-tech/migorm"
-	//"github.com/jinzhu/gorm"
-	//_ "github.com/jinzhu/gorm/dialects/mysql"
-
-	"cryptowatcher.example/internal/pkg/env"
-	"cryptowatcher.example/internal/pkg/logga"
 )
 
 type ParamStruct struct {

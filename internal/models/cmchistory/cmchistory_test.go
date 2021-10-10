@@ -1,7 +1,6 @@
 package cmchistory
 
 import (
-	"cryptowatcher.example/internal/pkg/db"
 	"database/sql"
 	"os"
 	"testing"
@@ -10,7 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/env"
+	"cryptowatcher.example/internal/pkg/config"
+	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
@@ -25,15 +25,17 @@ func setup() {
 
 	_ = os.Setenv("APP_ENV", "test")
 
-	e, err := env.New(l)
+	// Setup logger.
+	l = logga.New()
+
+	// Setup config.
+	cfg, err := config.New(l, "../../../config.json.test")
 	if err != nil {
-		l.Lg.Error().Msg(err.Error())
+		l.Lg.Error().Msgf("error starting main. %w", err.Error())
 		os.Exit(1)
 	}
 
-	l = logga.New()
-
-	DB, err = db.New(l, e)
+	DB, err = db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
