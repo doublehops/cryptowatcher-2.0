@@ -1,23 +1,23 @@
 package cmchistory
 
 import (
+	"cryptowatcher.example/internal/pkg/db"
+	"database/sql"
 	"os"
 	"testing"
 
 	"github.com/icrowley/fake"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
 )
 
 var l *logga.Logga
-var db *gorm.DB
-var tx *gorm.DB
+var DB *sql.DB
+var tx *sql.Tx
 
 var cr *database.Currency
 
@@ -33,8 +33,16 @@ func setup() {
 
 	l = logga.New()
 
-	db = orm.Connect(l, e)
-	tx = db.Begin()
+	DB, err = db.New(l, e)
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+	tx, err = DB.Begin()
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
 	cr = createTestRecords(l)
 }
 
@@ -53,10 +61,12 @@ func createTestRecords(l *logga.Logga) *database.Currency {
 		Symbol: fake.CharactersN(3),
 	}
 
-	err := cm.CreateRecord(&cr)
+	lastInsertID, err := cm.CreateRecord(&cr)
 	if err != nil {
 		lg.Error().Msgf("Unable to create test record.")
 	}
+
+	lg.Debug().Msgf("added history record with ID: %d", lastInsertID)
 
 	return &cr
 }
@@ -90,7 +100,8 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 
 	chm := New(tx, l)
 
-	err := chm.CreateRecord(r)
+	var err error
+	r.ID, err = chm.CreateRecord(r)
 	assert.Nil(t, err, "Created record returned no error")
 
 	var rt database.CmcHistory

@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"cryptowatcher.example/internal/models/currency"
+	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/orm"
 	"cryptowatcher.example/internal/types/database"
 )
 
@@ -40,9 +40,12 @@ func (h *Handler) GetRecords(c *gin.Context) {
 	l := h.l.Lg.With().Str("currency handle", "GetRecords").Logger()
 	l.Info().Msg("Request to list currency")
 
-	// Setup database connection.
-	db := orm.Connect(h.l, h.e)
-	cm := currency.New(db, h.l)
+	// Setup db connection.
+	DB, err := db.New(h.l, h.e)
+	if err!= nil {
+		// @todo handle error
+	}
+	cm := currency.New(DB, h.l)
 
 	pg := pagination.GetPaginationVars(h.l, c)
 	var count int64
