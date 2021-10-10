@@ -1,25 +1,27 @@
 package currency
 
 import (
+	dbi "cryptowatcher.example/internal/dbinterface"
 	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"database/sql"
 	"fmt"
+	"reflect"
 
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
 
 type Model struct {
-	db *sql.DB
-	l *logga.Logga
+	db dbi.QueryAble
+	l  *logga.Logga
 }
 
 // New - creates new instance of currency.
-func New(db *sql.DB, logger *logga.Logga) *Model {
+func New(db dbi.QueryAble, logger *logga.Logga) *Model {
 
 	return &Model{
 		db: db,
-		l: logger,
+		l:  logger,
 	}
 }
 
@@ -36,7 +38,7 @@ func (m *Model) GetRecordByID(record *database.Currency, ID int64) error {
 	//err := row.Scan(record, s)
 
 	//err := db.QueryToStructs(record, m.db, GetRecordByID, ID)
-	row := m.db.QueryRow(GetRecordByID, ID)
+	row := m.db.QueryRow(GetRecordByIDSql, ID)
 	err := m.populateRecord(record, row)
 	if err != nil {
 		return fmt.Errorf("unable to populate record. %s", err)
@@ -51,10 +53,7 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) error {
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()
 	l.Info().Msgf("Fetching currency by symbol: %s", s)
 
-	//bindVars := map[string]interface{}{
-	//	"symbol": s,
-	//}
-	row := m.db.QueryRow(GetRecordBySymbol, s)
+	row := m.db.QueryRow(GetRecordBySymbolSql, s)
 	err := m.populateRecord(record, row)
 	if err != nil {
 		return fmt.Errorf("unable to populate record. %s", err)
@@ -69,14 +68,13 @@ func (m *Model) GetRecords(records *database.Currencies, pg *pagination.MetaRequ
 	l := m.l.Lg.With().Str("currency", "GetRecords").Logger()
 	l.Info().Msgf("Fetching currencies")
 
-	//m.db.Find(records).Count(count)
-	//m.db.Limit(pg.PerPage).Offset(pg.Offset).Find(records)
+	m.db.Query(GetRecordsSql, records, pg.Offset, pg.PerPage)
 }
 
 // GetRecordsMapKeySymbol will return the requested record from the db by its symbol.
 func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 
-	var records  []database.Currency
+	var records []database.Currency
 
 	l := m.l.Lg.With().Str("currency", "GetRecordIdsAndSymbols").Logger()
 	l.Info().Msgf("Fetching currencies attrs of just ID and Symbol")
@@ -90,9 +88,10 @@ func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
 func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
-	l.Info().Msgf("Adding currency: %s", record.Symbol)
+	l.Info().Msgf("Adding currency: %s; with interface type: %v", record.Symbol, reflect.TypeOf(m.db))
 
-	result, err := m.db.Exec(InsertRecord, record.Name, record.Symbol)
+	//result, err := m.db.Exec(InsertRecord, record.Name, record.Symbol)
+	result, err := m.db.Exec(InsertRecordSql, record.Name, record.Symbol)
 	if err != nil {
 		l.Error().Msgf("There was an error saving record to db. %w", err)
 		return 0, err

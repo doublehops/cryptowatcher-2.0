@@ -1,8 +1,7 @@
 package processor
 
 import (
-	"database/sql"
-
+	"cryptowatcher.example/internal/dbinterface"
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
@@ -14,11 +13,11 @@ import (
 type Runner struct {
 	e    *env.Env
 	l    *logga.Logga
-	db   *sql.DB
+	db   dbinterface.QueryAble
 	cmcm *cmcmodule.CmcModule
 }
 
-func New(e *env.Env, l *logga.Logga, db *sql.DB, cmcm *cmcmodule.CmcModule) *Runner {
+func New(e *env.Env, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
 
 	return &Runner{
 		e:    e,
@@ -58,7 +57,7 @@ func (r *Runner) Run() error {
 			cur.Name = c.Name
 			cur.Symbol = c.Symbol
 
-			err := cm.CreateRecord(&cur)
+			_, err = cm.CreateRecord(&cur)
 			if err != nil {
 				l.Error().Msgf("Error adding currency: %s", cur.Symbol)
 			}
@@ -89,7 +88,7 @@ func (r *Runner) Run() error {
 			MarketCap:         c.Quote.USDObj.MarketCap,
 		}
 
-		err = cmch.CreateRecord(cmcr)
+		_, err = cmch.CreateRecord(cmcr)
 		if err != nil {
 			l.Error().Msgf("Error adding currency: %s", cur.Symbol)
 		}

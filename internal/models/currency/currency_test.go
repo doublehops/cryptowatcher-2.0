@@ -27,7 +27,11 @@ func setup() {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-	DB, _ = db.New(l, e)
+	DB, err = db.New(l, e)
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
 	tx, err = DB.Begin()
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
@@ -37,7 +41,7 @@ func setup() {
 
 	// Add test record
 	record := getTestRecord()
-	cm := New(DB, l)
+	cm := New(tx, l)
 
 	_, err = cm.CreateRecord(record)
 	if err != nil {
@@ -55,7 +59,7 @@ func TestCreateRecord(t *testing.T) {
 	setup()
 	defer teardown()
 
-	cm := New(DB, l)
+	cm := New(tx, l)
 
 	cr := &database.Currency{
 		Name:   "createTestCoin",
