@@ -1,17 +1,15 @@
 package processor
 
 import (
-	"cryptowatcher.example/internal/pkg/db"
 	"database/sql"
 	"encoding/json"
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/config"
+	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 	"cryptowatcher.example/test"
@@ -92,6 +90,11 @@ func TestRun(t *testing.T) {
 		t.Errorf("error with GetRecordBySymbol. %s", err)
 	}
 
-	assert.Equal(t, jsonRec1.Name, curDbRec1.Name)
-	assert.Equal(t, jsonRec1.Symbol, curDbRec1.Symbol)
+	if jsonRec1.Name != curDbRec1.Name {
+		t.Errorf("name not as expected. Got: %s; found: %s;", jsonRec1.Name, curDbRec1.Name)
+	}
+
+	if jsonRec1.Name != curDbRec1.Name {
+		t.Errorf("symbol not as expected. Got: %s; found: %s;", jsonRec1.Symbol, curDbRec1.Symbol)
+	}
 }

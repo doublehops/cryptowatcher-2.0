@@ -1,11 +1,11 @@
 package currency
 
 import (
-	"cryptowatcher.example/internal/pkg/config"
 	"database/sql"
 	"os"
 	"testing"
 
+	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
@@ -97,7 +97,7 @@ func TestGetRecord(t *testing.T) {
 	setup()
 	defer teardown()
 
-	cm := New(DB, l)
+	cm := New(tx, l)
 
 	record := getTestRecord()
 
@@ -105,7 +105,7 @@ func TestGetRecord(t *testing.T) {
 
 	err := cm.GetRecordBySymbol(&tc, record.Symbol)
 	if err != nil {
-		t.Errorf("error getting record. %s", err)
+		t.Fatalf("error getting record. %s", err)
 	}
 	if record.Name != tc.Name {
 		t.Fatalf("Name not as expected. Got: %s; wanted: %s;", record.Name, tc.Name)
