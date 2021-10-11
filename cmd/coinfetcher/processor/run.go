@@ -5,22 +5,22 @@ import (
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
-	"cryptowatcher.example/internal/pkg/env"
+	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
 
 type Runner struct {
-	e    *env.Env
+	cfg  config.Tracker
 	l    *logga.Logga
 	db   dbinterface.QueryAble
 	cmcm *cmcmodule.CmcModule
 }
 
-func New(e *env.Env, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
+func New(cfg config.Tracker, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
 
 	return &Runner{
-		e:    e,
+		cfg:  cfg,
 		l:    l,
 		db:   db,
 		cmcm: cmcm,
@@ -49,7 +49,7 @@ func (r *Runner) Run() error {
 		curMap := make(map[string]uint32)
 		cm.GetRecordsMapKeySymbol(&curMap)
 
-		// Check if currency already exists in db.
+		// Check if currency already exists in the database.
 		_, exists := curMap[c.Symbol]
 
 		if !exists {

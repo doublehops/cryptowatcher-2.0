@@ -3,21 +3,16 @@ package db
 import (
 	"fmt"
 
-	"cryptowatcher.example/internal/pkg/env"
+	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func New(logger *logga.Logga, e *env.Env) (*sql.DB, error) {
+func New(logger *logga.Logga, cfg config.DB) (*sql.DB, error) {
 	l := logger.Lg.With().Str("db", "New").Logger()
 
-	dbName := e.GetVar("MYSQL_DATABASE")
-	user := e.GetVar("MYSQL_USER")
-	password := e.GetVar("MYSQL_PASSWORD")
-	host := e.GetVar("MYSQL_HOST")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", user, password, host, dbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", cfg.User, cfg.Pass, cfg.Host, cfg.Name)
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {

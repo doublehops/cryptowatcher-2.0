@@ -1,9 +1,9 @@
 package cmchistory
 
 import (
+	"cryptowatcher.example/internal/dbinterface"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 
@@ -11,29 +11,21 @@ import (
 
 	"cryptowatcher.example/internal/models/cmchistory"
 	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
 
 type Handler struct {
 	l *logga.Logga
-	e *env.Env
+	DB dbinterface.QueryAble
 }
 
 // New - instantiate package.
-func New(l *logga.Logga) Handler {
+func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 
-	// Setup environment.
-	e, err := env.New(l)
-	if err != nil {
-		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
-	}
 	return Handler{
 		l: l,
-		e: e,
+		DB: db,
 	}
 }
 
@@ -45,17 +37,11 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	symbol := c.Param("symbol")
 	l.Info().Msgf("Request to retrieve time series data for symbol: %s", symbol)
 
-	// Setup db connection.
-	DB, err := db.New(h.l, h.e)
-	if err != nil {
-		l.Error().Msg(err.Error())
-		os.Exit(1)
-	}
-	cm := currency.New(DB, h.l)
-	chm := cmchistory.New(DB, h.l)
+	cm := currency.New(h.DB, h.l)
+	chm := cmchistory.New(h.DB, h.l)
 
 	var cur database.Currency
-	err = cm.GetRecordBySymbol(&cur, symbol)
+	err := cm.GetRecordBySymbol(&cur, symbol)
 	if err != nil {
 		l.Info().Msgf("Error with GetRecordBySymbol: %s", err.Error())
 		c.JSON(http.StatusNotFound, gin.H{"code": "Error with GetRecordBySymbol", "message": err.Error()})
@@ -63,7 +49,7 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	}
 
 	if cur.ID == 0 {
-		l.Info().Msgf("symbol not found: %s", err.Error())
+		l.Info().Msgf("symbol not found: %w")
 		c.JSON(http.StatusNotFound, gin.H{"code": "symbol not found", "message": "Symbol not found"})
 		return
 	}

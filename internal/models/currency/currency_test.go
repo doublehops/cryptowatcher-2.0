@@ -1,12 +1,12 @@
 package currency
 
 import (
+	"cryptowatcher.example/internal/pkg/config"
 	"database/sql"
 	"os"
 	"testing"
 
 	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/env"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
@@ -20,14 +20,21 @@ var testCoin *sql.DB
 func setup() {
 	_ = os.Setenv("APP_ENV", "test")
 
+	// Setup logger.
 	l = logga.New()
 
-	e, err := env.New(l)
+	// Setup config.
+	cfg, err := config.New(l, "../../../config.json.test")
+	if err != nil {
+		l.Lg.Error().Msgf("error starting main. %w", err.Error())
+		os.Exit(1)
+	}
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-	DB, err = db.New(l, e)
+
+	DB, err = db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
@@ -37,9 +44,7 @@ func setup() {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-	//defer DB.Close()
 
-	// Add test record
 	record := getTestRecord()
 	cm := New(tx, l)
 

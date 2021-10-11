@@ -31,13 +31,6 @@ func (m *Model) GetRecordByID(record *database.Currency, ID int64) error {
 	l := m.l.Lg.With().Str("currency", "GetCoinByID").Logger()
 	l.Info().Msgf("Fetching currency by ID: %d", ID)
 
-	//bindVars := map[string]interface{}{
-	//	"symbol": s,
-	//}
-	//row := m.db.QueryRow(GetRecordBySymbol, s)
-	//err := row.Scan(record, s)
-
-	//err := db.QueryToStructs(record, m.db, GetRecordByID, ID)
 	row := m.db.QueryRow(GetRecordByIDSql, ID)
 	err := m.populateRecord(record, row)
 	if err != nil {
@@ -47,7 +40,7 @@ func (m *Model) GetRecordByID(record *database.Currency, ID int64) error {
 	return nil
 }
 
-// GetRecordBySymbol will return the requested record from the db by its symbol.
+// GetRecordBySymbol will return a record by its symbol.
 func (m *Model) GetRecordBySymbol(record *database.Currency, s string) error {
 
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()

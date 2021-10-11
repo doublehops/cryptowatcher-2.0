@@ -1,6 +1,7 @@
 package router
 
 import (
+	"cryptowatcher.example/internal/dbinterface"
 	"cryptowatcher.example/internal/pkg/logga"
 	"github.com/gin-gonic/gin"
 
@@ -8,10 +9,10 @@ import (
 	"cryptowatcher.example/internal/pkg/handlers/currency"
 )
 
-func New(r *gin.Engine, l *logga.Logga) {
+func New(r *gin.Engine, db dbinterface.QueryAble, l *logga.Logga) {
 
-	c := currency.New(l)
-	ch := cmchistory.New(l)
+	c := currency.New(l, db)
+	ch := cmchistory.New(l, db)
 
 	api := r.Group("/api")
 	{
