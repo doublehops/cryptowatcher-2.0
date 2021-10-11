@@ -40,7 +40,7 @@ func (m *Model) GetRecordByID(record *database.Currency, ID int64) error {
 	return nil
 }
 
-// GetRecordBySymbol will return the requested record from the db by its symbol.
+// GetRecordBySymbol will return a record by its symbol.
 func (m *Model) GetRecordBySymbol(record *database.Currency, s string) error {
 
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()

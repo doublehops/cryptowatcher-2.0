@@ -38,7 +38,7 @@ func run(flags runflags.FlagStruct) {
 	}
 
 	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(cfg.Tracker.Host, cfg.Tracker.APIKey, logger)
+	cmcm := cmcmodule.New(cfg.Tracker, logger)
 
 	// Process
 	runner := processor.New(cfg.Tracker, logger, DB, cmcm)

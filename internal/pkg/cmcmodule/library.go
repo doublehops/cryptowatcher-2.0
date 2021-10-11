@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
+	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 )
 
@@ -13,11 +14,11 @@ type CmcModule struct {
 	l       *logga.Logga
 }
 
-func New(ApiHost, ApiKey string, logger *logga.Logga) *CmcModule {
+func New(cfg config.Tracker, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
-		ApiHost: ApiHost,
-		ApiKey:  ApiKey,
+		ApiHost: cfg.Host,
+		ApiKey:  cfg.APIKey,
 		l:       logger,
 	}
 }

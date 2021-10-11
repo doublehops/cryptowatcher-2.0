@@ -49,7 +49,7 @@ func (r *Runner) Run() error {
 		curMap := make(map[string]uint32)
 		cm.GetRecordsMapKeySymbol(&curMap)
 
-		// Check if currency already exists in db.
+		// Check if currency already exists in the database.
 		_, exists := curMap[c.Symbol]
 
 		if !exists {

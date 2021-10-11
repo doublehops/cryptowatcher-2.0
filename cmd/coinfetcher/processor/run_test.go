@@ -11,14 +11,14 @@ import (
 
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
-	"cryptowatcher.example/internal/pkg/env"
+	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 	"cryptowatcher.example/test"
 )
 
 var l *logga.Logga
-var e *env.Env
+var cfg *config.Config
 var DB *sql.DB
 var tx *sql.Tx
 
@@ -27,14 +27,16 @@ func setup() {
 
 	l = logga.New()
 
-	e, err := env.New(l)
+	// Setup config.
+	var err error
+	cfg, err = config.New(l, "../../../config.json.test")
 	if err != nil {
-		l.Lg.Error().Msg(err.Error())
+		l.Lg.Error().Msgf("error starting main. %w", err.Error())
 		os.Exit(1)
 	}
 
 	l = logga.New()
-	DB, err = db.New(l, e)
+	DB, err = db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
@@ -63,21 +65,32 @@ func TestRun(t *testing.T) {
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	chm := cmcmodule.New(e.GetVar("CMC_API_KEY"), server.URL, l)
+	cfg.Tracker.Host = server.URL // Set URL to that of the test response
 
-	p := New(e, l, tx, chm)
-	p.Run()
+	chm := cmcmodule.New(cfg.Tracker, l)
+
+	p := New(cfg.Tracker, l, DB, chm)
+	err = p.Run()
+	if err != nil {
+		t.Errorf("unable to instantiate runner. %s", err)
+	}
 
 	var currencies cmcmodule.Data
-	json.Unmarshal(testJsonResponse, &currencies)
+	err = json.Unmarshal(testJsonResponse, &currencies)
+	if err != nil {
+		t.Errorf("could not unmarshal JSON. %s", err)
+	}
 
 	jsonRec1 := currencies.Currencies[0]
 
 	// Test record in currency table.
 	var curDbRec1 database.Currency
 
-	cm := currency.New(tx, l)
-	cm.GetRecordBySymbol(&curDbRec1, jsonRec1.Symbol)
+	cm := currency.New(DB, l)
+	err = cm.GetRecordBySymbol(&curDbRec1, jsonRec1.Symbol)
+	if err != nil {
+		t.Errorf("error with GetRecordBySymbol. %s", err)
+	}
 
 	assert.Equal(t, jsonRec1.Name, curDbRec1.Name)
 	assert.Equal(t, jsonRec1.Symbol, curDbRec1.Symbol)
