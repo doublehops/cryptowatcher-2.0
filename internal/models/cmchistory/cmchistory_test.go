@@ -2,7 +2,6 @@ package cmchistory
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"testing"
 
