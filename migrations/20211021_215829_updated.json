@@ -1,0 +1,8 @@
+{
+  "up": [
+    "CREATE TABLE testddddd ( name VARCHAR(255))"
+  ],
+  "down": [
+    "DROP TABLE 'testddddd'"
+  ]
+}

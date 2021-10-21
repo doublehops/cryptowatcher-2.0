@@ -1,12 +1,13 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func New(logger *logga.Logga, cfg config.DB) (*sql.DB, error) {
