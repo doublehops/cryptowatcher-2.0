@@ -1,7 +1,0 @@
-{
-  "up": [
-  ],
-  "down": [
-    "DROP TABLE 'test'"
-  ]
-}

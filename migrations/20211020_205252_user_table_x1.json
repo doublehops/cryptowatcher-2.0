@@ -1,8 +1,0 @@
-{
-  "up": [
-    "CREATE TABLE what ( name VARCHAR(255))"
-  ],
-  "down": [
-    "DROP TABLE 'test'"
-  ]
-}
