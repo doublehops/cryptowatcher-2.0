@@ -12,7 +12,6 @@ import (
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
-	"cryptowatcher.example/test"
 )
 
 var l *logga.Logga
