@@ -36,14 +36,13 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 		"convert": "USD",
 	}
 
-	var dataObj Data
+	var dataObj CurrencyData
 	var listing []*Currency
 
 	_, data, err := mm.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
 		return listing, fmt.Errorf("\"There was an error instantiating marketmodule request client. %w", err)
 	}
-	fmt.Printf(">>>>>>> data: %s", string(data))
 
 	err = json.Unmarshal(data, &dataObj)
 	if err != nil {

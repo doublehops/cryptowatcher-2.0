@@ -73,7 +73,7 @@ func TestRun(t *testing.T) {
 		t.Errorf("unable to instantiate runner. %s", err)
 	}
 
-	var currencies cmcmodule.Data
+	var currencies cmcmodule.CurrencyData
 	err = json.Unmarshal(testJsonResponse, &currencies)
 	if err != nil {
 		t.Errorf("could not unmarshal JSON. %s", err)
