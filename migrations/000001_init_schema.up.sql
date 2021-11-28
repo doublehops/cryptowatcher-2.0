@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS currency (
     deleted_at DATETIME,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
-
+------------------
 CREATE TABLE IF NOT EXISTS cmc_history (
     id int(11) NOT NULL AUTO_INCREMENT,
     currency_id INT(11) NOT NULL,

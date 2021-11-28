@@ -12,6 +12,7 @@ import (
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
+	"cryptowatcher.example/test/testfuncs"
 )
 
 var l *logga.Logga
@@ -55,7 +56,7 @@ func TestRun(t *testing.T) {
 	defer tearDown()
 
 	// Setup test http server.
-	testJsonResponse, err := testfuncs.GetServerResponse("test_cmc_list_response.json")
+	testJsonResponse, err := testfuncs.GetTestJsonResponse("coin_response.json")
 	if err != nil {
 		t.Fatalf("error getting server response. %s", err)
 	}
@@ -93,7 +94,7 @@ func TestRun(t *testing.T) {
 		t.Errorf("name not as expected. Got: %s; found: %s;", jsonRec1.Name, curDbRec1.Name)
 	}
 
-	if jsonRec1.Name != curDbRec1.Name {
+	if jsonRec1.Symbol != curDbRec1.Symbol {
 		t.Errorf("symbol not as expected. Got: %s; found: %s;", jsonRec1.Symbol, curDbRec1.Symbol)
 	}
 }

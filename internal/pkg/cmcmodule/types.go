@@ -21,7 +21,7 @@ type Currency struct {
 	NumMarketPairs    int32    `json:"num_market_pairs"`
 	DateAdded         string   `json:"date_added"`
 	Tags              []string `json:"tags"`
-	MaxSupply         float64  `json:"max_supply"` // It seems that some currencies are missing this property.
+	MaxSupply         float64  `json:"max_supply,omitempty"` // It seems that some currencies are missing this property.
 	CirculatingSupply float64  `json:"circulating_supply"`
 	TotalSupply       float64  `json:"total_supply"`
 	CmcRank           int32    `json:"cmc_rank"`
