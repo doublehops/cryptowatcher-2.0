@@ -2,6 +2,7 @@ package cmcmodule
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	"cryptowatcher.example/internal/pkg/config"
@@ -25,7 +26,7 @@ func New(cfg config.Tracker, logger *logga.Logga) *CmcModule {
 
 func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
-	l := mm.l.Lg.With().Str("marketmodule", "GetCurrencyListing").Logger()
+	l := mm.l.Lg.With().Str("marketmodule", "FetchCurrencyListing").Logger()
 
 	l.Info().Msg("---  Fetching currencies  ---")
 
@@ -35,22 +36,17 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 		"convert": "USD",
 	}
 
-	var dataObj Data
+	var dataObj CurrencyData
 	var listing []*Currency
 
 	_, data, err := mm.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
-		l.Error().Msg("There was an error instantiating marketmodule request client")
-		l.Error().Msg(err.Error())
-		return listing, err
+		return listing, fmt.Errorf("\"There was an error instantiating marketmodule request client. %w", err)
 	}
 
 	err = json.Unmarshal(data, &dataObj)
 	if err != nil {
-		l.Error().Msg("There was an error unmarshalling json marketmodule response")
-		l.Error().Msg(err.Error())
-		l.Error().Msgf("%#v", err)
-		return listing, err
+		return listing, fmt.Errorf("there was an error unmarshalling json marketmodule response. %w", err)
 	}
 
 	listing = dataObj.Currencies
