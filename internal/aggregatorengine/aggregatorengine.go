@@ -11,11 +11,11 @@ import (
 type Aggregator interface {
 	GetAggregatorID() uint32
 	GetAggregatorName() string
-	FetchLatestHistory() (*database.Histories, error)
+	FetchLatestHistory() (database.Histories, error)
 }
 
 type Agg struct {
-	name 	 string
+	name     string
 	db       dbinterface.QueryAble
 	logga    *logga.Logga
 	currency *currency.Model
@@ -51,8 +51,8 @@ func (a *Agg) UpdateLatestHistory(agg Aggregator) error {
 		return err
 	}
 
-	for _, cur := range *histories {
-		cur.ID = a.getCurrencyID(curMap, *cur)
+	for _, cur := range histories {
+		cur.CurrencyID = a.getCurrencyID(curMap, *cur)
 		_, err = a.history.CreateRecord(cur)
 		if err != nil {
 			l.Error().Msgf("Error adding history record: %s", cur.Symbol)
@@ -75,7 +75,7 @@ func (a *Agg) getCurrencyID(curMap map[string]uint32, h database.History) uint32
 
 	// not found, create new record.
 	cur := database.Currency{
-		Name: h.Name,
+		Name:   h.Name,
 		Symbol: h.Symbol,
 	}
 

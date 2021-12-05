@@ -21,6 +21,7 @@ type Runner struct {
 	cmcm *cmcmodule.CmcModule
 }
 
+// New will instantiate Runner.
 func New(cfg config.CMCAggregator, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
 
 	return &Runner{
@@ -32,7 +33,7 @@ func New(cfg config.CMCAggregator, l *logga.Logga, db dbinterface.QueryAble, cmc
 }
 
 // FetchLatestHistory will fetch the latest history populate a database.History struct.
-func (r *Runner) FetchLatestHistory() (*database.Histories, error) {
+func (r *Runner) FetchLatestHistory() (database.Histories, error) {
 	var histories database.Histories
 
 	l := r.l.Lg.With().Str("main", "Run").Logger()
@@ -41,7 +42,7 @@ func (r *Runner) FetchLatestHistory() (*database.Histories, error) {
 	currencies, err := r.cmcm.FetchCurrencyListing(20)
 	if err != nil {
 		r.l.Error("Unable to get currency listing from CMC module")
-		return &histories, err
+		return histories, err
 	}
 
 	for _, c := range currencies {
@@ -71,7 +72,7 @@ func (r *Runner) FetchLatestHistory() (*database.Histories, error) {
 		histories = append(histories, history)
 	}
 
-	return &histories, nil
+	return histories, nil
 }
 
 // GetAggregatorName will return the aggregator name for log messages
