@@ -1,10 +1,11 @@
 package currency
 
 import (
-	"cryptowatcher.example/internal/dbinterface"
-	"github.com/gin-gonic/gin"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+
+	"cryptowatcher.example/internal/dbinterface"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/handlers/pagination"
 	"cryptowatcher.example/internal/pkg/logga"
@@ -12,7 +13,7 @@ import (
 )
 
 type Handler struct {
-	l   *logga.Logga
+	l  *logga.Logga
 	DB dbinterface.QueryAble
 }
 
@@ -20,7 +21,7 @@ type Handler struct {
 func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 
 	return Handler{
-		l: l,
+		l:  l,
 		DB: db,
 	}
 }
@@ -36,7 +37,11 @@ func (h *Handler) GetRecords(c *gin.Context) {
 	var count int64
 
 	var records database.Currencies
-	cm.GetRecords(&records, pg, &count)
+	records, err := cm.GetRecords(pg)
+	if err != nil {
+		l.Error().Msgf("There was an error fetching currency records. %w", err)
+		c.JSON(500, gin.H{"error": "error fetching currency records"})
+	}
 
 	c.JSON(http.StatusOK, gin.H{"data": records, "meta": pagination.GetMetaResponse(pg, count)})
 }
