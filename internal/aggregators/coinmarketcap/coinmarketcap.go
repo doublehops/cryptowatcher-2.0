@@ -1,23 +1,23 @@
-package processor
+package coinmarketcap
 
 import (
 	"cryptowatcher.example/internal/dbinterface"
-	"cryptowatcher.example/internal/models/cmchistory"
-	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
 )
 
+const aggregatorID uint32 = 1
+
 type Runner struct {
-	cfg  config.Tracker
+	cfg  config.CMCAggregator
 	l    *logga.Logga
 	db   dbinterface.QueryAble
 	cmcm *cmcmodule.CmcModule
 }
 
-func New(cfg config.Tracker, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
+func New(cfg config.CMCAggregator, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
 
 	return &Runner{
 		cfg:  cfg,
@@ -27,7 +27,8 @@ func New(cfg config.Tracker, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmc
 	}
 }
 
-func (r *Runner) Run() error {
+func (r *Runner) FetchLatestHistory() (database.Histories, error) {
+	var histories database.Histories
 
 	l := r.l.Lg.With().Str("main", "Run").Logger()
 	l.Info().Msg("Running currency fetcher")
@@ -35,40 +36,39 @@ func (r *Runner) Run() error {
 	currencies, err := r.cmcm.FetchCurrencyListing(20)
 	if err != nil {
 		r.l.Error("Unable to get currency listing from CMC module")
-		return err
+		return histories, err
 	}
 
-	cm := currency.New(r.db, r.l)
-	cmch := cmchistory.New(r.db, r.l)
+	//cm := currency.New(r.db, r.l)
 
 	for _, c := range currencies {
 
-		var cur database.Currency
+		//var cur database.Currency
+		//
+		//var curID uint32
+		//curMap := cm.GetRecordsMapKeySymbol()
+		//
+		//// Check if currency already exists in the database.
+		//_, exists := curMap[c.Symbol]
+		////
+		//if !exists {
+		//
+		//	cur.Name = c.Name
+		//	cur.Symbol = c.Symbol
+		//
+		//	_, err = cm.CreateRecord(&cur)
+		//	if err != nil {
+		//		l.Error().Msgf("Error adding currency: %s", cur.Symbol)
+		//	}
+		//	curID = cur.ID
+		//} else {
+		//	curID = curMap[c.Symbol]
+		//}
 
-		var curID uint32
-		curMap := make(map[string]uint32)
-		cm.GetRecordsMapKeySymbol(&curMap)
-
-		// Check if currency already exists in the database.
-		_, exists := curMap[c.Symbol]
-
-		if !exists {
-
-			cur.Name = c.Name
-			cur.Symbol = c.Symbol
-
-			_, err = cm.CreateRecord(&cur)
-			if err != nil {
-				l.Error().Msgf("Error adding currency: %s", cur.Symbol)
-			}
-			curID = cur.ID
-		} else {
-			curID = curMap[c.Symbol]
-		}
-
-		cmcr := &database.CmcHistory{
+		history := &database.History{
+			AggregatorID:      r.GetAggregatorID(),
+			//CurrencyID:        curID,
 			Name:              c.Name,
-			CurrencyID:        curID,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
 			NumMarketPairs:    c.NumMarketPairs,
@@ -76,7 +76,7 @@ func (r *Runner) Run() error {
 			MaxSupply:         c.MaxSupply,
 			CirculatingSupply: c.CirculatingSupply,
 			TotalSupply:       c.TotalSupply,
-			CmcRank:           c.CmcRank,
+			Rank:           c.CmcRank,
 			QuotePrice:        c.Quote.USDObj.Price,
 			Volume24h:         c.Quote.USDObj.Volume24Hours,
 			PercentChange1h:   c.Quote.USDObj.PercentChange1Hour,
@@ -88,11 +88,17 @@ func (r *Runner) Run() error {
 			MarketCap:         c.Quote.USDObj.MarketCap,
 		}
 
-		_, err = cmch.CreateRecord(cmcr)
-		if err != nil {
-			l.Error().Msgf("Error adding currency: %s", cur.Symbol)
-		}
+		histories = append(histories, history)
+		//_, err = cmch.CreateRecord(cmcr)
+		//if err != nil {
+		//	l.Error().Msgf("Error adding currency: %s", cur.Symbol)
+		//}
 	}
 
-	return nil
+	return histories, nil
+}
+
+// GetAggregatorID will return the aggregator ID to distinguish which aggregator each currency record came from.
+func (r *Runner) GetAggregatorID() uint32 {
+	return aggregatorID
 }

@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Currencies []Currency
+type Currencies []*Currency
 
 type Currency struct {
 	ID        uint32
@@ -16,11 +16,12 @@ type Currency struct {
 	DeletedAt sql.NullTime
 }
 
-type CmcHistories []CmcHistory
-type CmcHistoryPriceTimeSeriesData []CmcHistoryPriceTimeSeriesDataItem
+type Histories []*History
+type HistoryPriceTimeSeriesData []HistoryPriceTimeSeriesDataItem
 
-type CmcHistory struct {
+type History struct {
 	ID                uint32
+	AggregatorID      uint32
 	CurrencyID        uint32
 	Currency          Currency
 	Name              string
@@ -31,7 +32,7 @@ type CmcHistory struct {
 	MaxSupply         float64
 	CirculatingSupply float64
 	TotalSupply       float64
-	CmcRank           int32
+	Rank           int32
 	QuotePrice        float64
 	Volume24h         float64
 	PercentChange1h   float64
@@ -41,12 +42,12 @@ type CmcHistory struct {
 	PercentChange60D  float64
 	PercentChange90D  float64
 	MarketCap         float64
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+	DeletedAt         sql.NullTime
 }
 
-type CmcHistoryPriceTimeSeriesDataItem struct {
+type HistoryPriceTimeSeriesDataItem struct {
 	QuotePrice float64
 	CreatedAt  time.Time
 }

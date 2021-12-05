@@ -56,25 +56,55 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) error {
 }
 
 // GetRecords will return model records.
-func (m *Model) GetRecords(records *database.Currencies, pg *pagination.MetaRequest, count *int64) {
+func (m *Model) GetRecords(pg *pagination.MetaRequest) (database.Currencies, error) {
 
 	l := m.l.Lg.With().Str("currency", "GetRecords").Logger()
 	l.Info().Msgf("Fetching currencies")
 
-	m.db.Query(GetRecordsSql, records, pg.Offset, pg.PerPage)
+	var records database.Currencies
+	rows, err := m.db.Query(GetRecordsSql, pg.Offset, pg.PerPage)
+	if err != nil {
+		err := fmt.Errorf("unable to retrieve currency records. %w", err)
+		l.Error().Msg(err.Error())
+		return records, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var record database.Currency
+		if err := rows.Scan(&record.ID, &record.Symbol, &record.Name, &record.CreatedAt, &record.UpdatedAt); err != nil {
+			return records, fmt.Errorf("error scanning row. %w", err)
+		}
+
+		records = append(records, &record)
+	}
+
+	return records, nil
 }
 
 // GetRecordsMapKeySymbol will return the requested record from the db by its symbol.
-func (m *Model) GetRecordsMapKeySymbol(curMap *map[string]uint32) {
+func (m *Model) GetRecordsMapKeySymbol() (map[string]uint32, error) {
 
-	var records []database.Currency
-
-	l := m.l.Lg.With().Str("currency", "GetRecordIdsAndSymbols").Logger()
+	l := m.l.Lg.With().Str("currency", "GetRecordsMapKeySymbol").Logger()
 	l.Info().Msgf("Fetching currencies attrs of just ID and Symbol")
 
-	for _, v := range records {
-		(*curMap)[v.Symbol] = v.ID
+	curMap := make(map[string]uint32)
+	pg := pagination.MetaRequest{
+		Page: 1,
+		PerPage: 100000,
+		Offset: 0,
 	}
+
+	records, err := m.GetRecords(&pg)
+	if err != nil {
+		return curMap, err
+	}
+
+	for _, v := range records {
+		curMap[v.Symbol] = v.ID
+	}
+
+	return curMap, nil
 }
 
 // CreateRecord will create a new record in the db.
@@ -83,7 +113,6 @@ func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
 	l.Info().Msgf("Adding currency: %s; with interface type: %v", record.Symbol, reflect.TypeOf(m.db))
 
-	//result, err := m.db.Exec(InsertRecord, record.Name, record.Symbol)
 	result, err := m.db.Exec(InsertRecordSql, record.Name, record.Symbol)
 	if err != nil {
 		l.Error().Msgf("There was an error saving record to db. %w", err)

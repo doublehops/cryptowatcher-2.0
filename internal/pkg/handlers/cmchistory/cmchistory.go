@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"cryptowatcher.example/internal/models/cmchistory"
+	"cryptowatcher.example/internal/models/history"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
@@ -32,13 +32,13 @@ func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 // GetTimeSeriesData - get record collection
 func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 
-	l := h.l.Lg.With().Str("cmchistory handle", "GetTimeSeriesData").Logger()
+	l := h.l.Lg.With().Str("history handle", "GetTimeSeriesData").Logger()
 
 	symbol := c.Param("symbol")
 	l.Info().Msgf("Request to retrieve time series data for symbol: %s", symbol)
 
 	cm := currency.New(h.DB, h.l)
-	chm := cmchistory.New(h.DB, h.l)
+	chm := history.New(h.DB, h.l)
 
 	var cur database.Currency
 	err := cm.GetRecordBySymbol(&cur, symbol)
@@ -72,12 +72,12 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 }
 
 // getSearchParams - get search parameters to fetch records by.
-func (h *Handler) getSearchParams(c *gin.Context) (*cmchistory.SearchParams, error) {
+func (h *Handler) getSearchParams(c *gin.Context) (*history.SearchParams, error) {
 
-	l := h.l.Lg.With().Str("cmchistory handle", "getSearchParams").Logger()
+	l := h.l.Lg.With().Str("history handle", "getSearchParams").Logger()
 
 	var t string
-	var params cmchistory.SearchParams
+	var params history.SearchParams
 
 	now := time.Now()
 	secs := now.Unix()

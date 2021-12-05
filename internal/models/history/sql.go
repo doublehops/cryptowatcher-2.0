@@ -1,4 +1,4 @@
-package cmchistory
+package history
 
 // TimeSeriesSlicedPeriodQuery - Get average quote_price for a given period
 var TimeSeriesSlicedPeriodQuery = `
@@ -6,7 +6,7 @@ var TimeSeriesSlicedPeriodQuery = `
 		AVG(c.quote_price) AS quote_price,
 		c.created_at
 	FROM
-		(SELECT *, NTILE(?) OVER (ORDER BY created_at) AS bucket FROM cmc_history) AS c
+		(SELECT *, NTILE(?) OVER (ORDER BY created_at) AS bucket FROM history) AS c
 	WHERE c.symbol = ? 
 	AND c.created_at >= ? 
 	AND c.created_at <= ?
@@ -14,7 +14,7 @@ var TimeSeriesSlicedPeriodQuery = `
 `
 
 var GetRecordsSql = `
-	SELECT id,symbol,name,created_at,updated_at FROM cmc_history
+	SELECT id,symbol,name,created_at,updated_at FROM history
 	ORDER BY ID
 	LIMIT ?,?
 `
@@ -22,6 +22,7 @@ var GetRecordsSql = `
 var GetRecordByIDSql = `
 SELECT 
 	id,
+    aggregator_id,
     currency_id,
 	name,
 	symbol,
@@ -31,7 +32,7 @@ SELECT
 	max_supply,
 	circulating_supply,
 	total_supply,
-	cmc_rank,
+	rank,
 	quote_price,
 	volume_24h,
 	percent_change_1h,
@@ -43,12 +44,13 @@ SELECT
 	market_cap,
 	created_at,
 	updated_at
-  FROM cmc_history
+  FROM history
   WHERE id = ?`
 
 var GetRecordBySymbolSql = `
 SELECT 
 	id,
+    aggregator_id,
     currency_id,
 	name,
 	symbol,
@@ -70,11 +72,12 @@ SELECT
 	market_cap,
 	created_at,
 	updated_at
-  FROM cmc_history AS 
+  FROM history AS 
   WHERE symbol = ?`
 
 var InsertRecordSql = `
-INSERT INTO cmc_history (
+INSERT INTO history (
+    aggregator_id,
 	currency_id,
 	name,
 	symbol,
@@ -84,7 +87,7 @@ INSERT INTO cmc_history (
 	max_supply,
 	circulating_supply,
 	total_supply,
-	cmc_rank,
+	rank,
 	quote_price,
 	volume_24h,
 	percent_change_1h,
@@ -98,6 +101,7 @@ INSERT INTO cmc_history (
 	updated_at
 )
 VALUES (
+	?,
 	?,
 	?,
 	?,

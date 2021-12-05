@@ -15,7 +15,7 @@ type CmcModule struct {
 	l       *logga.Logga
 }
 
-func New(cfg config.Tracker, logger *logga.Logga) *CmcModule {
+func New(cfg config.CMCAggregator, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
 		ApiHost: cfg.Host,

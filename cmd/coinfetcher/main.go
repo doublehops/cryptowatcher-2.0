@@ -3,7 +3,8 @@ package main
 import (
 	"os"
 
-	"cryptowatcher.example/cmd/coinfetcher/processor"
+	"cryptowatcher.example/internal/aggregatorengine"
+	"cryptowatcher.example/internal/aggregators/coinmarketcap"
 	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
@@ -38,11 +39,13 @@ func run(flags runflags.FlagStruct) {
 	}
 
 	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(cfg.Tracker, logger)
+	cmcm := cmcmodule.New(cfg.CMC, logger)
 
 	// Process
-	runner := processor.New(cfg.Tracker, logger, DB, cmcm)
-	err = runner.Run()
+	cmc := coinmarketcap.New(cfg.CMC, logger, DB, cmcm)
+
+	agg := aggregatorengine.New(DB, logger)
+	err = agg.UpdateLatestHistory(cmc)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)

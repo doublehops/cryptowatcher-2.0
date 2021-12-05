@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS history (
     percent_change_60d FLOAT(6, 2),
     percent_change_90d FLOAT(6, 2),
     market_cap FLOAT(20, 2),
-    market_cap_rank INT(11) NOT NULL,
+    rank INT(11) NOT NULL,
     created_at DATETIME,
     updated_at DATETIME,
     deleted_at DATETIME,

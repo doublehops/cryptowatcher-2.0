@@ -1,4 +1,4 @@
-package processor
+package coinmarketcap
 
 import (
 	"database/sql"

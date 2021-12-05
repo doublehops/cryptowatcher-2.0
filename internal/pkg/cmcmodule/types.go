@@ -21,7 +21,7 @@ type Currency struct {
 	NumMarketPairs    int32    `json:"num_market_pairs"`
 	DateAdded         string   `json:"date_added"`
 	Tags              []string `json:"tags"`
-	MaxSupply         float64  `json:"max_supply,omitempty"` // It seems that some currencies are missing this property.
+	MaxSupply         float64  `json:"max_supply,omitempty"`
 	CirculatingSupply float64  `json:"circulating_supply"`
 	TotalSupply       float64  `json:"total_supply"`
 	CmcRank           int32    `json:"cmc_rank"`
@@ -45,43 +45,46 @@ type PriceObj struct {
 	MarketCap            float64 `json:"market_cap"`
 }
 
-//{
-//"id": 6951,
-//"name": "Reef",
-//"symbol": "REEF",
-//"slug": "reef",
-//"num_market_pairs": 53,
-//"date_added": "2020-09-08T00:00:00.000Z",
-//"tags": [
-//	"defi",
-//	"substrate",
-//	"polkadot",
-//	"dot-ecosystem"
-//],
-//"max_supply": 20000000000,
-//"circulating_supply": 11268898338,
-//"total_supply": 15934019762,
-//"platform": {
-//	"id": 1027,
-//	"name": "Ethereum",
-//	"symbol": "ETH",
-//	"slug": "ethereum",
-//	"token_address": "0xfe3e6a25e6b192a42a44ecddcd13796471735acf"
-//},
-//"cmc_rank": 99,
-//"last_updated": "2021-03-12T23:55:13.000Z",
-//"quote": {
-//	"USD": {
-//		"price": 0.04585198755086,
-//		"volume_24h": 560482777.3297944,
-//		"percent_change_1h": -3.3673205,
-//		"percent_change_24h": 23.71972341,
-//		"percent_change_7d": 15.65177067,
-//		"percent_change_30d": 16.99732327,
-//		"percent_change_60d": 470.25121697,
-//		"percent_change_90d": 0,
-//		"market_cap": 516701386.30588293,
-//		"last_updated": "2021-03-12T23:55:13.000Z"
-//		}
-//	}
-//}
+/***************** Example response ********************
+{
+"id": 6951,
+"name": "Reef",
+"symbol": "REEF",
+"slug": "reef",
+"num_market_pairs": 53,
+"date_added": "2020-09-08T00:00:00.000Z",
+"tags": [
+	"defi",
+	"substrate",
+	"polkadot",
+	"dot-ecosystem"
+],
+"max_supply": 20000000000,
+"circulating_supply": 11268898338,
+"total_supply": 15934019762,
+"platform": {
+	"id": 1027,
+	"name": "Ethereum",
+	"symbol": "ETH",
+	"slug": "ethereum",
+	"token_address": "0xfe3e6a25e6b192a42a44ecddcd13796471735acf"
+},
+"cmc_rank": 99,
+"last_updated": "2021-03-12T23:55:13.000Z",
+"quote": {
+	"USD": {
+		"price": 0.04585198755086,
+		"volume_24h": 560482777.3297944,
+		"percent_change_1h": -3.3673205,
+		"percent_change_24h": 23.71972341,
+		"percent_change_7d": 15.65177067,
+		"percent_change_30d": 16.99732327,
+		"percent_change_60d": 470.25121697,
+		"percent_change_90d": 0,
+		"market_cap": 516701386.30588293,
+		"last_updated": "2021-03-12T23:55:13.000Z"
+		}
+	}
+}
+
+*/

@@ -8,11 +8,11 @@ import (
 )
 
 type Config struct {
-	Tracker Tracker `json:"tracker"`
-	DB      DB      `json:"database"`
+	CMC CMCAggregator `json:"cmc_aggregator"`
+	DB  DB            `json:"database"`
 }
 
-type Tracker struct {
+type CMCAggregator struct {
 	APIKey string `json:"APIKey"`
 	Host   string `json:"host"`
 }
@@ -41,7 +41,7 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 		return nil, err
 	}
 
-	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" || c.Tracker.Host == "" || c.Tracker.APIKey == "" {
+	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" || c.CMC.Host == "" || c.CMC.APIKey == "" {
 		return &c, fmt.Errorf("some configuration is missing")
 	}
 

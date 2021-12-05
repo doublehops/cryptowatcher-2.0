@@ -1,4 +1,4 @@
-package cmchistory
+package history
 
 import (
 	"database/sql"
@@ -20,7 +20,7 @@ type SearchParams struct {
 	TimeToUnix   int64
 }
 
-// New - creates new instance of cmchistory.
+// New - creates new instance of history.
 func New(db dbi.QueryAble, logger *logga.Logga) *Model {
 
 	return &Model{
@@ -29,13 +29,15 @@ func New(db dbi.QueryAble, logger *logga.Logga) *Model {
 	}
 }
 
-// CreateRecord inserts a new record into the cmc_history table.
-func (m *Model) CreateRecord(record *database.CmcHistory) (uint32, error) {
+// CreateRecord inserts a new record into the history table.
+func (m *Model) CreateRecord(record *database.History) (uint32, error) {
 
-	l := m.l.Lg.With().Str("cmchistory", "CreateRecord").Logger()
-	l.Info().Msgf("Adding cmc record: %s", record.Symbol)
+	l := m.l.Lg.With().Str("history", "CreateRecord").Logger()
+	l.Info().Msgf("Adding history record: %s", record.Symbol)
 
-	result, err := m.db.Exec(InsertRecordSql, &record.CurrencyID,
+	result, err := m.db.Exec(InsertRecordSql,
+		&record.AggregatorID,
+		&record.CurrencyID,
 		&record.Name,
 		&record.Symbol,
 		&record.Slug,
@@ -44,7 +46,7 @@ func (m *Model) CreateRecord(record *database.CmcHistory) (uint32, error) {
 		&record.MaxSupply,
 		&record.CirculatingSupply,
 		&record.TotalSupply,
-		&record.CmcRank,
+		&record.Rank,
 		&record.QuotePrice,
 		&record.Volume24h,
 		&record.PercentChange1h,
@@ -71,10 +73,10 @@ func (m *Model) CreateRecord(record *database.CmcHistory) (uint32, error) {
 }
 
 // GetRecordByID will return the requested record from the db by its ID.
-func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
+func (m *Model) GetRecordByID(record *database.History, ID uint32) error {
 
-	l := m.l.Lg.With().Str("cmchistory", "GetRecordByID").Logger()
-	l.Info().Msgf("Retrieving cmchistory record by ID: %d", ID)
+	l := m.l.Lg.With().Str("history", "GetRecordByID").Logger()
+	l.Info().Msgf("Retrieving history record by ID: %d", ID)
 
 	row := m.db.QueryRow(GetRecordByIDSql, ID)
 	err := m.populateRecord(record, row)
@@ -87,10 +89,10 @@ func (m *Model) GetRecordByID(record *database.CmcHistory, ID uint32) error {
 }
 
 // GetPriceTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group/bucket.
-func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams) ([]*database.CmcHistoryPriceTimeSeriesDataItem, error) {
+func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams) ([]*database.HistoryPriceTimeSeriesDataItem, error) {
 
-	l := m.l.Lg.With().Str("cmchistory", "GetTimeSeriesData").Logger()
-	l.Info().Msgf("Fetching cmchistory records for symbol: %s", symbol)
+	l := m.l.Lg.With().Str("history", "GetTimeSeriesData").Logger()
+	l.Info().Msgf("Fetching history records for symbol: %s", symbol)
 
 	buckets := 5 // number of buckets to group the records in and determine average for.
 
@@ -100,9 +102,9 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 	}
 	defer rows.Close()
 
-	var records []*database.CmcHistoryPriceTimeSeriesDataItem
+	var records []*database.HistoryPriceTimeSeriesDataItem
 	for rows.Next() {
-		var record database.CmcHistoryPriceTimeSeriesDataItem
+		var record database.HistoryPriceTimeSeriesDataItem
 		err = rows.Scan(&record.QuotePrice, &record.CreatedAt)
 		if err != nil {
 			return records, err
@@ -115,7 +117,7 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 }
 
 // populateRecord will populate model object from query.
-func (m *Model) populateRecord(record *database.CmcHistory, row *sql.Row) error {
+func (m *Model) populateRecord(record *database.History, row *sql.Row) error {
 
 	err := row.Scan(&record.ID,
 		&record.CurrencyID,
@@ -127,7 +129,7 @@ func (m *Model) populateRecord(record *database.CmcHistory, row *sql.Row) error 
 		&record.MaxSupply,
 		&record.CirculatingSupply,
 		&record.TotalSupply,
-		&record.CmcRank,
+		&record.Rank,
 		&record.QuotePrice,
 		&record.Volume24h,
 		&record.PercentChange1h,
