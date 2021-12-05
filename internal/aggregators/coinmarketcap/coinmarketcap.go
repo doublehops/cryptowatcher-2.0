@@ -8,7 +8,11 @@ import (
 	"cryptowatcher.example/internal/types/database"
 )
 
-const aggregatorID uint32 = 1
+const (
+	aggregatorID uint32 = 1
+	aggregatorName string = "cmc"
+)
+
 
 type Runner struct {
 	cfg  config.CMCAggregator
@@ -96,6 +100,11 @@ func (r *Runner) FetchLatestHistory() (database.Histories, error) {
 	}
 
 	return histories, nil
+}
+
+// GetAggregatorName will return the aggregator name for log messages
+func (r *Runner) GetAggregatorName() string {
+	return aggregatorName
 }
 
 // GetAggregatorID will return the aggregator ID to distinguish which aggregator each currency record came from.
