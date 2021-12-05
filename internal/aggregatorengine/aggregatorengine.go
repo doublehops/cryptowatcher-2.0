@@ -11,7 +11,7 @@ import (
 type Aggregator interface {
 	GetAggregatorID() uint32
 	GetAggregatorName() string
-	FetchLatestHistory() (database.Histories, error)
+	FetchLatestHistory() (*database.Histories, error)
 }
 
 type Agg struct {
@@ -51,7 +51,7 @@ func (a *Agg) UpdateLatestHistory(agg Aggregator) error {
 		return err
 	}
 
-	for _, cur := range histories {
+	for _, cur := range *histories {
 		cur.ID = a.getCurrencyID(curMap, *cur)
 		_, err = a.history.CreateRecord(cur)
 		if err != nil {

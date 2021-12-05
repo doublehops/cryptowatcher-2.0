@@ -15,6 +15,7 @@ type CmcModule struct {
 	l       *logga.Logga
 }
 
+// New will return an instance of CmcModule.
 func New(cfg config.CMCAggregator, logger *logga.Logga) *CmcModule {
 
 	return &CmcModule{
@@ -24,11 +25,11 @@ func New(cfg config.CMCAggregator, logger *logga.Logga) *CmcModule {
 	}
 }
 
+// FetchCurrencyListing will make a request on CMC to retrieve current listings of each currency.
 func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
-	l := mm.l.Lg.With().Str("marketmodule", "FetchCurrencyListing").Logger()
+	l := mm.l.Lg.With().Str("cmcmodule", "FetchCurrencyListing").Logger()
 
-	l.Info().Msg("---  Fetching currencies  ---")
 
 	params := map[string]string{
 		"start":   "1",
@@ -41,12 +42,16 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
 	_, data, err := mm.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
-		return listing, fmt.Errorf("\"There was an error instantiating marketmodule request client. %w", err)
+		errMsg := fmt.Errorf("there was an error instantiating marketmodule request client. %w", err)
+		l.Error().Msg(errMsg.Error())
+		return listing, errMsg
 	}
 
 	err = json.Unmarshal(data, &dataObj)
 	if err != nil {
-		return listing, fmt.Errorf("there was an error unmarshalling json marketmodule response. %w", err)
+		errMsg := fmt.Errorf("there was an error unmarshalling json marketmodule response. %w", err)
+		l.Error().Msg(errMsg.Error())
+		return listing, errMsg
 	}
 
 	listing = dataObj.Currencies

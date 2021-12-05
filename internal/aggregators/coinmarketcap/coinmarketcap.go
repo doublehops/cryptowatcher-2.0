@@ -31,7 +31,8 @@ func New(cfg config.CMCAggregator, l *logga.Logga, db dbinterface.QueryAble, cmc
 	}
 }
 
-func (r *Runner) FetchLatestHistory() (database.Histories, error) {
+// FetchLatestHistory will fetch the latest history populate a database.History struct.
+func (r *Runner) FetchLatestHistory() (*database.Histories, error) {
 	var histories database.Histories
 
 	l := r.l.Lg.With().Str("main", "Run").Logger()
@@ -40,38 +41,13 @@ func (r *Runner) FetchLatestHistory() (database.Histories, error) {
 	currencies, err := r.cmcm.FetchCurrencyListing(20)
 	if err != nil {
 		r.l.Error("Unable to get currency listing from CMC module")
-		return histories, err
+		return &histories, err
 	}
-
-	//cm := currency.New(r.db, r.l)
 
 	for _, c := range currencies {
 
-		//var cur database.Currency
-		//
-		//var curID uint32
-		//curMap := cm.GetRecordsMapKeySymbol()
-		//
-		//// Check if currency already exists in the database.
-		//_, exists := curMap[c.Symbol]
-		////
-		//if !exists {
-		//
-		//	cur.Name = c.Name
-		//	cur.Symbol = c.Symbol
-		//
-		//	_, err = cm.CreateRecord(&cur)
-		//	if err != nil {
-		//		l.Error().Msgf("Error adding currency: %s", cur.Symbol)
-		//	}
-		//	curID = cur.ID
-		//} else {
-		//	curID = curMap[c.Symbol]
-		//}
-
 		history := &database.History{
 			AggregatorID:      r.GetAggregatorID(),
-			//CurrencyID:        curID,
 			Name:              c.Name,
 			Symbol:            c.Symbol,
 			Slug:              c.Slug,
@@ -93,13 +69,9 @@ func (r *Runner) FetchLatestHistory() (database.Histories, error) {
 		}
 
 		histories = append(histories, history)
-		//_, err = cmch.CreateRecord(cmcr)
-		//if err != nil {
-		//	l.Error().Msgf("Error adding currency: %s", cur.Symbol)
-		//}
 	}
 
-	return histories, nil
+	return &histories, nil
 }
 
 // GetAggregatorName will return the aggregator name for log messages

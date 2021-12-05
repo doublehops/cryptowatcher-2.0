@@ -1,10 +1,12 @@
 package cmcmodule
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
+// MakeRequest will make an HTTP request to CoinMarketCap.
 func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
 	l := mm.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
@@ -33,9 +35,10 @@ func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, 
 
 	resp, err := client.Do(req)
 	if err != nil {
-		l.Error().Msg("There was an error making request to cmc")
-		l.Error().Msg(err.Error())
-		return "", nil, err
+		errMsg := fmt.Errorf("there was an error making request to cmc. %w", err)
+		l.Error().Msg(errMsg.Error())
+
+		return "", nil, errMsg
 	}
 
 	statusCode := resp.Status
