@@ -1,6 +1,7 @@
 package coinmarketcap
 
 import (
+	"cryptowatcher.example/internal/aggregatorengine"
 	"database/sql"
 	"encoding/json"
 	"os"
@@ -63,14 +64,17 @@ func TestRun(t *testing.T) {
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	cfg.Tracker.Host = server.URL // Set URL to that of the test response
+	cfg.CMC.Host = server.URL // Set URL to that of the test response
 
-	chm := cmcmodule.New(cfg.Tracker, l)
+	chm := cmcmodule.New(cfg.CMC, l)
 
-	p := New(cfg.Tracker, l, DB, chm)
-	err = p.Run()
+	cmc := New(cfg.CMC, l, DB, chm)
+
+	agg := aggregatorengine.New(DB, l)
+	err = agg.UpdateLatestHistory(cmc)
 	if err != nil {
-		t.Errorf("unable to instantiate runner. %s", err)
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
 	}
 
 	var currencies cmcmodule.CurrencyData

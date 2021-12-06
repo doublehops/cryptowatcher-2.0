@@ -1,10 +1,11 @@
 package config
 
 import (
-	"cryptowatcher.example/internal/pkg/logga"
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"cryptowatcher.example/internal/pkg/logga"
 )
 
 type Config struct {

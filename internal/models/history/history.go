@@ -119,7 +119,9 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 // populateRecord will populate model object from query.
 func (m *Model) populateRecord(record *database.History, row *sql.Row) error {
 
-	err := row.Scan(&record.ID,
+	err := row.Scan(
+		&record.ID,
+		&record.AggregatorID,
 		&record.CurrencyID,
 		&record.Name,
 		&record.Symbol,

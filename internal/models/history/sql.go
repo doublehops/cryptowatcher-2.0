@@ -72,7 +72,7 @@ SELECT
 	market_cap,
 	created_at,
 	updated_at
-  FROM history AS 
+  FROM history
   WHERE symbol = ?`
 
 var InsertRecordSql = `

@@ -75,7 +75,8 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 	setup()
 	defer teardown()
 
-	r := &database.CmcHistory{
+	r := &database.History{
+		AggregatorID: 1,
 		Name:              fake.CharactersN(10),
 		Symbol:            fake.Characters(),
 		Slug:              fake.Characters(),
@@ -84,7 +85,7 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 		MaxSupply:         12.32,
 		CirculatingSupply: 123133.02,
 		TotalSupply:       564654.40,
-		CmcRank:           123,
+		Rank:              123,
 		QuotePrice:        100.23,
 		Volume24h:         15541.15,
 		PercentChange1h:   1,
@@ -104,35 +105,35 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 		t.Errorf("could not create record. %s", err)
 	}
 
-	var rt database.CmcHistory
+	var rt database.History
 
 	err = chm.GetRecordByID(&rt, r.ID)
 	if err != nil {
 		t.Errorf("Get record returned no error. %s", err)
 	}
 
-	tests := []struct{
-		Name string
-		Got interface{}
+	tests := []struct {
+		Name     string
+		Got      interface{}
 		Expected interface{}
 	}{
-		{ Name: "Currency ID", Got: rt.Name, Expected: r.Name },
-		{ Name: "Symbol", Got: rt.Symbol, Expected: r.Symbol },
-		{ Name: "Slug", Got: rt.Slug, Expected: r.Slug },
-		{ Name: "NumMarketPairs", Got: rt.NumMarketPairs, Expected: r.NumMarketPairs },
-		{ Name: "MaxSupply", Got: rt.MaxSupply, Expected: r.MaxSupply },
-		{ Name: "CirculatingSupply", Got: rt.CirculatingSupply, Expected: r.CirculatingSupply },
-		{ Name: "TotalSupply", Got: rt.TotalSupply, Expected: r.TotalSupply },
-		{ Name: "CmcRank", Got: rt.CmcRank, Expected: r.CmcRank },
-		{ Name: "QuotePrice", Got: rt.QuotePrice, Expected: r.QuotePrice },
-		{ Name: "Volume24h", Got: rt.Volume24h, Expected: r.Volume24h },
-		{ Name: "PercentChange1h", Got: rt.PercentChange1h, Expected: r.PercentChange1h },
-		{ Name: "PercentChange24h", Got: rt.PercentChange24h, Expected: r.PercentChange24h },
-		{ Name: "PercentChange7D", Got: rt.PercentChange7D, Expected: r.PercentChange7D },
-		{ Name: "PercentChange30D", Got: rt.PercentChange30D, Expected: r.PercentChange30D },
-		{ Name: "PercentChange60D", Got: rt.PercentChange60D, Expected: r.PercentChange60D },
-		{ Name: "PercentChange90D", Got: rt.PercentChange90D, Expected: r.PercentChange90D },
-		{ Name: "MarketCap", Got: rt.MarketCap, Expected: r.MarketCap },
+		{Name: "Currency ID", Got: rt.Name, Expected: r.Name},
+		{Name: "Symbol", Got: rt.Symbol, Expected: r.Symbol},
+		{Name: "Slug", Got: rt.Slug, Expected: r.Slug},
+		{Name: "NumMarketPairs", Got: rt.NumMarketPairs, Expected: r.NumMarketPairs},
+		{Name: "MaxSupply", Got: rt.MaxSupply, Expected: r.MaxSupply},
+		{Name: "CirculatingSupply", Got: rt.CirculatingSupply, Expected: r.CirculatingSupply},
+		{Name: "TotalSupply", Got: rt.TotalSupply, Expected: r.TotalSupply},
+		{Name: "CmcRank", Got: rt.Rank, Expected: r.Rank},
+		{Name: "QuotePrice", Got: rt.QuotePrice, Expected: r.QuotePrice},
+		{Name: "Volume24h", Got: rt.Volume24h, Expected: r.Volume24h},
+		{Name: "PercentChange1h", Got: rt.PercentChange1h, Expected: r.PercentChange1h},
+		{Name: "PercentChange24h", Got: rt.PercentChange24h, Expected: r.PercentChange24h},
+		{Name: "PercentChange7D", Got: rt.PercentChange7D, Expected: r.PercentChange7D},
+		{Name: "PercentChange30D", Got: rt.PercentChange30D, Expected: r.PercentChange30D},
+		{Name: "PercentChange60D", Got: rt.PercentChange60D, Expected: r.PercentChange60D},
+		{Name: "PercentChange90D", Got: rt.PercentChange90D, Expected: r.PercentChange90D},
+		{Name: "MarketCap", Got: rt.MarketCap, Expected: r.MarketCap},
 	}
 
 	for _, tt := range tests {
