@@ -20,3 +20,8 @@ INSERT INTO currency
 VALUES
 (?, ?, NOW(), NOW())
 `
+
+var DeleteRecordSql = `
+DELETE FROM currency
+WHERE id=?
+`

@@ -127,6 +127,21 @@ func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 	return lastInsertID, nil
 }
 
+// DeleteRecord will remove a record from the db.
+func (m *Model) DeleteRecord(ID uint32) error {
+
+	l := m.l.Lg.With().Str("currency", "DeleteRecord").Logger()
+	l.Info().Msgf("Deleting currency: %s; with interface type: %d", ID)
+
+	_, err := m.db.Exec(DeleteRecordSql, ID)
+	if err != nil {
+		l.Error().Msgf("There was an error deleting record from db. %w", err)
+		return err
+	}
+
+	return nil
+}
+
 // populateRecord will populate model object from query.
 func (m *Model) populateRecord(record *database.Currency, row *sql.Row) error {
 

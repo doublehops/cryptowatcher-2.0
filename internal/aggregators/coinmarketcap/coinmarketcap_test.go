@@ -101,4 +101,11 @@ func TestRun(t *testing.T) {
 	if jsonRec1.Symbol != curDbRec1.Symbol {
 		t.Errorf("symbol not as expected. Got: %s; found: %s;", jsonRec1.Symbol, curDbRec1.Symbol)
 	}
+
+	err = cm.DeleteRecord(curDbRec1.ID)
+	if err != nil {
+		t.Errorf("Unable to remove test record from database")
+	}
+
+
 }

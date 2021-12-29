@@ -28,7 +28,7 @@ func setup() {
 	l = logga.New()
 
 	// Setup config.
-	cfg, err := config.New(l, "../../../config.json.test")
+	cfg, err := config.New(l, "../../../config.json") // Alternatively use test config - ../../../config.json.test
 	if err != nil {
 		l.Lg.Error().Msgf("error starting main. %w", err.Error())
 		os.Exit(1)
