@@ -18,3 +18,7 @@ test:
 .PHONY: docker_up
 docker_up:
 	docker-compose up -d
+
+.PHONY: dbc
+dbc: ## Connect to local MySQL database.
+	dev/local_database_conn.sh
