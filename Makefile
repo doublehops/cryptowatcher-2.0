@@ -14,3 +14,7 @@ lint: ## Run golangci-lint. golangci-lint must be installed and in your path.
 .PHONY: test
 test:
 	go test -count=1 -cover ./...
+
+.PHONY: docker_up
+docker_up:
+	docker-compose up -d
