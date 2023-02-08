@@ -16,7 +16,7 @@ type Currency struct {
 	DeletedAt sql.NullTime
 }
 
-type Histories []*History
+//type Histories []*History
 type HistoryPriceTimeSeriesData []HistoryPriceTimeSeriesDataItem
 
 type History struct {
@@ -32,7 +32,7 @@ type History struct {
 	MaxSupply         float64
 	CirculatingSupply float64
 	TotalSupply       float64
-	Rank           int32
+	Rank              int32
 	QuotePrice        float64
 	Volume24h         float64
 	PercentChange1h   float64

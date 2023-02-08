@@ -1,0 +1,8 @@
+{
+  "name": "coinmarketcap",
+  "label": "CoinMarketcap",
+  "hostConfig": {
+    "apiKey": "1e649074-64cf-44cf-8236-a0c234c1ccc2",
+    "apiHost": "https://pro-api.coinmarketcap.com"
+  }
+}

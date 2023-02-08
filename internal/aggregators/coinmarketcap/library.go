@@ -1,35 +1,15 @@
-package cmcmodule
+package coinmarketcap
 
 import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/logga"
 )
 
-type CmcModule struct {
-	ApiKey  string
-	ApiHost string
-	l       *logga.Logga
-}
-
-// New will return an instance of CmcModule.
-func New(cfg config.CMCAggregator, logger *logga.Logga) *CmcModule {
-
-	return &CmcModule{
-		ApiHost: cfg.Host,
-		ApiKey:  cfg.APIKey,
-		l:       logger,
-	}
-}
-
 // FetchCurrencyListing will make a request on CMC to retrieve current listings of each currency.
-func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
+func (r *Runner) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
-	l := mm.l.Lg.With().Str("cmcmodule", "FetchCurrencyListing").Logger()
-
+	l := r.l.Lg.With().Str("cmcmodule", "FetchCurrencyListing").Logger()
 
 	params := map[string]string{
 		"start":   "1",
@@ -40,7 +20,7 @@ func (mm *CmcModule) FetchCurrencyListing(limit int) ([]*Currency, error) {
 	var dataObj CurrencyData
 	var listing []*Currency
 
-	_, data, err := mm.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
+	_, data, err := r.MakeRequest("GET", "/v1/cryptocurrency/listings/latest", params, nil)
 	if err != nil {
 		errMsg := fmt.Errorf("there was an error instantiating marketmodule request client. %w", err)
 		l.Error().Msg(errMsg.Error())

@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"cryptowatcher.example/internal/aggregatorengine"
 	"cryptowatcher.example/internal/aggregators/coinmarketcap"
-	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
@@ -39,13 +39,26 @@ func run(flags runflags.FlagStruct) {
 	}
 
 	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(cfg.CMC, logger)
+	//cmcm := coinmarketcap.New(cfg.Aggregator, logger)
+
+	//agggg, _ := coinmarketcap.New(cfg.Aggregator, nil, nil)
 
 	// Process
-	cmc := coinmarketcap.New(cfg.CMC, logger, DB, cmcm)
+	//cmc := coinmarketcap.New(cfg.Aggregator, logger, DB, cmcm)
+
+	var aggg aggregatorengine.Aggregator
+	// todo - remove the control statements and replace with a dynamic approach.
+	if cfg.Aggregator.Name == "coinmarketcap" {
+		aggg, err = coinmarketcap.New(logger, DB)
+	}
+
+	if err != nil {
+		logger.Error(fmt.Sprintf("unable to instantiate aggregator. %s", err))
+		os.Exit(1)
+	}
 
 	agg := aggregatorengine.New(DB, logger)
-	err = agg.UpdateLatestHistory(cmc)
+	err = agg.UpdateLatestHistory(aggg)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)

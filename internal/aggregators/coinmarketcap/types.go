@@ -1,4 +1,4 @@
-package cmcmodule
+package coinmarketcap
 
 type CurrencySortBase struct {
 	Name           string

@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/cmcmodule"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
 	"cryptowatcher.example/internal/pkg/logga"
@@ -17,7 +16,7 @@ import (
 )
 
 var l *logga.Logga
-var cfg *config.Config
+var cfg *aggregatorConfig.Config
 var DB *sql.DB
 var tx *sql.Tx
 
@@ -26,9 +25,9 @@ func setup() {
 
 	l = logga.New()
 
-	// Setup config.
+	// Setup aggregatorConfig.
 	var err error
-	cfg, err = config.New(l, "../../../config.json.test")
+	cfg, err = config.New(l, "../../../aggregatorConfig.json.test")
 	if err != nil {
 		l.Lg.Error().Msgf("error starting main. %w", err.Error())
 		os.Exit(1)
@@ -66,7 +65,7 @@ func TestRun(t *testing.T) {
 
 	cfg.CMC.Host = server.URL // Set URL to that of the test response
 
-	chm := cmcmodule.New(cfg.CMC, l)
+	chm := New(cfg.CMC, l)
 
 	cmc := New(cfg.CMC, l, DB, chm)
 
@@ -77,7 +76,7 @@ func TestRun(t *testing.T) {
 		os.Exit(1)
 	}
 
-	var currencies cmcmodule.CurrencyData
+	var currencies CurrencyData
 	err = json.Unmarshal(testJsonResponse, &currencies)
 	if err != nil {
 		t.Errorf("could not unmarshal JSON. %s", err)
@@ -106,6 +105,5 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unable to remove test record from database")
 	}
-
 
 }

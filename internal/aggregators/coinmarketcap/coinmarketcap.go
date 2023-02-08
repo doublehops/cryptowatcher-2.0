@@ -2,44 +2,80 @@ package coinmarketcap
 
 import (
 	"cryptowatcher.example/internal/dbinterface"
-	"cryptowatcher.example/internal/pkg/cmcmodule"
-	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/logga"
 	"cryptowatcher.example/internal/types/database"
+	"encoding/json"
+	"fmt"
+	"os"
 )
 
 const (
-	aggregatorID uint32 = 1
+	aggregatorID   uint32 = 1
 	aggregatorName string = "cmc"
 )
 
-
 type Runner struct {
-	cfg  config.CMCAggregator
-	l    *logga.Logga
-	db   dbinterface.QueryAble
-	cmcm *cmcmodule.CmcModule
+	l                *logga.Logga
+	db               dbinterface.QueryAble
+	aggregatorConfig *aggregatorConfig
+}
+
+type aggregatorConfig struct {
+	Name       string     `json:"name"`
+	Label      string     `json:"label"`
+	HostConfig HostConfig `json:"hostConfig"`
+}
+
+type HostConfig struct {
+	ApiKey  string `json:"apiKey"`
+	ApiHost string `json:"apiHost"`
 }
 
 // New will instantiate Runner.
-func New(cfg config.CMCAggregator, l *logga.Logga, db dbinterface.QueryAble, cmcm *cmcmodule.CmcModule) *Runner {
+func New(l *logga.Logga, db dbinterface.QueryAble) (*Runner, error) {
+	config, err := parseConfig()
+	if err != nil {
+		// todo - add log message
+		return nil, err
+	}
 
 	return &Runner{
-		cfg:  cfg,
-		l:    l,
-		db:   db,
-		cmcm: cmcm,
+		aggregatorConfig: config,
+		l:                l,
+		db:               db,
+		//cmcm: cmcm,
+	}, nil
+}
+
+func parseConfig() (*aggregatorConfig, error) {
+	var config aggregatorConfig
+
+	//path, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+
+	configFile := "internal/aggregators/coinmarketcap/config.json"
+	f, err := os.ReadFile(configFile)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
+
+	if err = json.Unmarshal(f, &config); err != nil {
+		return nil, err
+	}
+
+	return &config, nil
 }
 
 // FetchLatestHistory will fetch the latest history populate a database.History struct.
-func (r *Runner) FetchLatestHistory() (database.Histories, error) {
-	var histories database.Histories
+func (r *Runner) FetchLatestHistory() ([]*database.History, error) {
+	var histories []*database.History
 
 	l := r.l.Lg.With().Str("main", "Run").Logger()
 	l.Info().Msg("Running currency fetcher")
 
-	currencies, err := r.cmcm.FetchCurrencyListing(20)
+	currencies, err := r.FetchCurrencyListing(20)
 	if err != nil {
 		r.l.Error("Unable to get currency listing from CMC module")
 		return histories, err
@@ -57,7 +93,7 @@ func (r *Runner) FetchLatestHistory() (database.Histories, error) {
 			MaxSupply:         c.MaxSupply,
 			CirculatingSupply: c.CirculatingSupply,
 			TotalSupply:       c.TotalSupply,
-			Rank:           c.CmcRank,
+			Rank:              c.CmcRank,
 			QuotePrice:        c.Quote.USDObj.Price,
 			Volume24h:         c.Quote.USDObj.Volume24Hours,
 			PercentChange1h:   c.Quote.USDObj.PercentChange1Hour,

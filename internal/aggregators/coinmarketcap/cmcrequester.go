@@ -1,4 +1,4 @@
-package cmcmodule
+package coinmarketcap
 
 import (
 	"fmt"
@@ -7,22 +7,22 @@ import (
 )
 
 // MakeRequest will make an HTTP request to CoinMarketCap.
-func (mm *CmcModule) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
+func (r *Runner) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
-	l := mm.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
+	l := r.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
 
 	client := &http.Client{}
 
 	l.Info().Msgf("cmcmodule.MakeRequest: %s %s", method, path)
 
-	req, err := http.NewRequest(method, mm.ApiHost+path, nil)
+	req, err := http.NewRequest(method, r.aggregatorConfig.HostConfig.ApiHost+path, nil)
 	if err != nil {
 		l.Error().Msg("There was an error instantiating request client for cmcmodule")
 		l.Error().Msg(err.Error())
 		return "", nil, err
 	}
 
-	req.Header.Add("X-CMC_PRO_API_KEY", mm.ApiKey)
+	req.Header.Add("X-CMC_PRO_API_KEY", r.aggregatorConfig.HostConfig.ApiKey)
 	req.Header.Add("Accept", "application/json")
 
 	if params != nil {

@@ -9,13 +9,12 @@ import (
 )
 
 type Config struct {
-	CMC CMCAggregator `json:"cmc_aggregator"`
-	DB  DB            `json:"database"`
+	Aggregator Aggregator `json:"aggregator"`
+	DB         DB         `json:"database"`
 }
 
-type CMCAggregator struct {
-	APIKey string `json:"APIKey"`
-	Host   string `json:"host"`
+type Aggregator struct {
+	Name string `json:"name"`
 }
 
 type DB struct {
@@ -37,12 +36,11 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
 
-	err = json.Unmarshal(f, &c)
-	if err != nil {
+	if err = json.Unmarshal(f, &c); err != nil {
 		return nil, err
 	}
 
-	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" || c.CMC.Host == "" || c.CMC.APIKey == "" {
+	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" {
 		return &c, fmt.Errorf("some configuration is missing")
 	}
 

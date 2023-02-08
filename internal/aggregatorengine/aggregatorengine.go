@@ -11,7 +11,7 @@ import (
 type Aggregator interface {
 	GetAggregatorID() uint32
 	GetAggregatorName() string
-	FetchLatestHistory() (database.Histories, error)
+	FetchLatestHistory() ([]*database.History, error)
 }
 
 type Agg struct {
@@ -36,7 +36,7 @@ func New(db dbinterface.QueryAble, logga *logga.Logga) *Agg {
 	}
 }
 
-// UpdateLatestHistory will update latest records from the aggregator.
+// UpdateLatestHistory will update the latest records from the aggregator.
 func (a *Agg) UpdateLatestHistory(agg Aggregator) error {
 
 	l := a.logga.Lg.With().Str("aggregatorengine", "UpdateLatestHistory").Logger()
