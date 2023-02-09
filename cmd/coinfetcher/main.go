@@ -38,27 +38,19 @@ func run(flags runflags.FlagStruct) {
 		os.Exit(1)
 	}
 
-	// Setup Coinmarketcap connection.
-	//cmcm := coinmarketcap.New(cfg.Aggregator, logger)
-
-	//agggg, _ := coinmarketcap.New(cfg.Aggregator, nil, nil)
-
-	// Process
-	//cmc := coinmarketcap.New(cfg.Aggregator, logger, DB, cmcm)
-
-	var aggg aggregatorengine.Aggregator
+	var a aggregatorengine.Aggregator
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coinmarketcap" {
-		aggg, err = coinmarketcap.New(logger, DB)
+		a, err = coinmarketcap.New(logger, DB)
 	}
 
-	if err != nil {
+	if a == nil || err != nil {
 		logger.Error(fmt.Sprintf("unable to instantiate aggregator. %s", err))
 		os.Exit(1)
 	}
 
 	agg := aggregatorengine.New(DB, logger)
-	err = agg.UpdateLatestHistory(aggg)
+	err = agg.UpdateLatestHistory(a)
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
