@@ -44,7 +44,12 @@ func run(flags runflags.FlagStruct) {
 		a, err = coinmarketcap.New(logger, DB)
 	}
 
-	if a == nil || err != nil {
+	if a == nil {
+		logger.Error(fmt.Sprintf("aggregator not configured."))
+		os.Exit(1)
+	}
+
+	if err != nil {
 		logger.Error(fmt.Sprintf("unable to instantiate aggregator. %s", err))
 		os.Exit(1)
 	}
