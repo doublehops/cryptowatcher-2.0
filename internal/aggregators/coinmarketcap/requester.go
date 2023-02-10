@@ -9,15 +9,15 @@ import (
 // MakeRequest will make an HTTP request to CoinMarketCap.
 func (r *Runner) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
 
-	l := r.l.Lg.With().Str("cmcmodule", "MakeRequest").Logger()
+	l := r.l.Lg.With().Str(packageName, "MakeRequest").Logger()
 
 	client := &http.Client{}
 
-	l.Info().Msgf("cmcmodule.MakeRequest: %s %s", method, path)
+	l.Info().Msgf("coinmarketcap.MakeRequest: %s %s", method, path)
 
 	req, err := http.NewRequest(method, r.aggregatorConfig.HostConfig.ApiHost+path, nil)
 	if err != nil {
-		l.Error().Msg("There was an error instantiating request client for cmcmodule")
+		l.Error().Msg("There was an error instantiating request client for coinmarketcap")
 		l.Error().Msg(err.Error())
 		return "", nil, err
 	}

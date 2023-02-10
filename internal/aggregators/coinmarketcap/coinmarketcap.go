@@ -10,8 +10,10 @@ import (
 )
 
 const (
+	packageName = "coinmarketcap"
+
 	aggregatorID   uint32 = 1
-	aggregatorName string = "cmc"
+	aggregatorName string = "coinmarketcap"
 )
 
 type Runner struct {
@@ -43,18 +45,11 @@ func New(l *logga.Logga, db dbinterface.QueryAble) (*Runner, error) {
 		aggregatorConfig: config,
 		l:                l,
 		db:               db,
-		//cmcm: cmcm,
 	}, nil
 }
 
 func parseConfig() (*aggregatorConfig, error) {
 	var config aggregatorConfig
-
-	//path, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	configFile := "internal/aggregators/coinmarketcap/config.json"
 	f, err := os.ReadFile(configFile)
 	if err != nil {
@@ -72,7 +67,7 @@ func parseConfig() (*aggregatorConfig, error) {
 func (r *Runner) FetchLatestHistory() ([]*database.History, error) {
 	var histories []*database.History
 
-	l := r.l.Lg.With().Str("main", "Run").Logger()
+	l := r.l.Lg.With().Str(packageName, "FetchLatestHistory").Logger()
 	l.Info().Msg("Running currency fetcher")
 
 	currencies, err := r.FetchCurrencyListing(20)

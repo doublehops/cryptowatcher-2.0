@@ -6,10 +6,10 @@ import (
 	"strconv"
 )
 
-// FetchCurrencyListing will make a request on CMC to retrieve current listings of each currency.
+// FetchCurrencyListing will make a request on coinmarketcap to retrieve current listings of each currency.
 func (r *Runner) FetchCurrencyListing(limit int) ([]*Currency, error) {
 
-	l := r.l.Lg.With().Str("cmcmodule", "FetchCurrencyListing").Logger()
+	l := r.l.Lg.With().Str(packageName, "FetchCurrencyListing").Logger()
 
 	params := map[string]string{
 		"start":   "1",

@@ -15,29 +15,31 @@ type Aggregator interface {
 }
 
 type Agg struct {
-	name     string
-	db       dbinterface.QueryAble
-	logga    *logga.Logga
-	currency *currency.Model
-	history  *history.Model
+	name       string
+	db         dbinterface.QueryAble
+	aggregator Aggregator
+	logga      *logga.Logga
+	currency   *currency.Model
+	history    *history.Model
 }
 
 // New will instantiate a new instance of Aggregator.
-func New(db dbinterface.QueryAble, logga *logga.Logga) *Agg {
+func New(db dbinterface.QueryAble, agg Aggregator, logga *logga.Logga) *Agg {
 
 	cur := currency.New(db, logga)
 	hs := history.New(db, logga)
 
 	return &Agg{
-		db:       db,
-		logga:    logga,
-		currency: cur,
-		history:  hs,
+		db:         db,
+		aggregator: agg,
+		logga:      logga,
+		currency:   cur,
+		history:    hs,
 	}
 }
 
 // UpdateLatestHistory will update the latest records from the aggregator.
-func (a *Agg) UpdateLatestHistory(agg Aggregator) error {
+func (a *Agg) UpdateLatestHistory() error {
 
 	l := a.logga.Lg.With().Str("aggregatorengine", "UpdateLatestHistory").Logger()
 	l.Info().Msgf("Updating history for aggregator: %s", a.name)
@@ -46,7 +48,7 @@ func (a *Agg) UpdateLatestHistory(agg Aggregator) error {
 	if err != nil {
 		return err
 	}
-	histories, err := agg.FetchLatestHistory()
+	histories, err := a.aggregator.FetchLatestHistory()
 	if err != nil {
 		return err
 	}

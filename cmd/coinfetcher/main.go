@@ -54,8 +54,8 @@ func run(flags runflags.FlagStruct) {
 		os.Exit(1)
 	}
 
-	agg := aggregatorengine.New(DB, logger)
-	err = agg.UpdateLatestHistory(a)
+	agg := aggregatorengine.New(DB, a, logger)
+	err = agg.UpdateLatestHistory()
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
