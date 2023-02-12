@@ -41,6 +41,10 @@ func New(l *logga.Logga, db dbinterface.QueryAble) (*Runner, error) {
 		return nil, err
 	}
 
+	if config.HostConfig.ApiHost == "" || config.HostConfig.ApiKey == "" {
+		return nil, fmt.Errorf("coinmarketcap configuration not set")
+	}
+
 	return &Runner{
 		aggregatorConfig: config,
 		l:                l,

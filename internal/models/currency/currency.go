@@ -64,8 +64,9 @@ func (m *Model) GetRecords(pg *pagination.MetaRequest) (database.Currencies, err
 	var records database.Currencies
 	rows, err := m.db.Query(GetRecordsSql, pg.Offset, pg.PerPage)
 	if err != nil {
-		err := fmt.Errorf("unable to retrieve currency records. %w", err)
+		err := fmt.Errorf("unable to retrieve currency records from database. %w", err)
 		l.Error().Msg(err.Error())
+
 		return records, err
 	}
 	defer rows.Close()
@@ -90,9 +91,9 @@ func (m *Model) GetRecordsMapKeySymbol() (map[string]uint32, error) {
 
 	curMap := make(map[string]uint32)
 	pg := pagination.MetaRequest{
-		Page: 1,
+		Page:    1,
 		PerPage: 100000,
-		Offset: 0,
+		Offset:  0,
 	}
 
 	records, err := m.GetRecords(&pg)
@@ -116,6 +117,7 @@ func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 	result, err := m.db.Exec(InsertRecordSql, record.Name, record.Symbol)
 	if err != nil {
 		l.Error().Msgf("There was an error saving record to db. %w", err)
+
 		return 0, err
 	}
 
@@ -136,6 +138,7 @@ func (m *Model) DeleteRecord(ID uint32) error {
 	_, err := m.db.Exec(DeleteRecordSql, ID)
 	if err != nil {
 		l.Error().Msgf("There was an error deleting record from db. %w", err)
+
 		return err
 	}
 

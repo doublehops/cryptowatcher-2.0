@@ -32,7 +32,8 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 
 	f, err := os.ReadFile(configFile)
 	if err != nil {
-		l.Error().Msgf("unable to read config file. %w", err.Error())
+		l.Error().Msgf("unable to read config file. %s", err.Error())
+
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
 

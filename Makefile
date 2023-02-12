@@ -1,7 +1,7 @@
 
-.PHONY: run
-run:
-	go run main.go
+.PHONY: fetch
+fetch:
+	go run ./cmd/coinfetcher/main.go
 
 .PHONY: gofmt
 gofmt: ## Run gofumpt over the codebase. gofumpt must be installed and in your path.
