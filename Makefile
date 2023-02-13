@@ -17,8 +17,12 @@ test:
 
 .PHONY: docker_up
 docker_up:
-	docker-compose up -d
+	docker-compose -f docker-compose.yml up -d
 
 .PHONY: dbc
 dbc: ## Connect to local MySQL database.
 	dev/local_database_conn.sh
+
+.PHONY: migrate
+migrate:
+	go run cmd/migrate/migrate.go -action up

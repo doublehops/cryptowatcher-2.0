@@ -3,3 +3,4 @@
 vendor
 config.json
 internal/aggregators/coinmarketcap/config.json
+db-data

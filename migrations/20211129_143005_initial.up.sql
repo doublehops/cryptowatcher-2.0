@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS currency (
 CREATE TABLE IF NOT EXISTS aggregator (
     id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(200) NOT NUll,
-    symbol VARCHAR(10) NOT NULL,
+    label VARCHAR(25) NOT NULL,
     is_enabled TINYINT(4),
     created_at DATETIME,
     updated_at DATETIME,
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS aggregator (
     PRIMARY KEY (id)
     ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
 ------------------
-INSERT INTO aggregator (name, symbol, is_enabled, created_at, updated_at) VALUES ('CoinMarketCap', 'cmc', 1, NOW(), NOW());
+INSERT INTO aggregator (name, label, is_enabled, created_at, updated_at) VALUES ('coinmarketcap', 'CoinMarketcap', 1, NOW(), NOW());
 ------------------
-INSERT INTO aggregator (name, symbol, is_enabled, created_at, updated_at) VALUES ('CoinGecko', 'cg', 1, NOW(), NOW());
+INSERT INTO aggregator (name, label, is_enabled, created_at, updated_at) VALUES ('coingecko', 'CoinGecko', 1, NOW(), NOW());
 ------------------
 CREATE TABLE IF NOT EXISTS history (
     id INT(11) NOT NULL AUTO_INCREMENT,

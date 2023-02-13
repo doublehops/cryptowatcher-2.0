@@ -1,7 +1,9 @@
+### Get Running
+Run `make docker_up` to get the local environment up.
+
 ### Database Migrations
 
-Currently there are no migration tools being used, so manually importing needs to be done. A MySQL client needs to be installed in your environment and then run
-`mysql -u dev -ppass12 -h 127.0.0.1 cdb < database/migrations/000001_init_schema.up.sql`.
+Run `make migrate` to run migrations.
 
 #### Run tests
 

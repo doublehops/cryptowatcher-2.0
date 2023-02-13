@@ -4,9 +4,8 @@ services:
   db:
     image: "mariadb:10.5"
     restart: "always"
-#    volumes:
-#      - ./db-data:/var/lib/mysql/data
-#      - ./db-logs:/var/lib/mysql/logsql
+    volumes:
+      - ./db-data:/var/lib/mysql
 #      - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
@@ -33,7 +32,6 @@ services:
       - net1
 volumes:
   db-data:
-  db-logs:
 
 networks:
   net1:
