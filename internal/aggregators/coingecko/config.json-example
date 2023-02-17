@@ -1,0 +1,8 @@
+{
+  "name": "coingecko",
+  "label": "Coingecko",
+  "hostConfig": {
+    "apiKey": "",
+    "apiHost": ""
+  }
+}
