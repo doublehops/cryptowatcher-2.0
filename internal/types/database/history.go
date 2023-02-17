@@ -34,6 +34,8 @@ type History struct {
 	TotalSupply       float64
 	Rank              int32
 	QuotePrice        float64
+	High24hr          float64
+	Low24hr           float64
 	Volume24h         float64
 	PercentChange1h   float64
 	PercentChange24h  float64

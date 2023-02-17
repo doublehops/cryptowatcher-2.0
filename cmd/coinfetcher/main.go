@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"cryptowatcher.example/internal/aggregatorengine"
+	"cryptowatcher.example/internal/aggregators/coingecko"
 	"cryptowatcher.example/internal/aggregators/coinmarketcap"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
@@ -42,6 +43,10 @@ func run(flags runflags.FlagStruct) {
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coinmarketcap" {
 		a, err = coinmarketcap.New(logger, DB)
+	}
+	// todo - remove the control statements and replace with a dynamic approach.
+	if cfg.Aggregator.Name == "coingecko" {
+		a, err = coingecko.New(logger, DB)
 	}
 
 	if a == nil {

@@ -40,6 +40,7 @@ func (r *Runner) MakeRequest(method, path string, params map[string]string, payl
 
 		return "", nil, errMsg
 	}
+	defer resp.Body.Close()
 
 	statusCode := resp.Status
 	respBody, _ := ioutil.ReadAll(resp.Body)

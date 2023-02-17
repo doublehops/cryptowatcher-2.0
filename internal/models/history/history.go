@@ -48,6 +48,8 @@ func (m *Model) CreateRecord(record *database.History) (uint32, error) {
 		&record.TotalSupply,
 		&record.Rank,
 		&record.QuotePrice,
+		&record.High24hr,
+		&record.Low24hr,
 		&record.Volume24h,
 		&record.PercentChange1h,
 		&record.PercentChange24h,

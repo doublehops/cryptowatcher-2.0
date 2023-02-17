@@ -34,6 +34,8 @@ SELECT
 	total_supply,
 	rank,
 	quote_price,
+    high_24hr,
+    low_24hr,
 	volume_24h,
 	percent_change_1h,
 	percent_change_24h,
@@ -62,6 +64,8 @@ SELECT
 	total_supply,
 	cmc_rank,
 	quote_price,
+    high_24hr,
+    low_24hr,
 	volume_24h,
 	percent_change_1h,
 	percent_change_24h,
@@ -89,6 +93,8 @@ INSERT INTO history (
 	total_supply,
 	rank,
 	quote_price,
+    high_24hr,
+    low_24hr,
 	volume_24h,
 	percent_change_1h,
 	percent_change_24h,
@@ -101,6 +107,8 @@ INSERT INTO history (
 	updated_at
 )
 VALUES (
+	?,
+	?,
 	?,
 	?,
 	?,

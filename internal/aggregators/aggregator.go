@@ -14,8 +14,6 @@ type Aggregator interface {
 }
 
 type Runner struct {
-	//cfg  config.CMCAggregator
 	L  *logga.Logga
 	DB dbinterface.QueryAble
-	//cmcm *cmcmodule.CmcModule
 }
