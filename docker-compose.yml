@@ -4,9 +4,10 @@ services:
   db:
     image: "mariadb:10.5"
     restart: "always"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db-data:/var/lib/mysql
-#      - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/provision/mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     environment:

@@ -16,7 +16,7 @@ import (
 )
 
 var l *logga.Logga
-var cfg *aggregatorConfig.Config
+var cfg aggregatorConfig.HostConfig
 var DB *sql.DB
 var tx *sql.Tx
 

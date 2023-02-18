@@ -1,7 +1,6 @@
 {
-  "cmc_aggregator": {
-    "APIKey": "test",
-    "host": "https://pro-api.coinmarketcap.com"
+  "aggregator": {
+    "name": "coingecko"
   },
   "database": {
     "host": "127.0.0.1",

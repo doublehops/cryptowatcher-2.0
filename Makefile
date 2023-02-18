@@ -19,6 +19,10 @@ test:
 docker_up:
 	docker-compose -f docker-compose.yml up -d
 
+.PHONY: docker_down
+docker_down:
+	docker-compose -f docker-compose.yml down
+
 .PHONY: dbc
 dbc: ## Connect to local MySQL database.
 	dev/local_database_conn.sh
@@ -26,3 +30,7 @@ dbc: ## Connect to local MySQL database.
 .PHONY: migrate
 migrate:
 	go run cmd/migrate/migrate.go -action up
+
+.PHONY: migrate_test
+migrate_test:
+	go run cmd/migrate/migrate.go -action up -config ./config.json.test
