@@ -39,13 +39,13 @@ func run(flags runflags.FlagStruct) {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
-	
+
 	client := &http.Client{}
 
 	var a aggregatorengine.Aggregator
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coinmarketcap" {
-		a, err = coinmarketcap.New(logger, DB, client, flags.ConfigFile)
+		a, err = coinmarketcap.New(logger, DB, client)
 	}
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coingecko" {

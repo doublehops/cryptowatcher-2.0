@@ -37,8 +37,8 @@ type HostConfig struct {
 }
 
 // New will instantiate Runner.
-func New(l *logga.Logga, db dbinterface.QueryAble, client *http.Client, configFile string) (*Runner, error) {
-	config, err := parseConfig(configFile)
+func New(l *logga.Logga, db dbinterface.QueryAble, client *http.Client) (*Runner, error) {
+	config, err := parseConfig()
 	if err != nil {
 		// todo - add log message
 		return nil, err
@@ -56,9 +56,9 @@ func New(l *logga.Logga, db dbinterface.QueryAble, client *http.Client, configFi
 	}, nil
 }
 
-func parseConfig(configFile string) (*aggregatorConfig, error) {
+func parseConfig() (*aggregatorConfig, error) {
 	var config aggregatorConfig
-	//configFile := "internal/aggregators/coinmarketcap/config.json"
+	configFile := "internal/aggregators/coinmarketcap/config.json"
 	absPath, _ := filepath.Abs(configFile)
 	f, err := os.ReadFile(absPath)
 	if err != nil {
