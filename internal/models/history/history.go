@@ -69,8 +69,6 @@ func (m *Model) CreateRecord(record *database.History) (uint32, error) {
 		return 0, err
 	}
 
-	l.Info().Msgf("Added cmc record. Symbol: %s; Record ID: %d", record.Symbol, lastInsertID)
-
 	return uint32(lastInsertID), err
 }
 
