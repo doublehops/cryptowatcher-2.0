@@ -55,6 +55,13 @@ func TestRun(t *testing.T) {
 	setup()
 	defer tearDown()
 
+	// Setup dbConn connection.
+	dbConn, err := db.New(l, cfg.DB)
+	if err != nil {
+		l.Lg.Error().Msg(err.Error())
+		os.Exit(1)
+	}
+
 	// Setup test http server.
 	testJsonResponse, err := testfuncs.GetTestJsonResponse("coingecko_coin_list_response.json")
 	if err != nil {
@@ -63,29 +70,34 @@ func TestRun(t *testing.T) {
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	//cfg.Aggregator = server.URL // Set URL to that of the test response
-
-	//runner := New(cfg.Aggregator, l)
-
-	coingecko, err := New(l, DB)
+	aggConfig, err := parseConfig("./config.json")
 	if err != nil {
-		t.Errorf("error instantiating aggregator. %s", err)
+		t.Errorf("unable to parse config. %s", err)
 	}
 
-	agg := aggregatorengine.New(DB, coingecko, l)
+	aggConfig.HostConfig.ApiHost = server.URL
+
+	runner := &Runner{
+		aggregatorConfig: aggConfig,
+		l:                l,
+		db:               dbConn,
+		client:           server.Client(),
+	}
+
+	agg := aggregatorengine.New(DB, runner, l)
 	err = agg.UpdateLatestHistory()
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
 
-	var currencies CurrencyData
+	var currencies []*Currency
 	err = json.Unmarshal(testJsonResponse, &currencies)
 	if err != nil {
 		t.Errorf("could not unmarshal JSON. %s", err)
 	}
 
-	jsonRec1 := currencies.Currencies[0]
+	jsonRec1 := currencies[0]
 
 	// Test record in currency table.
 	var curDbRec1 database.Currency

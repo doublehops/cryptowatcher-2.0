@@ -31,6 +31,7 @@ func (r *Runner) FetchCurrencyListing(limit int) ([]*Currency, error) {
 	if err != nil {
 		errMsg := fmt.Errorf("there was an error unmarshalling json marketmodule response. %w", err)
 		l.Error().Msg(errMsg.Error())
+
 		return listing, errMsg
 	}
 

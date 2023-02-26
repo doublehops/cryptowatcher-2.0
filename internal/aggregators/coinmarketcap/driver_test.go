@@ -55,8 +55,8 @@ func TestRun(t *testing.T) {
 	setup()
 	defer tearDown()
 
-	// Setup db connection.
-	db, err := db.New(l, cfg.DB)
+	// Setup dbConn connection.
+	dbConn, err := db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)
@@ -67,6 +67,7 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error getting server response. %s", err)
 	}
+
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
@@ -80,7 +81,7 @@ func TestRun(t *testing.T) {
 	runner := &Runner{
 		aggregatorConfig: aggConfig,
 		l:                l,
-		db:               db,
+		db:               dbConn,
 		client:           server.Client(),
 	}
 

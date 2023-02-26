@@ -49,7 +49,7 @@ func run(flags runflags.FlagStruct) {
 	}
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coingecko" {
-		a, err = coingecko.New(logger, DB)
+		a, err = coingecko.New(logger, DB, client)
 	}
 
 	if a == nil {

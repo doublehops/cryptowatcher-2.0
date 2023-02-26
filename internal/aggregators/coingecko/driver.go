@@ -6,6 +6,7 @@ import (
 	"cryptowatcher.example/internal/types/database"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 )
 
@@ -20,6 +21,7 @@ type Runner struct {
 	l                *logga.Logga
 	db               dbinterface.QueryAble
 	aggregatorConfig *aggregatorConfig
+	client           *http.Client
 }
 
 type aggregatorConfig struct {
@@ -34,8 +36,8 @@ type HostConfig struct {
 }
 
 // New will instantiate Runner.
-func New(l *logga.Logga, db dbinterface.QueryAble) (*Runner, error) {
-	config, err := parseConfig()
+func New(l *logga.Logga, db dbinterface.QueryAble, client *http.Client) (*Runner, error) {
+	config, err := parseConfig("internal/aggregators/coingecko/config.json")
 	if err != nil {
 		// todo - add log message
 		return nil, err
@@ -49,12 +51,12 @@ func New(l *logga.Logga, db dbinterface.QueryAble) (*Runner, error) {
 		aggregatorConfig: config,
 		l:                l,
 		db:               db,
+		client:           client,
 	}, nil
 }
 
-func parseConfig() (*aggregatorConfig, error) {
+func parseConfig(configFile string) (*aggregatorConfig, error) {
 	var config aggregatorConfig
-	configFile := "internal/aggregators/coingecko/config.json"
 	f, err := os.ReadFile(configFile)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
