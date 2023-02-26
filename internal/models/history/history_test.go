@@ -53,7 +53,7 @@ func teardown() {
 
 func createTestRecords(l *logga.Logga) {
 
-	lg := l.Lg.With().Str("cmchistory_test", "createTestRecords").Logger()
+	lg := l.Lg.With().Str("history_test", "createTestRecords").Logger()
 
 	cm := currency.New(tx, l)
 
@@ -76,7 +76,7 @@ func TestCreateAndRetrieveRecord(t *testing.T) {
 	defer teardown()
 
 	r := &database.History{
-		AggregatorID: 1,
+		AggregatorID:      1,
 		Name:              fake.CharactersN(10),
 		Symbol:            fake.Characters(),
 		Slug:              fake.Characters(),
