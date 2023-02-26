@@ -70,12 +70,13 @@ func TestRun(t *testing.T) {
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	aggConfig, err := parseConfig("./config.json")
-	if err != nil {
-		t.Errorf("unable to parse config. %s", err)
+	aggConfig := &aggregatorConfig{
+		Name:  "Coinmarketcap-test",
+		Label: "coinmarketcap-test",
+		HostConfig: HostConfig{
+			ApiHost: server.URL,
+		},
 	}
-
-	aggConfig.HostConfig.ApiHost = server.URL
 
 	runner := &Runner{
 		aggregatorConfig: aggConfig,
