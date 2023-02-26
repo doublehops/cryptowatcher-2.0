@@ -7,9 +7,9 @@ import (
 
 	migrate "github.com/doublehops/go-migration"
 
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	args.Path = dir+"/migrations"
+	args.Path = dir + "/migrations"
 	args.DB = DB
 	err = args.Migrate()
 	if err != nil {

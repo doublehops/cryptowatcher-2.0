@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"os"
 
-	"cryptowatcher.example/internal/aggregatorengine"
-	"cryptowatcher.example/internal/aggregators/coingecko"
-	"cryptowatcher.example/internal/aggregators/coinmarketcap"
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/runflags"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregatorengine"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregators/coingecko"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregators/coinmarketcap"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/runflags"
 )
 
 var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.

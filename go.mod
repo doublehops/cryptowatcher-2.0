@@ -1,9 +1,9 @@
-module cryptowatcher.example
+module github.com/doublehops/cryptowatcher-2.0
 
 go 1.19
 
 require (
-	github.com/doublehops/go-migration v1.0.2
+	github.com/doublehops/go-migration v0.0.1
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
@@ -34,5 +34,3 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/doublehops/go-migration => /home/b/workspace/go-migration

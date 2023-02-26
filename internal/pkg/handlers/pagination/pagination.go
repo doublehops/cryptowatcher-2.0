@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"cryptowatcher.example/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
 type MetaRequest struct {

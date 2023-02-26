@@ -6,13 +6,13 @@ import (
 	"os"
 	"testing"
 
-	"cryptowatcher.example/internal/aggregatorengine"
-	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/types/database"
-	"cryptowatcher.example/test/testfuncs"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregatorengine"
+	"github.com/doublehops/cryptowatcher-2.0/internal/models/currency"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
+	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 )
 
 var l *logga.Logga

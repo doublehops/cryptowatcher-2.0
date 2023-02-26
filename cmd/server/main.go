@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/router"
-	"cryptowatcher.example/internal/pkg/runflags"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/router"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/runflags"
 	"github.com/gin-gonic/gin"
 )
 

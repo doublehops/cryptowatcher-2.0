@@ -5,11 +5,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"cryptowatcher.example/internal/dbinterface"
-	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/handlers/pagination"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/types/database"
+	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
+	"github.com/doublehops/cryptowatcher-2.0/internal/models/currency"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/handlers/pagination"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 )
 
 type Handler struct {

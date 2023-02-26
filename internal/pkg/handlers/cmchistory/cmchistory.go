@@ -1,22 +1,22 @@
 package cmchistory
 
 import (
-	"cryptowatcher.example/internal/dbinterface"
 	"fmt"
+	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 
-	"cryptowatcher.example/internal/models/history"
-	"cryptowatcher.example/internal/models/currency"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/types/database"
+	"github.com/doublehops/cryptowatcher-2.0/internal/models/currency"
+	"github.com/doublehops/cryptowatcher-2.0/internal/models/history"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 )
 
 type Handler struct {
-	l *logga.Logga
+	l  *logga.Logga
 	DB dbinterface.QueryAble
 }
 
@@ -24,7 +24,7 @@ type Handler struct {
 func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 
 	return Handler{
-		l: l,
+		l:  l,
 		DB: db,
 	}
 }
