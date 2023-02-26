@@ -1,12 +1,12 @@
 package coingecko
 
 import (
-	"cryptowatcher.example/internal/aggregatorengine"
 	"database/sql"
 	"encoding/json"
 	"os"
 	"testing"
 
+	"cryptowatcher.example/internal/aggregatorengine"
 	"cryptowatcher.example/internal/models/currency"
 	"cryptowatcher.example/internal/pkg/config"
 	"cryptowatcher.example/internal/pkg/db"
@@ -16,7 +16,7 @@ import (
 )
 
 var l *logga.Logga
-var cfg aggregatorConfig.HostConfig
+var cfg *config.Config
 var DB *sql.DB
 var tx *sql.Tx
 
@@ -27,9 +27,9 @@ func setup() {
 
 	// Setup aggregatorConfig.
 	var err error
-	cfg, err = config.New(l, "../../../aggregatorConfig.json.test")
+	cfg, err = config.New(l, "../../../config.json.test")
 	if err != nil {
-		l.Lg.Error().Msgf("error starting main. %w", err.Error())
+		l.Lg.Error().Msgf("error starting main. %s", err.Error())
 		os.Exit(1)
 	}
 
@@ -56,21 +56,24 @@ func TestRun(t *testing.T) {
 	defer tearDown()
 
 	// Setup test http server.
-	testJsonResponse, err := testfuncs.GetTestJsonResponse("coin_response.json")
+	testJsonResponse, err := testfuncs.GetTestJsonResponse("coingecko_coin_list_response.json")
 	if err != nil {
 		t.Fatalf("error getting server response. %s", err)
 	}
 	server := testfuncs.SetupTestServer(testJsonResponse)
 	defer server.Close()
 
-	cfg.coingecko.Host = server.URL // Set URL to that of the test response
+	//cfg.Aggregator = server.URL // Set URL to that of the test response
 
-	chm := New(cfg.coingecko, l)
+	//runner := New(cfg.Aggregator, l)
 
-	coingecko := New(cfg.coingecko, l, DB, chm)
+	coingecko, err := New(l, DB)
+	if err != nil {
+		t.Errorf("error instantiating aggregator. %s", err)
+	}
 
-	agg := aggregatorengine.New(DB, l)
-	err = agg.UpdateLatestHistory(coingecko)
+	agg := aggregatorengine.New(DB, coingecko, l)
+	err = agg.UpdateLatestHistory()
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
 		os.Exit(1)

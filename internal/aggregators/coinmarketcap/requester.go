@@ -11,8 +11,6 @@ func (r *Runner) MakeRequest(method, path string, params map[string]string, payl
 
 	l := r.l.Lg.With().Str(packageName, "MakeRequest").Logger()
 
-	client := &http.Client{}
-
 	l.Info().Msgf("coinmarketcap.MakeRequest: %s %s", method, path)
 
 	req, err := http.NewRequest(method, r.aggregatorConfig.HostConfig.ApiHost+path, nil)
@@ -33,7 +31,7 @@ func (r *Runner) MakeRequest(method, path string, params map[string]string, payl
 		req.URL.RawQuery = q.Encode()
 	}
 
-	resp, err := client.Do(req)
+	resp, err := r.client.Do(req)
 	if err != nil {
 		errMsg := fmt.Errorf("there was an error making request to cmc. %w", err)
 		l.Error().Msg(errMsg.Error())

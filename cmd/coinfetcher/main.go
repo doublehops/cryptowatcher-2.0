@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"cryptowatcher.example/internal/aggregatorengine"
@@ -38,11 +39,13 @@ func run(flags runflags.FlagStruct) {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)
 	}
+	
+	client := &http.Client{}
 
 	var a aggregatorengine.Aggregator
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coinmarketcap" {
-		a, err = coinmarketcap.New(logger, DB)
+		a, err = coinmarketcap.New(logger, DB, client, flags.ConfigFile)
 	}
 	// todo - remove the control statements and replace with a dynamic approach.
 	if cfg.Aggregator.Name == "coingecko" {
