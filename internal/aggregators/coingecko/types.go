@@ -4,10 +4,6 @@ import (
 	"time"
 )
 
-type CurrencyData struct {
-	Currencies []*Currency `json:"data"`
-}
-
 type Currency struct {
 	Id                           string      `json:"id"`
 	Symbol                       string      `json:"symbol"`
