@@ -3,6 +3,6 @@
   "label": "CoinMarketcap",
   "hostConfig": {
     "apiKey": "",
-    "apiHost": ""
+    "apiHost": "https://pro-api.coinmarketcap.com"
   }
 }

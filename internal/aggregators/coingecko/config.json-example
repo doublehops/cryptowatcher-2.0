@@ -2,7 +2,6 @@
   "name": "coingecko",
   "label": "Coingecko",
   "hostConfig": {
-    "apiKey": "",
-    "apiHost": ""
+    "apiHost": "https://api.coingecko.com"
   }
 }
