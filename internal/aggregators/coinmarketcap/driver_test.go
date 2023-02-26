@@ -84,13 +84,6 @@ func TestRun(t *testing.T) {
 		client:           server.Client(),
 	}
 
-	//cmc, err := New(l, DB, server.Client(), aggConfig)
-	//if err != nil {
-	//	t.Errorf("error instantiating aggregator. %s", err)
-	//
-	//	return
-	//}
-
 	agg := aggregatorengine.New(DB, runner, l)
 	err = agg.UpdateLatestHistory()
 	if err != nil {
