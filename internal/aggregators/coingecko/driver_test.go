@@ -71,8 +71,8 @@ func TestRun(t *testing.T) {
 	defer server.Close()
 
 	aggConfig := &aggregatorConfig{
-		Name:  "Coinmarketcap-test",
-		Label: "coinmarketcap-test",
+		Name:  "CoinGecko-test",
+		Label: "coingecko-test",
 		HostConfig: HostConfig{
 			ApiHost: server.URL,
 		},
