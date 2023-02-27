@@ -20,29 +20,30 @@ var cfg *config.Config
 var DB *sql.DB
 var tx *sql.Tx
 
-func setup() {
+func setup(t *testing.T) {
 	_ = os.Setenv("APP_ENV", "test")
 
 	l = logga.New()
 
-	// Setup aggregatorConfig.
 	var err error
-	cfg, err = config.New(l, "../../../config.json.test")
+
+	// Setup aggregatorConfig.
+	cfg, err = testfuncs.GetTestConfig(l)
 	if err != nil {
-		l.Lg.Error().Msgf("error starting main. %s", err.Error())
-		os.Exit(1)
+		l.Lg.Error().Msg(err.Error())
+		t.Errorf("unable to get config. %s", err)
 	}
 
 	l = logga.New()
 	DB, err = db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to create database connection. %s", err)
 	}
 	tx, err = DB.Begin()
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to begin database transaction. %s", err)
 	}
 }
 
@@ -52,7 +53,7 @@ func tearDown() {
 
 func TestRun(t *testing.T) {
 
-	setup()
+	setup(t)
 	defer tearDown()
 
 	// Setup dbConn connection.

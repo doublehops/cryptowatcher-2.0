@@ -2,10 +2,10 @@ package currency
 
 import (
 	"database/sql"
+	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 	"os"
 	"testing"
 
-	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
@@ -17,32 +17,28 @@ var tx *sql.Tx
 
 var testCoin *sql.DB
 
-func setup() {
+func setup(t *testing.T) {
 	_ = os.Setenv("APP_ENV", "test")
 
 	// Setup logger.
 	l = logga.New()
 
 	// Setup config.
-	cfg, err := config.New(l, "../../../config.json.test")
-	if err != nil {
-		l.Lg.Error().Msgf("error starting main. %w", err.Error())
-		os.Exit(1)
-	}
+	cfg, err := testfuncs.GetTestConfig(l)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to get config. %s", err)
 	}
 
 	DB, err = db.New(l, cfg.DB)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to create database connection. %s", err)
 	}
 	tx, err = DB.Begin()
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to begin database transaction. %s", err)
 	}
 
 	record := getTestRecord()
@@ -51,7 +47,7 @@ func setup() {
 	_, err = cm.CreateRecord(record)
 	if err != nil {
 		l.Lg.Error().Msg(err.Error())
-		os.Exit(1)
+		t.Errorf("unable to create record. %s", err)
 	}
 }
 
@@ -61,7 +57,7 @@ func teardown() {
 
 func TestCreateRecord(t *testing.T) {
 
-	setup()
+	setup(t)
 	defer teardown()
 
 	cm := New(tx, l)
@@ -94,7 +90,7 @@ func TestCreateRecord(t *testing.T) {
 
 func TestGetRecord(t *testing.T) {
 
-	setup()
+	setup(t)
 	defer teardown()
 
 	cm := New(tx, l)

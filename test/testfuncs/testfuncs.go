@@ -2,12 +2,24 @@ package testfuncs
 
 import (
 	"bytes"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 )
+
+func GetTestConfig(l *logga.Logga) (*config.Config, error) {
+	cfg, err := config.New(l, "./../../../test/config.json.test")
+	if err != nil {
+		l.Lg.Error().Msgf("error starting main. %w", err.Error())
+		return nil, err
+	}
+
+	return cfg, nil
+}
 
 // --------  TEST SERVER  --------
 
