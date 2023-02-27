@@ -11,11 +11,25 @@ import (
 	"path/filepath"
 )
 
+// GetTestConfig will return the config of the test config file.
+// todo - Github is not able to open the path for some reason so hard-coding the response for now.
 func GetTestConfig(l *logga.Logga) (*config.Config, error) {
-	cfg, err := config.New(l, "./../../../test/config.json.test")
-	if err != nil {
-		l.Lg.Error().Msgf("error starting main. %w", err.Error())
-		return nil, err
+	//cfg, err := config.New(l, "./../../../test/config.json.test")
+	//if err != nil {
+	//	l.Lg.Error().Msgf("error starting main. %w", err.Error())
+	//	return nil, err
+	//}
+
+	cfg := &config.Config{
+		Aggregator: config.Aggregator{
+			Name: "coingecko",
+		},
+		DB: config.DB{
+			Host: "127.0.0.1",
+			Name: "cw_test",
+			User: "dev",
+			Pass: "pass12",
+		},
 	}
 
 	return cfg, nil
