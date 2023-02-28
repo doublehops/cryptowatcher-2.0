@@ -17,7 +17,7 @@ func New(logger *logga.Logga, cfg config.DB) (*sql.DB, error) {
 
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		l.Error().Msgf("unable to create db connection. %w", err)
+		l.Error().Msgf("unable to create db connection. %s", err)
 		return db, err
 	}
 

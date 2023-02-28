@@ -46,8 +46,11 @@ func setup(t *testing.T) {
 	createTestRecords(l)
 }
 
-func teardown() {
-	tx.Rollback()
+func teardown(t *testing.T) {
+	err := tx.Rollback()
+	if err != nil {
+		t.Errorf("unable to rollback transaction. %s", err)
+	}
 }
 
 func createTestRecords(l *logga.Logga) {
@@ -72,7 +75,7 @@ func createTestRecords(l *logga.Logga) {
 func TestCreateAndRetrieveRecord(t *testing.T) {
 
 	setup(t)
-	defer teardown()
+	defer teardown(t)
 
 	r := &database.History{
 		AggregatorID:      1,

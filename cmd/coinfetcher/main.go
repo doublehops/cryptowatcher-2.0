@@ -14,8 +14,6 @@ import (
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/runflags"
 )
 
-var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.
-
 func main() {
 	flags := runflags.GetFlags()
 	run(flags)
@@ -53,7 +51,7 @@ func run(flags runflags.FlagStruct) {
 	}
 
 	if a == nil {
-		logger.Error(fmt.Sprintf("aggregator not configured."))
+		logger.Error("aggregator not configured.")
 		os.Exit(1)
 	}
 

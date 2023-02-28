@@ -15,8 +15,6 @@ var l *logga.Logga
 var DB *sql.DB
 var tx *sql.Tx
 
-var testCoin *sql.DB
-
 func setup(t *testing.T) {
 	_ = os.Setenv("APP_ENV", "test")
 
@@ -51,14 +49,17 @@ func setup(t *testing.T) {
 	}
 }
 
-func teardown() {
-	tx.Rollback()
+func teardown(t *testing.T) {
+	err := tx.Rollback()
+	if err != nil {
+		t.Errorf("unable to rollback transaction. %s", err)
+	}
 }
 
 func TestCreateRecord(t *testing.T) {
 
 	setup(t)
-	defer teardown()
+	defer teardown(t)
 
 	cm := New(tx, l)
 
@@ -91,7 +92,7 @@ func TestCreateRecord(t *testing.T) {
 func TestGetRecord(t *testing.T) {
 
 	setup(t)
-	defer teardown()
+	defer teardown(t)
 
 	cm := New(tx, l)
 

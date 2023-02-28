@@ -2,7 +2,7 @@ package coingecko
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -42,7 +42,7 @@ func (r *Runner) MakeRequest(method, path string, params map[string]string, payl
 	defer resp.Body.Close()
 
 	statusCode := resp.Status
-	respBody, _ := ioutil.ReadAll(resp.Body)
+	respBody, _ := io.ReadAll(resp.Body)
 
 	return statusCode, respBody, nil
 }

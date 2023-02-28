@@ -35,5 +35,8 @@ func main() {
 	r := gin.Default()
 	router.New(r, DB, l)
 
-	r.Run(":8080")
+	err = r.Run(":8080")
+	if err != nil {
+		l.Lg.Error().Msgf("unable to run application. %s", err)
+	}
 }

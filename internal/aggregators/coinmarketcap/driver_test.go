@@ -47,14 +47,17 @@ func setup(t *testing.T) {
 	}
 }
 
-func tearDown() {
-	tx.Rollback()
+func tearDown(t *testing.T) {
+	err := tx.Rollback()
+	if err != nil {
+		t.Errorf("unable to rollback transcaction. %s", err)
+	}
 }
 
 func TestRun(t *testing.T) {
 
 	setup(t)
-	defer tearDown()
+	defer tearDown(t)
 
 	// Setup dbConn connection.
 	dbConn, err := db.New(l, cfg.DB)

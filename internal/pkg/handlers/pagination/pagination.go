@@ -55,10 +55,8 @@ func getVars(query map[string][]string) (int, int, int) {
 		switch key {
 		case "perPage":
 			perPage, _ = strconv.Atoi(queryValue)
-			break
 		case "page":
 			page, _ = strconv.Atoi(queryValue)
-			break
 		}
 	}
 
