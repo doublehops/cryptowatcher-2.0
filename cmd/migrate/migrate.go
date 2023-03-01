@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	var args migrate.Action
 
 	flag.StringVar(&args.Action, "action", "", "the intended action")

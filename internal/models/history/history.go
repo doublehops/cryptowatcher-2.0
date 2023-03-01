@@ -22,7 +22,6 @@ type SearchParams struct {
 
 // New - creates new instance of history.
 func New(db dbi.QueryAble, logger *logga.Logga) *Model {
-
 	return &Model{
 		db: db,
 		l:  logger,
@@ -31,11 +30,10 @@ func New(db dbi.QueryAble, logger *logga.Logga) *Model {
 
 // CreateRecord inserts a new record into the history table.
 func (m *Model) CreateRecord(record *database.History) (uint32, error) {
-
 	l := m.l.Lg.With().Str("history", "CreateRecord").Logger()
 	l.Info().Msgf("Adding history record: %s", record.Symbol)
 
-	result, err := m.db.Exec(InsertRecordSql,
+	result, err := m.db.Exec(InsertRecordSQL,
 		&record.AggregatorID,
 		&record.CurrencyID,
 		&record.Name,
@@ -74,7 +72,6 @@ func (m *Model) CreateRecord(record *database.History) (uint32, error) {
 
 // GetRecordByID will return the requested record from the db by its ID.
 func (m *Model) GetRecordByID(record *database.History, ID uint32) error {
-
 	l := m.l.Lg.With().Str("history", "GetRecordByID").Logger()
 	l.Info().Msgf("Retrieving history record by ID: %d", ID)
 
@@ -90,7 +87,6 @@ func (m *Model) GetRecordByID(record *database.History, ID uint32) error {
 
 // GetPriceTimeSeriesData will return records grouped together in X number of groups with `quote_price` averaged out per group/bucket.
 func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams) ([]*database.HistoryPriceTimeSeriesDataItem, error) {
-
 	l := m.l.Lg.With().Str("history", "GetTimeSeriesData").Logger()
 	l.Info().Msgf("Fetching history records for symbol: %s", symbol)
 
@@ -118,7 +114,6 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 
 // populateRecord will populate model object from query.
 func (m *Model) populateRecord(record *database.History, row *sql.Row) error {
-
 	err := row.Scan(
 		&record.ID,
 		&record.AggregatorID,

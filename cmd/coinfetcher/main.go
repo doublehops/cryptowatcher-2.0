@@ -20,7 +20,6 @@ func main() {
 }
 
 func run(flags runflags.FlagStruct) {
-
 	// Setup logger.
 	logger := logga.New()
 

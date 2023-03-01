@@ -10,7 +10,6 @@ import (
 )
 
 func New(r *gin.Engine, db dbinterface.QueryAble, l *logga.Logga) {
-
 	c := currency.New(l, db)
 	ch := cmchistory.New(l, db)
 

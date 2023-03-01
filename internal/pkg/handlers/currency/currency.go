@@ -19,7 +19,6 @@ type Handler struct {
 
 // New - instantiate package.
 func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
-
 	return Handler{
 		l:  l,
 		DB: db,
@@ -28,7 +27,6 @@ func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 
 // GetRecords - get record collection
 func (h *Handler) GetRecords(c *gin.Context) {
-
 	l := h.l.Lg.With().Str("currency handle", "GetRecords").Logger()
 	l.Info().Msg("Request to list currency")
 	cm := currency.New(h.DB, h.l)
@@ -39,7 +37,7 @@ func (h *Handler) GetRecords(c *gin.Context) {
 	var records database.Currencies
 	records, err := cm.GetRecords(pg)
 	if err != nil {
-		l.Error().Msgf("There was an error fetching currency records. %w", err)
+		l.Error().Msgf("There was an error fetching currency records. %s", err)
 		c.JSON(500, gin.H{"error": "error fetching currency records"})
 	}
 

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	// nolint:revive
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"

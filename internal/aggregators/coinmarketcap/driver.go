@@ -3,12 +3,13 @@ package coinmarketcap
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
-	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
-	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 )
 
 const (

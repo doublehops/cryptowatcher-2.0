@@ -3,8 +3,9 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 	"os"
+
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
 type Config struct {
@@ -29,7 +30,7 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 
 	var c Config
 
-	//absPath, _ := filepath.Abs(configFile)
+	// absPath, _ := filepath.Abs(configFile)
 
 	pwd, _ := os.Getwd()
 	relPath := pwd + "/" + configFile
@@ -41,7 +42,7 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
 
-	if err = json.Unmarshal(f, &c); err != nil {
+	if err := json.Unmarshal(f, &c); err != nil {
 		return nil, err
 	}
 

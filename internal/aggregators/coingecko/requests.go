@@ -8,7 +8,6 @@ import (
 
 // FetchCurrencyListing will make a request on Coingecko to retrieve current listings of each currency.
 func (r *Runner) FetchCurrencyListing(limit int) ([]*Currency, error) {
-
 	l := r.l.Lg.With().Str(packageName, "FetchCurrencyListing").Logger()
 
 	params := map[string]string{

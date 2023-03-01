@@ -25,7 +25,6 @@ type Agg struct {
 
 // New will instantiate a new instance of Aggregator.
 func New(db dbinterface.QueryAble, agg Aggregator, logga *logga.Logga) *Agg {
-
 	cur := currency.New(db, logga)
 	hs := history.New(db, logga)
 
@@ -40,7 +39,6 @@ func New(db dbinterface.QueryAble, agg Aggregator, logga *logga.Logga) *Agg {
 
 // UpdateLatestHistory will update the latest records from the aggregator.
 func (a *Agg) UpdateLatestHistory() error {
-
 	l := a.logga.Lg.With().Str("aggregatorengine", "UpdateLatestHistory").Logger()
 	l.Info().Msgf("Updating history for aggregator: %s", a.name)
 
@@ -67,7 +65,6 @@ func (a *Agg) UpdateLatestHistory() error {
 // getCurrencyID will return the ID of the currency record in the database. It will create a new record if
 // that currency doesn't already exist.
 func (a *Agg) getCurrencyID(curMap map[string]uint32, h database.History) uint32 {
-
 	l := a.logga.Lg.With().Str("aggregatorengine", "getCurrencyID").Logger()
 
 	_, exists := curMap[h.Symbol]

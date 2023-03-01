@@ -2,9 +2,10 @@ package history
 
 import (
 	"database/sql"
-	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 	"os"
 	"testing"
+
+	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 
 	"github.com/icrowley/fake"
 
@@ -14,14 +15,15 @@ import (
 	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 )
 
-var l *logga.Logga
-var DB *sql.DB
-var tx *sql.Tx
+var (
+	l  *logga.Logga
+	DB *sql.DB
+	tx *sql.Tx
+)
 
 var cr *database.Currency
 
 func setup(t *testing.T) {
-
 	_ = os.Setenv("APP_ENV", "test")
 
 	// Setup logger.
@@ -54,7 +56,6 @@ func teardown(t *testing.T) {
 }
 
 func createTestRecords(l *logga.Logga) {
-
 	lg := l.Lg.With().Str("history_test", "createTestRecords").Logger()
 
 	cm := currency.New(tx, l)
@@ -73,7 +74,6 @@ func createTestRecords(l *logga.Logga) {
 }
 
 func TestCreateAndRetrieveRecord(t *testing.T) {
-
 	setup(t)
 	defer teardown(t)
 

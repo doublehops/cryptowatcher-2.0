@@ -2,10 +2,11 @@ package cmchistory
 
 import (
 	"fmt"
-	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/doublehops/cryptowatcher-2.0/internal/dbinterface"
 
 	"github.com/gin-gonic/gin"
 
@@ -22,7 +23,6 @@ type Handler struct {
 
 // New - instantiate package.
 func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
-
 	return Handler{
 		l:  l,
 		DB: db,
@@ -31,7 +31,6 @@ func New(l *logga.Logga, db dbinterface.QueryAble) Handler {
 
 // GetTimeSeriesData - get record collection
 func (h *Handler) GetTimeSeriesData(c *gin.Context) {
-
 	l := h.l.Lg.With().Str("history handle", "GetTimeSeriesData").Logger()
 
 	symbol := c.Param("symbol")
@@ -45,12 +44,12 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	if err != nil {
 		l.Info().Msgf("Error with GetRecordBySymbol: %s", err.Error())
 		c.JSON(http.StatusNotFound, gin.H{"code": "Error with GetRecordBySymbol", "message": err.Error()})
-		
+
 		return
 	}
 
 	if cur.ID == 0 {
-		l.Info().Msgf("symbol not found: %w")
+		l.Info().Msgf("symbol not found: %w", symbol)
 		c.JSON(http.StatusNotFound, gin.H{"code": "symbol not found", "message": "Symbol not found"})
 
 		return
@@ -77,7 +76,6 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 
 // getSearchParams - get search parameters to fetch records by.
 func (h *Handler) getSearchParams(c *gin.Context) (*history.SearchParams, error) {
-
 	l := h.l.Lg.With().Str("history handle", "getSearchParams").Logger()
 
 	var t string

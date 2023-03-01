@@ -16,7 +16,7 @@ type Currency struct {
 	DeletedAt sql.NullTime
 }
 
-//type Histories []*History
+// type Histories []*History
 type HistoryPriceTimeSeriesData []HistoryPriceTimeSeriesDataItem
 
 type History struct {

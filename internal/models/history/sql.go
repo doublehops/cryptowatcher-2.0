@@ -79,7 +79,7 @@ SELECT
   FROM history
   WHERE symbol = ?`
 
-var InsertRecordSql = `
+var InsertRecordSQL = `
 INSERT INTO history (
     aggregator_id,
 	currency_id,

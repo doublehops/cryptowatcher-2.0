@@ -7,7 +7,6 @@ type FlagStruct struct {
 }
 
 func GetFlags() FlagStruct {
-
 	configFile := flag.String("config", "config.json", "Config file to use")
 	flag.Parse()
 

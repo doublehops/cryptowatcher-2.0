@@ -13,7 +13,6 @@ type Logga struct {
 }
 
 func New() *Logga {
-
 	logger := zerolog.New(os.Stderr)
 
 	logga := Logga{

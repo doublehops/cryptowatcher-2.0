@@ -2,18 +2,21 @@ package currency
 
 import (
 	"database/sql"
-	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 	"os"
 	"testing"
+
+	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
 	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 	"github.com/doublehops/cryptowatcher-2.0/internal/types/database"
 )
 
-var l *logga.Logga
-var DB *sql.DB
-var tx *sql.Tx
+var (
+	l  *logga.Logga
+	DB *sql.DB
+	tx *sql.Tx
+)
 
 func setup(t *testing.T) {
 	_ = os.Setenv("APP_ENV", "test")
@@ -57,7 +60,6 @@ func teardown(t *testing.T) {
 }
 
 func TestCreateRecord(t *testing.T) {
-
 	setup(t)
 	defer teardown(t)
 
@@ -90,7 +92,6 @@ func TestCreateRecord(t *testing.T) {
 }
 
 func TestGetRecord(t *testing.T) {
-
 	setup(t)
 	defer teardown(t)
 
@@ -110,7 +111,6 @@ func TestGetRecord(t *testing.T) {
 }
 
 func getTestRecord() *database.Currency {
-
 	return &database.Currency{
 		Name:   "testcoin",
 		Symbol: "TestCoin",

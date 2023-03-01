@@ -15,10 +15,12 @@ import (
 	"github.com/doublehops/cryptowatcher-2.0/test/testfuncs"
 )
 
-var l *logga.Logga
-var cfg *config.Config
-var DB *sql.DB
-var tx *sql.Tx
+var (
+	l   *logga.Logga
+	cfg *config.Config
+	DB  *sql.DB
+	tx  *sql.Tx
+)
 
 func setup(t *testing.T) {
 	_ = os.Setenv("APP_ENV", "test")
@@ -55,7 +57,6 @@ func tearDown(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-
 	setup(t)
 	defer tearDown(t)
 
@@ -125,5 +126,4 @@ func TestRun(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unable to remove test record from database")
 	}
-
 }

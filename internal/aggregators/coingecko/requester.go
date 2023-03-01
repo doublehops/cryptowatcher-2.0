@@ -8,7 +8,6 @@ import (
 
 // MakeRequest will make an HTTP request to Coingecko.
 func (r *Runner) MakeRequest(method, path string, params map[string]string, payload interface{}) (string, []byte, error) {
-
 	l := r.l.Lg.With().Str(packageName, "MakeRequest").Logger()
 
 	client := &http.Client{}

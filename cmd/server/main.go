@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-
 	flags := runflags.GetFlags()
 
 	// Setup logger.
@@ -21,14 +20,14 @@ func main() {
 	// Setup config.
 	cfg, err := config.New(l, flags.ConfigFile)
 	if err != nil {
-		l.Lg.Error().Msgf("error starting main. %w", err.Error())
+		l.Lg.Error().Msgf("error starting main. %s", err.Error())
 		os.Exit(1)
 	}
 
 	// Setup db connection.
 	DB, err := db.New(l, cfg.DB)
 	if err != nil {
-		l.Lg.Error().Msgf("error creating database connection. %w", err.Error())
+		l.Lg.Error().Msgf("error creating database connection. %s", err.Error())
 		os.Exit(1)
 	}
 
