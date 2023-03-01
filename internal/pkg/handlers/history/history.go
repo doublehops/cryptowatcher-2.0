@@ -1,4 +1,4 @@
-package cmchistory
+package history
 
 import (
 	"fmt"
