@@ -127,7 +127,7 @@ func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 // DeleteRecord will remove a record from the db.
 func (m *Model) DeleteRecord(ID uint32) error {
 	l := m.l.Lg.With().Str("currency", "DeleteRecord").Logger()
-	l.Info().Msgf("Deleting currency: %s; with interface type: %d", ID)
+	l.Info().Msgf("Deleting currency with ID %d", ID)
 
 	_, err := m.db.Exec(DeleteRecordSQL, ID)
 	if err != nil {

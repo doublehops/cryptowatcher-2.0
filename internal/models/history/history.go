@@ -58,7 +58,7 @@ func (m *Model) CreateRecord(record *database.History) (uint32, error) {
 		&record.MarketCap,
 	)
 	if err != nil {
-		l.Error().Msgf("There was an error saving record to db. %w", err)
+		l.Error().Msgf("There was an error saving record to db. %s", err)
 		return 0, err
 	}
 
@@ -78,7 +78,7 @@ func (m *Model) GetRecordByID(record *database.History, ID uint32) error {
 	row := m.db.QueryRow(GetRecordByIDSQL, ID)
 	err := m.populateRecord(record, row)
 	if err != nil {
-		l.Error().Msgf("There was an error retrieving record from the db. %w", err)
+		l.Error().Msgf("There was an error retrieving record from the db. %s", err)
 		return err
 	}
 
@@ -94,7 +94,7 @@ func (m *Model) GetPriceTimeSeriesData(symbol string, searchParams *SearchParams
 
 	rows, err := m.db.Query(TimeSeriesSlicedPeriodQuery, buckets, symbol, searchParams.TimeFrom, searchParams.TimeTo)
 	if err != nil {
-		l.Error().Msgf("There was an error retrieving time series data. %w", err)
+		l.Error().Msgf("There was an error retrieving time series data. %s", err)
 	}
 	defer rows.Close()
 

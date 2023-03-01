@@ -49,7 +49,7 @@ func (h *Handler) GetTimeSeriesData(c *gin.Context) {
 	}
 
 	if cur.ID == 0 {
-		l.Info().Msgf("symbol not found: %w", symbol)
+		l.Info().Msgf("symbol not found: %s", symbol)
 		c.JSON(http.StatusNotFound, gin.H{"code": "symbol not found", "message": "Symbol not found"})
 
 		return
