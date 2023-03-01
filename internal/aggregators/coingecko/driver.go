@@ -31,8 +31,8 @@ type aggregatorConfig struct {
 }
 
 type HostConfig struct {
-	ApiKey  string `json:"apiKey"`
-	ApiHost string `json:"apiHost"`
+	APIKey  string `json:"apiKey"`
+	APIHost string `json:"apiHost"`
 }
 
 // New will instantiate Runner.
@@ -43,7 +43,7 @@ func New(l *logga.Logga, db dbinterface.QueryAble, client *http.Client) (*Runner
 		return nil, err
 	}
 
-	if config.HostConfig.ApiHost == "" {
+	if config.HostConfig.APIHost == "" {
 		return nil, fmt.Errorf("coingecko configuration not set")
 	}
 
@@ -62,7 +62,7 @@ func parseConfig(configFile string) (*aggregatorConfig, error) {
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
 
-	if err = json.Unmarshal(f, &config); err != nil {
+	if err := json.Unmarshal(f, &config); err != nil {
 		return nil, err
 	}
 

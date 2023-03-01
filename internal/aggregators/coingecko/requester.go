@@ -15,10 +15,11 @@ func (r *Runner) MakeRequest(method, path string, params map[string]string, payl
 
 	l.Info().Msgf("coingecko.MakeRequest: %s %s", method, path)
 
-	req, err := http.NewRequest(method, r.aggregatorConfig.HostConfig.ApiHost+path, nil)
+	req, err := http.NewRequest(method, r.aggregatorConfig.HostConfig.APIHost+path, http.NoBody)
 	if err != nil {
 		l.Error().Msg("There was an error instantiating request client for coingecko")
 		l.Error().Msg(err.Error())
+
 		return "", nil, err
 	}
 

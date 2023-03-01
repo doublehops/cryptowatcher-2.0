@@ -49,18 +49,18 @@ func SetupTestServer(jsonResponse []byte) *httptest.Server {
 	return server
 }
 
-// GetTestJsonResponse will return the contents of `file` after reading it from the `serverresponses` directory.
+// GetTestJSONResponse will return the contents of `file` after reading it from the `serverresponses` directory.
 // This directory should include all test responses we need in the application.
-func GetTestJsonResponse(file string) ([]byte, error) {
+func GetTestJSONResponse(file string) ([]byte, error) {
 	var res []byte
 	path := "../../../test/serverresponses/" + file
 	absPath, _ := filepath.Abs(path)
-	testJsonResponse, err := os.ReadFile(absPath)
+	testJSONResponse, err := os.ReadFile(absPath)
 	if err != nil {
 		return res, err
 	}
 
-	return testJsonResponse, nil
+	return testJSONResponse, nil
 }
 
 // --------  TEST CLIENT  --------
@@ -73,16 +73,16 @@ func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 
 func NewTestClient(fn RoundTripFunc) *http.Client {
 	return &http.Client{
-		Transport: RoundTripFunc(fn),
+		Transport: fn,
 	}
 }
 
 // GetNewTestClient can be called to return a http.Client to use in tests. Just pass in the response you want back.
-func GetNewTestClient(testJsonResponse []byte) *http.Client {
+func GetNewTestClient(testJSONResponse []byte) *http.Client {
 	return NewTestClient(func(req *http.Request) *http.Response {
 		return &http.Response{
 			StatusCode: 200,
-			Body:       io.NopCloser(bytes.NewBufferString(string(testJsonResponse))),
+			Body:       io.NopCloser(bytes.NewBufferString(string(testJSONResponse))),
 			Header:     make(http.Header),
 		}
 	})

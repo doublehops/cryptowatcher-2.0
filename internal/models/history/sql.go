@@ -13,13 +13,13 @@ var TimeSeriesSlicedPeriodQuery = `
 	GROUP BY bucket
 `
 
-var GetRecordsSql = `
+var GetRecordsSQL = `
 	SELECT id,symbol,name,created_at,updated_at FROM history
 	ORDER BY ID
 	LIMIT ?,?
 `
 
-var GetRecordByIDSql = `
+var GetRecordByIDSQL = `
 SELECT 
 	id,
     aggregator_id,
@@ -49,7 +49,7 @@ SELECT
   FROM history
   WHERE id = ?`
 
-var GetRecordBySymbolSql = `
+var GetRecordBySymbolSQL = `
 SELECT 
 	id,
     aggregator_id,

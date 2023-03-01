@@ -67,19 +67,19 @@ func TestRun(t *testing.T) {
 	}
 
 	// Setup test http server.
-	testJsonResponse, err := testfuncs.GetTestJsonResponse("coin_response.json")
+	testJSONResponse, err := testfuncs.GetTestJSONResponse("coin_response.json")
 	if err != nil {
 		t.Fatalf("error getting server response. %s", err)
 	}
 
-	server := testfuncs.SetupTestServer(testJsonResponse)
+	server := testfuncs.SetupTestServer(testJSONResponse)
 	defer server.Close()
 
 	aggConfig := &aggregatorConfig{
 		Name:  "Coinmarketcap-test",
 		Label: "coinmarketcap-test",
 		HostConfig: HostConfig{
-			ApiHost: server.URL,
+			APIHost: server.URL,
 		},
 	}
 
@@ -98,7 +98,7 @@ func TestRun(t *testing.T) {
 	}
 
 	var wantedCurrencies CurrencyData
-	err = json.Unmarshal(testJsonResponse, &wantedCurrencies)
+	err = json.Unmarshal(testJSONResponse, &wantedCurrencies)
 	if err != nil {
 		t.Errorf("could not unmarshal JSON. %s", err)
 	}
@@ -106,23 +106,23 @@ func TestRun(t *testing.T) {
 	wantedRec1 := wantedCurrencies.Currencies[0]
 
 	// Test record in currency table.
-	var curDbRec1 database.Currency
+	var curDBRec1 database.Currency
 
 	cm := currency.New(DB, l)
-	err = cm.GetRecordBySymbol(&curDbRec1, wantedRec1.Symbol)
+	err = cm.GetRecordBySymbol(&curDBRec1, wantedRec1.Symbol)
 	if err != nil {
 		t.Errorf("error with GetRecordBySymbol. %s", err)
 	}
 
-	if wantedRec1.Name != curDbRec1.Name {
-		t.Errorf("name not as expected. Got: %s; found: %s;", wantedRec1.Name, curDbRec1.Name)
+	if wantedRec1.Name != curDBRec1.Name {
+		t.Errorf("name not as expected. Got: %s; found: %s;", wantedRec1.Name, curDBRec1.Name)
 	}
 
-	if wantedRec1.Symbol != curDbRec1.Symbol {
-		t.Errorf("symbol not as expected. Got: %s; found: %s;", wantedRec1.Symbol, curDbRec1.Symbol)
+	if wantedRec1.Symbol != curDBRec1.Symbol {
+		t.Errorf("symbol not as expected. Got: %s; found: %s;", wantedRec1.Symbol, curDBRec1.Symbol)
 	}
 
-	err = cm.DeleteRecord(curDbRec1.ID)
+	err = cm.DeleteRecord(curDBRec1.ID)
 	if err != nil {
 		t.Errorf("Unable to remove test record from database")
 	}

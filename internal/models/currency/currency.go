@@ -31,7 +31,7 @@ func (m *Model) GetRecordByID(record *database.Currency, ID int64) error {
 	l := m.l.Lg.With().Str("currency", "GetCoinByID").Logger()
 	l.Info().Msgf("Fetching currency by ID: %d", ID)
 
-	row := m.db.QueryRow(GetRecordByIDSql, ID)
+	row := m.db.QueryRow(GetRecordByIDSQL, ID)
 	err := m.populateRecord(record, row)
 	if err != nil {
 		return fmt.Errorf("unable to populate record. %s", err)
@@ -46,7 +46,7 @@ func (m *Model) GetRecordBySymbol(record *database.Currency, s string) error {
 	l := m.l.Lg.With().Str("currency", "GetCoinBySymbol").Logger()
 	l.Info().Msgf("Fetching currency by symbol: %s", s)
 
-	row := m.db.QueryRow(GetRecordBySymbolSql, s)
+	row := m.db.QueryRow(GetRecordBySymbolSQL, s)
 	err := m.populateRecord(record, row)
 	if err != nil {
 		return fmt.Errorf("unable to populate record. %s", err)
@@ -62,7 +62,7 @@ func (m *Model) GetRecords(pg *pagination.MetaRequest) (database.Currencies, err
 	l.Info().Msgf("Fetching currencies")
 
 	var records database.Currencies
-	rows, err := m.db.Query(GetRecordsSql, pg.Offset, pg.PerPage)
+	rows, err := m.db.Query(GetRecordsSQL, pg.Offset, pg.PerPage)
 	if err != nil {
 		err := fmt.Errorf("unable to retrieve currency records from database. %w", err)
 		l.Error().Msg(err.Error())
@@ -114,7 +114,7 @@ func (m *Model) CreateRecord(record *database.Currency) (int64, error) {
 	l := m.l.Lg.With().Str("currency", "CreateCurrency").Logger()
 	l.Info().Msgf("Adding currency: %s; with interface type: %v", record.Symbol, reflect.TypeOf(m.db))
 
-	result, err := m.db.Exec(InsertRecordSql, record.Name, record.Symbol)
+	result, err := m.db.Exec(InsertRecordSQL, record.Name, record.Symbol)
 	if err != nil {
 		l.Error().Msgf("There was an error saving record to db. %w", err)
 
@@ -135,9 +135,9 @@ func (m *Model) DeleteRecord(ID uint32) error {
 	l := m.l.Lg.With().Str("currency", "DeleteRecord").Logger()
 	l.Info().Msgf("Deleting currency: %s; with interface type: %d", ID)
 
-	_, err := m.db.Exec(DeleteRecordSql, ID)
+	_, err := m.db.Exec(DeleteRecordSQL, ID)
 	if err != nil {
-		l.Error().Msgf("There was an error deleting record from db. %w", err)
+		l.Error().Msgf("There was an error deleting record from db. %s", err)
 
 		return err
 	}

@@ -78,7 +78,7 @@ func (m *Model) GetRecordByID(record *database.History, ID uint32) error {
 	l := m.l.Lg.With().Str("history", "GetRecordByID").Logger()
 	l.Info().Msgf("Retrieving history record by ID: %d", ID)
 
-	row := m.db.QueryRow(GetRecordByIDSql, ID)
+	row := m.db.QueryRow(GetRecordByIDSQL, ID)
 	err := m.populateRecord(record, row)
 	if err != nil {
 		l.Error().Msgf("There was an error retrieving record from the db. %w", err)

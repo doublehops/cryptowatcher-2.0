@@ -24,6 +24,7 @@ func (r *Runner) FetchCurrencyListing(limit int) ([]*Currency, error) {
 	if err != nil {
 		errMsg := fmt.Errorf("there was an error instantiating marketmodule request client. %w", err)
 		l.Error().Msg(errMsg.Error())
+
 		return listing, errMsg
 	}
 

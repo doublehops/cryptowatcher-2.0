@@ -67,18 +67,18 @@ func TestRun(t *testing.T) {
 	}
 
 	// Setup test http server.
-	testJsonResponse, err := testfuncs.GetTestJsonResponse("coingecko_coin_list_response.json")
+	testJSONResponse, err := testfuncs.GetTestJSONResponse("coingecko_coin_list_response.json")
 	if err != nil {
 		t.Fatalf("error getting server response. %s", err)
 	}
-	server := testfuncs.SetupTestServer(testJsonResponse)
+	server := testfuncs.SetupTestServer(testJSONResponse)
 	defer server.Close()
 
 	aggConfig := &aggregatorConfig{
 		Name:  "CoinGecko-test",
 		Label: "coingecko-test",
 		HostConfig: HostConfig{
-			ApiHost: server.URL,
+			APIHost: server.URL,
 		},
 	}
 
@@ -97,7 +97,7 @@ func TestRun(t *testing.T) {
 	}
 
 	var currencies []*Currency
-	err = json.Unmarshal(testJsonResponse, &currencies)
+	err = json.Unmarshal(testJSONResponse, &currencies)
 	if err != nil {
 		t.Errorf("could not unmarshal JSON. %s", err)
 	}
@@ -105,23 +105,23 @@ func TestRun(t *testing.T) {
 	jsonRec1 := currencies[0]
 
 	// Test record in currency table.
-	var curDbRec1 database.Currency
+	var curDBRec1 database.Currency
 
 	cm := currency.New(DB, l)
-	err = cm.GetRecordBySymbol(&curDbRec1, jsonRec1.Symbol)
+	err = cm.GetRecordBySymbol(&curDBRec1, jsonRec1.Symbol)
 	if err != nil {
 		t.Errorf("error with GetRecordBySymbol. %s", err)
 	}
 
-	if jsonRec1.Name != curDbRec1.Name {
-		t.Errorf("name not as expected. Got: %s; found: %s;", jsonRec1.Name, curDbRec1.Name)
+	if jsonRec1.Name != curDBRec1.Name {
+		t.Errorf("name not as expected. Got: %s; found: %s;", jsonRec1.Name, curDBRec1.Name)
 	}
 
-	if jsonRec1.Symbol != curDbRec1.Symbol {
-		t.Errorf("symbol not as expected. Got: %s; found: %s;", jsonRec1.Symbol, curDbRec1.Symbol)
+	if jsonRec1.Symbol != curDBRec1.Symbol {
+		t.Errorf("symbol not as expected. Got: %s; found: %s;", jsonRec1.Symbol, curDBRec1.Symbol)
 	}
 
-	err = cm.DeleteRecord(curDbRec1.ID)
+	err = cm.DeleteRecord(curDBRec1.ID)
 	if err != nil {
 		t.Errorf("Unable to remove test record from database")
 	}

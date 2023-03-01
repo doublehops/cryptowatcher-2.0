@@ -5,7 +5,7 @@ import (
 )
 
 type Currency struct {
-	Id                           string      `json:"id"`
+	ID                           string      `json:"id"`
 	Symbol                       string      `json:"symbol"`
 	Name                         string      `json:"name"`
 	Image                        string      `json:"image"`

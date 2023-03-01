@@ -18,5 +18,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.51.2
-    args:
-      - '--config=/.golangci-lint.yml'
+    args: '--config=/ci/golangci-lint.yml'
