@@ -1,7 +1,7 @@
 
-.PHONY: run
-run:
-	go run main.go
+.PHONY: fetch
+fetch:
+	go run ./cmd/coinfetcher/main.go
 
 .PHONY: gofmt
 gofmt: ## Run gofumpt over the codebase. gofumpt must be installed and in your path.
@@ -13,4 +13,24 @@ lint: ## Run golangci-lint. golangci-lint must be installed and in your path.
 
 .PHONY: test
 test:
-	go test -cover ./...
+	go test -count=1 -cover ./...
+
+.PHONY: docker_up
+docker_up:
+	docker-compose -f docker-compose.yml up -d
+
+.PHONY: docker_down
+docker_down:
+	docker-compose -f docker-compose.yml down
+
+.PHONY: dbc
+dbc: ## Connect to local MySQL database.
+	dev/local_database_conn.sh
+
+.PHONY: migrate
+migrate:
+	go run cmd/migrate/migrate.go -action up
+
+.PHONY: migrate_test
+migrate_test:
+	go run cmd/migrate/migrate.go -action up -config ./config.json.test

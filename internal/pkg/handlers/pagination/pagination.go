@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"cryptowatcher.example/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
 type MetaRequest struct {
@@ -22,12 +22,13 @@ type MetaResponse struct {
 	TotalRecords int64 `json:"totalRecords"`
 }
 
-var defaultPage = 1
-var defaultPerPage = 10
+var (
+	defaultPage    = 1
+	defaultPerPage = 10
+)
 
 // GetPaginationVars - find and return pagination vars for query and meta response.
 func GetPaginationVars(lg *logga.Logga, c *gin.Context) *MetaRequest {
-
 	l := lg.Lg.With().Str("pagination", "HandlePagination").Logger()
 	l.Info().Msg("Setting up pagination")
 
@@ -45,20 +46,17 @@ func GetPaginationVars(lg *logga.Logga, c *gin.Context) *MetaRequest {
 
 // getVars - Search request query for wanted var and return value, if not found, return default value.
 func getVars(query map[string][]string) (int, int, int) {
-
 	page := defaultPage
 	perPage := defaultPerPage
-	var offset = 0
+	offset := 0
 
 	for key, value := range query {
 		queryValue := value[len(value)-1]
 		switch key {
 		case "perPage":
 			perPage, _ = strconv.Atoi(queryValue)
-			break
 		case "page":
 			page, _ = strconv.Atoi(queryValue)
-			break
 		}
 	}
 
@@ -71,7 +69,6 @@ func getVars(query map[string][]string) (int, int, int) {
 
 // GetMetaResponse - Get pagination data to send in API response.
 func GetMetaResponse(pg *MetaRequest, count int64) *MetaResponse {
-
 	pageApprox := float64(count) / float64(pg.PerPage)
 	totalPages := math.Ceil(pageApprox)
 	tp := int(totalPages)

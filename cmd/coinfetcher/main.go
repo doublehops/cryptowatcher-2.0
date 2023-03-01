@@ -1,17 +1,18 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
-	"cryptowatcher.example/cmd/coinfetcher/processor"
-	"cryptowatcher.example/internal/pkg/cmcmodule"
-	"cryptowatcher.example/internal/pkg/config"
-	"cryptowatcher.example/internal/pkg/db"
-	"cryptowatcher.example/internal/pkg/logga"
-	"cryptowatcher.example/internal/pkg/runflags"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregatorengine"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregators/coingecko"
+	"github.com/doublehops/cryptowatcher-2.0/internal/aggregators/coinmarketcap"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/config"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/db"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/runflags"
 )
-
-var numberToRetrieveDefault = 10 // @todo - this var can be removed or better handled elsewhere.
 
 func main() {
 	flags := runflags.GetFlags()
@@ -19,7 +20,6 @@ func main() {
 }
 
 func run(flags runflags.FlagStruct) {
-
 	// Setup logger.
 	logger := logga.New()
 
@@ -37,12 +37,30 @@ func run(flags runflags.FlagStruct) {
 		os.Exit(1)
 	}
 
-	// Setup Coinmarketcap connection.
-	cmcm := cmcmodule.New(cfg.Tracker, logger)
+	client := &http.Client{}
 
-	// Process
-	runner := processor.New(cfg.Tracker, logger, DB, cmcm)
-	err = runner.Run()
+	var a aggregatorengine.Aggregator
+	// todo - remove the control statements and replace with a dynamic approach.
+	if cfg.Aggregator.Name == "coinmarketcap" {
+		a, err = coinmarketcap.New(logger, DB, client)
+	}
+	// todo - remove the control statements and replace with a dynamic approach.
+	if cfg.Aggregator.Name == "coingecko" {
+		a, err = coingecko.New(logger, DB, client)
+	}
+
+	if a == nil {
+		logger.Error("aggregator not configured.")
+		os.Exit(1)
+	}
+
+	if err != nil {
+		logger.Error(fmt.Sprintf("unable to instantiate aggregator. %s", err))
+		os.Exit(1)
+	}
+
+	agg := aggregatorengine.New(DB, a, logger)
+	err = agg.UpdateLatestHistory()
 	if err != nil {
 		logger.Lg.Error().Msg(err.Error())
 		os.Exit(1)

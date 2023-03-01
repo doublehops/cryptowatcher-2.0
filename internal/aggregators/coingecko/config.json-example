@@ -1,0 +1,7 @@
+{
+  "name": "coingecko",
+  "label": "Coingecko",
+  "hostConfig": {
+    "apiHost": "https://api.coingecko.com"
+  }
+}

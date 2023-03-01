@@ -1,0 +1,12 @@
+{
+  "*** NOTE - This file is being ignored as Github can't read it ***",
+  "aggregator": {
+    "name": "coingecko"
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "name": "cw_test",
+    "user": "dev",
+    "password": "pass12"
+  }
+}

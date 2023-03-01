@@ -1,20 +1,20 @@
 package config
 
 import (
-	"cryptowatcher.example/internal/pkg/logga"
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"github.com/doublehops/cryptowatcher-2.0/internal/pkg/logga"
 )
 
 type Config struct {
-	Tracker Tracker `json:"tracker"`
-	DB      DB      `json:"database"`
+	Aggregator Aggregator `json:"aggregator"`
+	DB         DB         `json:"database"`
 }
 
-type Tracker struct {
-	APIKey string `json:"APIKey"`
-	Host   string `json:"host"`
+type Aggregator struct {
+	Name string `json:"name"`
 }
 
 type DB struct {
@@ -30,18 +30,23 @@ func New(lg *logga.Logga, configFile string) (*Config, error) {
 
 	var c Config
 
-	f, err := os.ReadFile(configFile)
+	// absPath, _ := filepath.Abs(configFile)
+
+	pwd, _ := os.Getwd()
+	relPath := pwd + "/" + configFile
+
+	f, err := os.ReadFile(relPath)
 	if err != nil {
-		l.Error().Msgf("unable to read config file. %w", err.Error())
+		l.Error().Msgf("unable to read config file - %s. %s", relPath, err.Error())
+
 		return nil, fmt.Errorf("unable to read config file `%s`. %w", configFile, err)
 	}
 
-	err = json.Unmarshal(f, &c)
-	if err != nil {
+	if err := json.Unmarshal(f, &c); err != nil {
 		return nil, err
 	}
 
-	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" || c.Tracker.Host == "" || c.Tracker.APIKey == "" {
+	if c.DB.Host == "" || c.DB.Name == "" || c.DB.User == "" || c.DB.Pass == "" {
 		return &c, fmt.Errorf("some configuration is missing")
 	}
 

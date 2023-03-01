@@ -1,4 +1,6 @@
 .env
 .idea
-vendor
 config.json
+internal/aggregators/coinmarketcap/config.json
+internal/aggregators/coingecko/config.json
+db-data

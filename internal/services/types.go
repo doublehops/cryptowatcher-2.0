@@ -1,6 +1,6 @@
 package services
 
 type TimeSeriesChartData struct {
-	Labels []string
+	Labels  []string
 	Dataset []string
 }
